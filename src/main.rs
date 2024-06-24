@@ -48,7 +48,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
         .await
         .unwrap();
     println!("listening on {}", listener.local_addr().unwrap());
-    axum::serve(listener, app()).await.unwrap();
+    axum::serve(listener, app().into_make_service_with_connect_info::<SocketAddr>()).await.unwrap();
     Ok(())
 }
 
@@ -73,7 +73,7 @@ fn app() -> Router {
         )
         .route(
             "/verify-user",
-            get(|| async { Html("<h1>Terms of Service</h1>") }),
+            get(|| async { Html("<h1>Verify User</h1>") }),
         )
         .route(
             "/terms-of-service",
@@ -81,7 +81,7 @@ fn app() -> Router {
         )
         .route(
             "/privacy-policy",
-            get(|| async { Html("<h1>Terms of Service</h1>") }),
+            get(|| async { Html("<h1>Privacy Policy</h1>") }),
         )
 }
 
