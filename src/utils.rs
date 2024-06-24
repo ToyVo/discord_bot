@@ -3,16 +3,18 @@ use axum::http::HeaderMap;
 use rand::seq::SliceRandom;
 use reqwest::{Error, Method, Response};
 use serde::Serialize;
+use serenity::all::Verifier;
 use std::env::var;
-use ed25519_dalek::Verifier;
 
-pub fn verify_discord_request(headers: HeaderMap) -> bool {
+pub fn verify_discord_request<S: AsRef<str>>(headers: HeaderMap, body: S) -> bool {
+    let verifyer = Verifier::new(var("DISCORD_PUBLIC_KEY").unwrap_or_default().as_ref());
     let client_key = var("DISCORD_CLIENT_SECRET").unwrap_or_default();
     let signature = headers.get("X-Signature-Ed25519").unwrap();
     // let signature_bytes = parse_hex()
     let sig = ed25519_dalek::Signature::from_slice(signature.as_ref());
     let timestamp = headers.get("X-Signature-Timestamp").unwrap();
     let is_valid_request = true; //verify_key(buf, signature, timestamp, client_key);
+    verifyer.verify(signature, timestamp, body);
     is_valid_request
     // return function (req, res, buf, encoding) {
     //   if (!isValidRequest) {

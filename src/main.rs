@@ -86,11 +86,13 @@ fn app() -> Router {
 }
 
 /// Interactions endpoint URL where Discord will send HTTP requests
-async fn interactions(headers: HeaderMap, payload: Json<serde_json::Value>) -> (StatusCode, Json<Value>) {
+async fn interactions(headers: HeaderMap, body: String) -> (StatusCode, Json<Value>) {
     // Parse request body and verifies incoming requests
-    if !verify_discord_request(headers) {
+    if !verify_discord_request(headers, body) {
         return (StatusCode::BAD_REQUEST, Json(json!({})));
     }
+
+    let payload = Json(body);
 
     // Interaction type and data
     if let Some(request_type) = payload.get("type") {
