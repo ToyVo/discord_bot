@@ -69,7 +69,7 @@
           options.services.mc-discord-bot = {
             enable = lib.mkEnableOption "enable minecraft discord bot";
             env_file = lib.mkOption {
-              type = "path";
+              type = lib.types.path;
               description = ''Path to the environment file, to be piped through xargs, must include the following variables:
                 DISCORD_CLIENT_ID
                 DISCORD_CLIENT_SECRET
