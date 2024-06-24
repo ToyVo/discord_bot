@@ -40,7 +40,7 @@
               version = cargoToml.package.version;
               src = ./.;
               cargoLock.lockFile = ./Cargo.lock;
-              nativeBuildInputs = [ pkg-config rustPlatform.bindgenHook ];
+              nativeBuildInputs = [ pkg-config rustPlatform.bindgenHook openssl ];
             })
           { };
       };
