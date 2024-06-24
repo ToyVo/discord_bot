@@ -46,7 +46,7 @@ pub async fn discord_request<S: AsRef<str>, T: Serialize + ?Sized>(
 }
 
 pub async fn install_global_commands(commands: Vec<Command<String>>) -> Result<Response, Error> {
-    let app_id = var("DISCORD_APPLICATION_ID").unwrap_or_default();
+    let app_id = var("DISCORD_CLIENT_ID").unwrap_or_default();
     // API endpoint to overwrite global commands
     let endpoint = format!("applications/{app_id}/commands");
     // This is calling the bulk overwrite endpoint: https://discord.com/developers/docs/interactions/application-commands#bulk-overwrite-global-application-commands

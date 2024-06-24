@@ -66,13 +66,27 @@
       nixosModules.mc-discord-bot =
         { pkgs, lib, config, ... }:
         {
-          options.services.mc-discord-bot.enable = lib.mkEnableOption "enable minecraft discord bot";
+          options.services.mc-discord-bot = {
+            enable = lib.mkEnableOption "enable minecraft discord bot";
+            env_file = lib.mkOption {
+              type = "path";
+              description = ''Path to the environment file, to be piped through xargs, must include the following variables:
+                DISCORD_CLIENT_ID
+                DISCORD_CLIENT_SECRET
+                DISCORD_PUBLIC_KEY
+                DISCORD_BOT_TOKEN
+              '';
+            };
+          };
           config = lib.mkIf config.services.mc-discord-bot.enable {
             nixpkgs.overlays = [ self.overlays.default ];
             systemd.services = {
               mc-discord-bot = {
                 wantedBy = [ "multi-user.target" ];
-                serviceConfig.ExecStart = "${pkgs.mc-discord-bot}/bin/mc-discord-bot";
+                script = ''
+                  export $(cat ${config.services.mc-discord-bot.env_file} | xargs)
+                  ${pkgs.mc-discord-bot}/bin/mc-discord-bot
+                '';
               };
             };
           };
