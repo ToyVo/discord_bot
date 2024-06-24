@@ -60,12 +60,15 @@
         });
       # A NixOS module.
       nixosModules.mc-discord-bot =
-        { pkgs, ... }:
+        { pkgs, lib, config, ... }:
         {
           nixpkgs.overlays = [ self.overlays.default ];
-          systemd.services.mc-discord-bot = {
-            wantedBy = [ "multi-user.target" ];
-            serviceConfig.ExecStart = "${pkgs.mc-discord-bot}/bin/mc-discord-bot";
+          options.services.mc-discord-bot.enable = lib.mkEnableOption "enable minecraft discord bot";
+          config.systemd.services = lib.mkIf config.services.mc-discord-bot.enable {
+            mc-discord-bot = {
+              wantedBy = [ "multi-user.target" ];
+              serviceConfig.ExecStart = "${pkgs.mc-discord-bot}/bin/mc-discord-bot";
+            };
           };
         };
     };
