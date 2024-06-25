@@ -34,12 +34,10 @@ fn create_minecraft_command() -> Command<String> {
             name: String::from("action"),
             description: String::from("Available actions"),
             required: true,
-            choices: Some(vec![
-                CommandChoice {
-                    name: String::from("Reboot"),
-                    value: String::from("reboot"),
-                }
-            ]),
+            choices: Some(vec![CommandChoice {
+                name: String::from("Reboot"),
+                value: String::from("reboot"),
+            }]),
         }]),
         command_type: 1,
     }

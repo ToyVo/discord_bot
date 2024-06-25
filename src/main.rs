@@ -1,7 +1,4 @@
-use crate::{
-    commands::create_all_commands,
-    utils::{get_random_emoji, install_global_commands},
-};
+use crate::{commands::create_all_commands, utils::install_global_commands};
 use axum::http::StatusCode;
 use axum::{
     http::HeaderMap,
@@ -142,7 +139,7 @@ async fn interactions(headers: HeaderMap, body: String) -> (StatusCode, Json<Val
         None => {
             eprintln!("Could not get discord request type");
             None
-        },
+        }
     };
 
     // Handle verification requests
@@ -172,14 +169,16 @@ async fn interactions(headers: HeaderMap, body: String) -> (StatusCode, Json<Val
         };
         println!("Received discord slash command request, {command:#?}");
         if command == Some("mc") {
-            // Send a message into the channel where command was triggered from
+            let content = match systemctl::restart("podman-minecraft.service") {
+                Ok(_) => format!("Successfully restarted minecraft server, it might take a couple minutes to come up"),
+                Err(_) => format!("There was an issue restarting minecraft server"),
+            };
             return (
                 StatusCode::OK,
                 Json(json!({
                     "type": DiscordInteractionResponseType::ChannelMessageWithSource as u64,
                     "data": {
-                        // Fetches a random emoji to send from a helper function
-                        "content": format!("hello world {}", get_random_emoji()),
+                        "content": content,
                     },
                 })),
             );

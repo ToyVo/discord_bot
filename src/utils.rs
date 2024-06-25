@@ -34,32 +34,3 @@ pub async fn install_global_commands(commands: Vec<Command<String>>) -> Result<R
     // This is calling the bulk overwrite endpoint: https://discord.com/developers/docs/interactions/application-commands#bulk-overwrite-global-application-commands
     discord_request(endpoint, Method::PUT, Some(&commands)).await
 }
-
-// Simple method that returns a random emoji from list
-pub fn get_random_emoji() -> &'static str {
-    const EMOJI_LIST: &[&str] = &[
-        "😭",
-        "😄",
-        "😌",
-        "🤓",
-        "😎",
-        "😤",
-        "🤖",
-        "😶‍🌫️",
-        "🌏",
-        "📸",
-        "💿",
-        "👋",
-        "🌊",
-        "✨",
-    ];
-    EMOJI_LIST.choose(&mut rand::thread_rng()).unwrap()
-}
-
-pub fn capitalize<S: AsRef<str>>(s: S) -> String {
-    let mut chars = s.as_ref().chars();
-    match chars.next() {
-        None => String::new(),
-        Some(c) => c.to_uppercase().collect::<String>() + chars.as_str(),
-    }
-}
