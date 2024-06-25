@@ -1,5 +1,4 @@
 use crate::commands::Command;
-use rand::seq::SliceRandom;
 use reqwest::{Error, Method, Response};
 use serde::Serialize;
 use std::env::var;
