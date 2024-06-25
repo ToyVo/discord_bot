@@ -11,9 +11,10 @@ use std::{
     net::SocketAddr,
 };
 use axum::http::StatusCode;
+use serenity::interactions_endpoint::Verifier;
 use crate::{
     commands::create_all_commands,
-    utils::{get_random_emoji, install_global_commands, verify_discord_request},
+    utils::{get_random_emoji, install_global_commands},
 };
 
 mod commands;
@@ -59,8 +60,8 @@ fn app() -> Router {
         .route("/", get(|| async { Html("<h1>Hello, World!</h1>") }))
         .route(
             "/json",
-            post(|payload: Json<serde_json::Value>| async move {
-                Json(serde_json::json!({ "data": payload.0 }))
+            post(|payload: Json<Value>| async move {
+                Json(json!({ "data": payload.0 }))
             }),
         )
         .route(
@@ -88,11 +89,14 @@ fn app() -> Router {
 /// Interactions endpoint URL where Discord will send HTTP requests
 async fn interactions(headers: HeaderMap, body: String) -> (StatusCode, Json<Value>) {
     // Parse request body and verifies incoming requests
-    if !verify_discord_request(headers, body) {
+    let verifier = Verifier::new(var("DISCORD_PUBLIC_KEY").expect("Could not get discord public key").as_str());
+    let signature = headers.get("X-Signature-Ed25519").expect("Could not get signature from header").to_str().expect("could not convert signature header to string");
+    let timestamp = headers.get("X-Signature-Timestamp").expect("could not get timestamp from header").to_str().expect("Could not convert timestamp header to string");
+    if verifier.verify(signature, timestamp, body.as_ref()).is_err() {
         return (StatusCode::BAD_REQUEST, Json(json!({})));
     }
 
-    let payload = Json(body);
+    let payload = Json::<Value>::from_bytes(body.as_bytes()).expect("Could not parse body");
 
     // Interaction type and data
     if let Some(request_type) = payload.get("type") {
