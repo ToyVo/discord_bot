@@ -85,6 +85,7 @@ fn app() -> Router {
 
 /// Interactions endpoint URL where Discord will send HTTP requests
 async fn interactions(headers: HeaderMap, body: String) -> (StatusCode, Json<Value>) {
+    println!("Request received: {body}");
     // Parse request body and verifies incoming requests
     let public_key = match var("DISCORD_PUBLIC_KEY") {
         Ok(s) => s,
@@ -124,7 +125,7 @@ async fn interactions(headers: HeaderMap, body: String) -> (StatusCode, Json<Val
         .verify(signature, timestamp, body.as_ref())
         .is_err()
     {
-        eprintln!("Signature verification failed");
+        eprintln!("Signature verification failed:\n\t{signature}\n\t{timestamp}");
         return (StatusCode::BAD_REQUEST, Json(json!({})));
     }
 
@@ -146,6 +147,7 @@ async fn interactions(headers: HeaderMap, body: String) -> (StatusCode, Json<Val
 
     // Handle verification requests
     if request_type == Some(DiscordInteractionType::Ping as u64) {
+        println!("Received discord ping request, Replying pong");
         return (
             StatusCode::OK,
             Json(json!({ "type": DiscordInteractionResponseType::Pong as u64})),
@@ -168,7 +170,7 @@ async fn interactions(headers: HeaderMap, body: String) -> (StatusCode, Json<Val
                 None
             }
         };
-        // "test" command
+        println!("Received discord slash command request, {command:#?}");
         if command == Some("mc") {
             // Send a message into the channel where command was triggered from
             return (
@@ -191,12 +193,9 @@ async fn interactions(headers: HeaderMap, body: String) -> (StatusCode, Json<Val
 mod tests {
     use axum::{
         body::Body,
-        extract::connect_info::MockConnectInfo,
-        http::{self, Request, StatusCode},
+        http::{Request, StatusCode},
     };
     use http_body_util::BodyExt;
-    // for `collect`
-    use serde_json::{json, Value};
     use tokio::net::TcpListener;
     use tower::{Service, ServiceExt};
 
