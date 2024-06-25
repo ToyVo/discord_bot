@@ -45,6 +45,9 @@
               OPENSSL_NO_VENDOR = 1;
               OPENSSL_LIB_DIR = "${lib.getLib openssl}/lib";
               OPENSSL_DIR = "${lib.getDev openssl}";
+              # Not that I'm using this bot anywhere other than linux... but this should only be used on nixos,
+              # not any other linux distro with nix installed or darwin.
+              SYSTEMCTL_PATH="${systemd}/bin/systemctl";
             })
           { };
       };
