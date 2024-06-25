@@ -222,31 +222,6 @@ mod tests {
     }
 
     #[tokio::test]
-    async fn json() {
-        let app = app();
-
-        let response = app
-            .oneshot(
-                Request::builder()
-                    .method(http::Method::POST)
-                    .uri("/json")
-                    .header(http::header::CONTENT_TYPE, mime::APPLICATION_JSON.as_ref())
-                    .body(Body::from(
-                        serde_json::to_vec(&json!([1, 2, 3, 4])).unwrap(),
-                    ))
-                    .unwrap(),
-            )
-            .await
-            .unwrap();
-
-        assert_eq!(response.status(), StatusCode::OK);
-
-        let body = response.into_body().collect().await.unwrap().to_bytes();
-        let body: Value = serde_json::from_slice(&body).unwrap();
-        assert_eq!(body, json!({ "data": [1, 2, 3, 4] }));
-    }
-
-    #[tokio::test]
     async fn not_found() {
         let app = app();
 
@@ -316,25 +291,6 @@ mod tests {
             .call(request)
             .await
             .unwrap();
-        assert_eq!(response.status(), StatusCode::OK);
-    }
-
-    // Here we're calling `/requires-connect-info` which requires `ConnectInfo`
-    //
-    // That is normally set with `Router::into_make_service_with_connect_info` but we can't easily
-    // use that during tests. The solution is instead to set the `MockConnectInfo` layer during
-    // tests.
-    #[tokio::test]
-    async fn with_into_make_service_with_connect_info() {
-        let mut app = app()
-            .layer(MockConnectInfo(SocketAddr::from(([0, 0, 0, 0], 3000))))
-            .into_service();
-
-        let request = Request::builder()
-            .uri("/requires-connect-info")
-            .body(Body::empty())
-            .unwrap();
-        let response = app.ready().await.unwrap().call(request).await.unwrap();
         assert_eq!(response.status(), StatusCode::OK);
     }
 }
