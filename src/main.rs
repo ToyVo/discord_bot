@@ -4,7 +4,6 @@ use crate::{
 };
 use axum::http::StatusCode;
 use axum::{
-    extract::ConnectInfo,
     http::HeaderMap,
     response::{Html, Json},
     routing::{get, post},
@@ -45,9 +44,9 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
     let host = var("HOST").unwrap_or(String::from("0.0.0.0"));
     let port = var("PORT").unwrap_or(String::from("8080"));
     match tokio::net::TcpListener::bind(format!("{host}:{port}")).await {
-        Some(listener) => {
+        Ok(listener) => {
             match listener.local_addr() {
-                Some(addr) => println!("Listening on http://{addr}"),
+                Ok(addr) => println!("Listening on http://{addr}"),
                 Err(e) => eprintln!("Failed to get addr off listener\n{e:#?}"),
             }
             if let Err(e) = axum::serve(
@@ -103,8 +102,8 @@ async fn interactions(headers: HeaderMap, body: String) -> (StatusCode, Json<Val
                 return (StatusCode::BAD_REQUEST, Json(json!({})));
             }
         },
-        Err(e) => {
-            eprintln!("Could not get discord signature\n{e:#?}");
+        None => {
+            eprintln!("Could not get discord signature");
             return (StatusCode::BAD_REQUEST, Json(json!({})));
         }
     };
@@ -116,8 +115,8 @@ async fn interactions(headers: HeaderMap, body: String) -> (StatusCode, Json<Val
                 return (StatusCode::BAD_REQUEST, Json(json!({})));
             }
         },
-        Err(e) => {
-            eprintln!("Could not get discord timestamp\n{e:#?}");
+        None => {
+            eprintln!("Could not get discord timestamp");
             return (StatusCode::BAD_REQUEST, Json(json!({})));
         }
     };
@@ -170,7 +169,7 @@ async fn interactions(headers: HeaderMap, body: String) -> (StatusCode, Json<Val
             }
         };
         // "test" command
-        if name == Some("mc") {
+        if command == Some("mc") {
             // Send a message into the channel where command was triggered from
             return (
                 StatusCode::OK,
