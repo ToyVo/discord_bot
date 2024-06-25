@@ -1,21 +1,18 @@
-use axum::{
-    extract::ConnectInfo,
-    routing::{get, post},
-    response::{Json, Html},
-    Router,
-    http::HeaderMap,
-};
-use serde_json::{json, Value};
-use std::{
-    env::var,
-    net::SocketAddr,
-};
-use axum::http::StatusCode;
-use serenity::interactions_endpoint::Verifier;
 use crate::{
     commands::create_all_commands,
     utils::{get_random_emoji, install_global_commands},
 };
+use axum::http::StatusCode;
+use axum::{
+    extract::ConnectInfo,
+    http::HeaderMap,
+    response::{Html, Json},
+    routing::{get, post},
+    Router,
+};
+use serde_json::{json, Value};
+use serenity::interactions_endpoint::Verifier;
+use std::{env::var, net::SocketAddr};
 
 mod commands;
 mod utils;
@@ -31,25 +28,39 @@ enum DiscordInteractionType {
 
 #[allow(dead_code)]
 enum DiscordInteractionResponseType {
-    Pong = 1, // ACK a Ping
-    ChannelMessageWithSource = 4, //respond to an interaction with a message
+    Pong = 1,                                 // ACK a Ping
+    ChannelMessageWithSource = 4,             //respond to an interaction with a message
     DeferredChannelMessageWithSource = 5, //ACK an interaction and edit a response later, the user sees a loading state
     DeferredUpdateMessage = 6, // for components, ACK an interaction and edit the original message later; the user does not see a loading state
-    UpdateMessage = 7, // for components, edit the message the component was attached to
+    UpdateMessage = 7,         // for components, edit the message the component was attached to
     ApplicationCommandAutocompleteResult = 8, // respond to an autocomplete interaction with suggested choices
-    Modal = 9, // respond to an interaction with a popup modal
+    Modal = 9,                                // respond to an interaction with a popup modal
 }
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
-    install_global_commands(create_all_commands()).await.expect("Cannot update slash commands");
+    if let Err(e) = install_global_commands(create_all_commands()).await {
+        eprintln!("Failed to update slash commands\n{e:#?}");
+    }
     let host = var("HOST").unwrap_or(String::from("0.0.0.0"));
     let port = var("PORT").unwrap_or(String::from("8080"));
-    let listener = tokio::net::TcpListener::bind(format!("{host}:{port}"))
-        .await
-        .unwrap();
-    println!("listening on {}", listener.local_addr().unwrap());
-    axum::serve(listener, app().into_make_service_with_connect_info::<SocketAddr>()).await.unwrap();
+    match tokio::net::TcpListener::bind(format!("{host}:{port}")).await {
+        Some(listener) => {
+            match listener.local_addr() {
+                Some(addr) => println!("Listening on http://{addr}"),
+                Err(e) => eprintln!("Failed to get addr off listener\n{e:#?}"),
+            }
+            if let Err(e) = axum::serve(
+                listener,
+                app().into_make_service_with_connect_info::<SocketAddr>(),
+            )
+            .await
+            {
+                eprintln!("Failed to start service\n{e:#?}");
+            }
+        }
+        Err(e) => eprintln!("Failed to bind listener\n{e:#?}"),
+    }
     Ok(())
 }
 
@@ -58,20 +69,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
 fn app() -> Router {
     Router::new()
         .route("/", get(|| async { Html("<h1>Hello, World!</h1>") }))
-        .route(
-            "/json",
-            post(|payload: Json<Value>| async move {
-                Json(json!({ "data": payload.0 }))
-            }),
-        )
-        .route(
-            "/requires-connect-info",
-            get(|ConnectInfo(addr): ConnectInfo<SocketAddr>| async move { format!("Hi {addr}") }),
-        )
-        .route(
-            "/api/interactions",
-            post(interactions),
-        )
+        .route("/api/interactions", post(interactions))
         .route(
             "/verify-user",
             get(|| async { Html("<h1>Verify User</h1>") }),
@@ -89,45 +87,101 @@ fn app() -> Router {
 /// Interactions endpoint URL where Discord will send HTTP requests
 async fn interactions(headers: HeaderMap, body: String) -> (StatusCode, Json<Value>) {
     // Parse request body and verifies incoming requests
-    let verifier = Verifier::new(var("DISCORD_PUBLIC_KEY").expect("Could not get discord public key").as_str());
-    let signature = headers.get("X-Signature-Ed25519").expect("Could not get signature from header").to_str().expect("could not convert signature header to string");
-    let timestamp = headers.get("X-Signature-Timestamp").expect("could not get timestamp from header").to_str().expect("Could not convert timestamp header to string");
-    if verifier.verify(signature, timestamp, body.as_ref()).is_err() {
+    let public_key = match var("DISCORD_PUBLIC_KEY") {
+        Ok(s) => s,
+        Err(e) => {
+            eprintln!("Could not get discord public key\n{e:#?}");
+            return (StatusCode::INTERNAL_SERVER_ERROR, Json(json!({})));
+        }
+    };
+    let verifier = Verifier::new(public_key.as_str());
+    let signature = match headers.get("X-Signature-Ed25519") {
+        Some(s) => match s.to_str() {
+            Ok(s) => s,
+            Err(e) => {
+                eprintln!("Could not parse discord signature\n{e:#?}");
+                return (StatusCode::BAD_REQUEST, Json(json!({})));
+            }
+        },
+        Err(e) => {
+            eprintln!("Could not get discord signature\n{e:#?}");
+            return (StatusCode::BAD_REQUEST, Json(json!({})));
+        }
+    };
+    let timestamp = match headers.get("X-Signature-Timestamp") {
+        Some(s) => match s.to_str() {
+            Ok(s) => s,
+            Err(e) => {
+                eprintln!("Could not parse discord timestamp\n{e:#?}");
+                return (StatusCode::BAD_REQUEST, Json(json!({})));
+            }
+        },
+        Err(e) => {
+            eprintln!("Could not get discord timestamp\n{e:#?}");
+            return (StatusCode::BAD_REQUEST, Json(json!({})));
+        }
+    };
+    if verifier
+        .verify(signature, timestamp, body.as_ref())
+        .is_err()
+    {
+        eprintln!("Signature verification failed");
         return (StatusCode::BAD_REQUEST, Json(json!({})));
     }
 
-    let payload = Json::<Value>::from_bytes(body.as_bytes()).expect("Could not parse body");
+    let payload = match Json::<Value>::from_bytes(body.as_bytes()) {
+        Ok(payload) => payload,
+        Err(e) => {
+            eprintln!("Could not parse body\n{e:#?}");
+            return (StatusCode::BAD_REQUEST, Json(json!({})));
+        }
+    };
 
-    // Interaction type and data
-    if let Some(request_type) = payload.get("type") {
-        if let Some(request_type) = request_type.as_u64() {
+    let request_type = match payload.get("type") {
+        Some(s) => s.as_u64(),
+        None => {
+            eprintln!("Could not get discord request type");
+            None
+        },
+    };
 
-            // Handle verification requests
-            if request_type == DiscordInteractionType::Ping as u64 {
-                return (StatusCode::OK, Json(json!({ "type": DiscordInteractionResponseType::Pong as u64})));
-            }
+    // Handle verification requests
+    if request_type == Some(DiscordInteractionType::Ping as u64) {
+        return (
+            StatusCode::OK,
+            Json(json!({ "type": DiscordInteractionResponseType::Pong as u64})),
+        );
+    }
 
-            // Handle slash command requests
-            // See https://discord.com/developers/docs/interactions/application-commands#slash-commands
-            if request_type == DiscordInteractionType::ApplicationCommand as u64 {
-                if let Some(data) = payload.get("data") {
-                    if let Some(name) = data.get("name") {
-                        if let Some(name) = name.as_str() {
-                            // "test" command
-                            if name == "mc" {
-                                // Send a message into the channel where command was triggered from
-                                return (StatusCode::OK, Json(json!({
-                                    "type": DiscordInteractionResponseType::ChannelMessageWithSource as u64,
-                                    "data": {
-                                        // Fetches a random emoji to send from a helper function
-                                        "content": format!("hello world {}", get_random_emoji()),
-                                    },
-                                })));
-                            }
-                        }
-                    }
+    // Handle slash command requests
+    // See https://discord.com/developers/docs/interactions/application-commands#slash-commands
+    if request_type == Some(DiscordInteractionType::ApplicationCommand as u64) {
+        let command = match payload.get("data") {
+            Some(s) => match s.get("name") {
+                Some(n) => n.as_str(),
+                None => {
+                    eprintln!("Could not get discord slash command name");
+                    None
                 }
+            },
+            None => {
+                eprintln!("Could not get discord slash command payload");
+                None
             }
+        };
+        // "test" command
+        if name == Some("mc") {
+            // Send a message into the channel where command was triggered from
+            return (
+                StatusCode::OK,
+                Json(json!({
+                    "type": DiscordInteractionResponseType::ChannelMessageWithSource as u64,
+                    "data": {
+                        // Fetches a random emoji to send from a helper function
+                        "content": format!("hello world {}", get_random_emoji()),
+                    },
+                })),
+            );
         }
     }
 
