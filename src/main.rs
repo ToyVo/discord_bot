@@ -171,7 +171,10 @@ async fn interactions(headers: HeaderMap, body: String) -> (StatusCode, Json<Val
         if command == Some("mc") {
             let content = match systemctl::restart("podman-minecraft.service") {
                 Ok(_) => format!("Successfully restarted minecraft server, it might take a couple minutes to come up"),
-                Err(_) => format!("There was an issue restarting minecraft server"),
+                Err(e) => {
+                    eprintln!("Could not restart minecraft server\n{e:#?}");
+                    format!("There was an issue restarting minecraft server")
+                },
             };
             return (
                 StatusCode::OK,
