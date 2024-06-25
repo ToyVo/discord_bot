@@ -9,6 +9,7 @@ use axum::{
 use serde_json::{json, Value};
 use serenity::interactions_endpoint::Verifier;
 use std::{env::var, net::SocketAddr};
+use tokio::process::Command;
 
 mod commands;
 mod utils;
@@ -169,13 +170,15 @@ async fn interactions(headers: HeaderMap, body: String) -> (StatusCode, Json<Val
         };
         println!("Received discord slash command request, {command:#?}");
         if command == Some("mc") {
-            let content = match systemctl::restart("podman-minecraft.service") {
-                Ok(_) => format!("Successfully restarted minecraft server, it might take a couple minutes to come up"),
+            // TODO: verify the argument and single source of truth for this and install_global_commands
+            let content = match Command::new("systemctl").args(&["restart", "podman-minecraft.service"]).output().await {
+                Ok(_) => String::from("Successfully restarted minecraft server, it might take a couple minutes to come up"),
                 Err(e) => {
                     eprintln!("Could not restart minecraft server\n{e:#?}");
-                    format!("There was an issue restarting minecraft server")
+                    String::from("There was an issue restarting minecraft server")
                 },
             };
+
             return (
                 StatusCode::OK,
                 Json(json!({
