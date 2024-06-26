@@ -21,7 +21,7 @@
     {
       # A Nixpkgs overlay.
       overlays.default = final: prev: {
-        mc-discord-bot = with final; final.callPackage
+        mc_discord_bot = with final; final.callPackage
           ({ inShell ? false }:
             let
               rustToolchain = rust-bin.selectLatestNightlyWith (toolchain: toolchain.default.override {
@@ -54,22 +54,22 @@
       # Provide some binary packages for selected system types.
       packages = forAllSystems (system:
         {
-          inherit (nixpkgsFor.${system}) mc-discord-bot;
+          inherit (nixpkgsFor.${system}) mc_discord_bot;
           # The default package for 'nix build'. This makes sense if the
           # flake provides only one package or there is a clear "main"
           # package.
-          default = self.packages.${system}.mc-discord-bot;
+          default = self.packages.${system}.mc_discord_bot;
         });
       # Provide a 'nix develop' environment for interactive hacking.
       devShells = forAllSystems (system:
         {
-          default = self.packages.${system}.mc-discord-bot.override { inShell = true; };
+          default = self.packages.${system}.mc_discord_bot.override { inShell = true; };
         });
       # A NixOS module.
-      nixosModules.mc-discord-bot =
+      nixosModules.mc_discord_bot =
         { pkgs, lib, config, ... }:
         {
-          options.services.mc-discord-bot = {
+          options.services.mc_discord_bot = {
             enable = lib.mkEnableOption "enable minecraft discord bot";
             env_file = lib.mkOption {
               type = lib.types.path;
@@ -81,14 +81,14 @@
               '';
             };
           };
-          config = lib.mkIf config.services.mc-discord-bot.enable {
+          config = lib.mkIf config.services.mc_discord_bot.enable {
             nixpkgs.overlays = [ self.overlays.default ];
             systemd.services = {
-              mc-discord-bot = {
+              mc_discord_bot = {
                 wantedBy = [ "multi-user.target" ];
                 script = ''
-                  export $(cat ${config.services.mc-discord-bot.env_file} | xargs)
-                  ${pkgs.mc-discord-bot}/bin/mc-discord-bot
+                  export $(cat ${config.services.mc_discord_bot.env_file} | xargs)
+                  ${pkgs.mc_discord_bot}/bin/mc_discord_bot
                 '';
               };
             };

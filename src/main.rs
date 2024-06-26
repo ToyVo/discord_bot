@@ -1,15 +1,18 @@
-use crate::{commands::create_all_commands, utils::install_global_commands};
-use axum::http::StatusCode;
+use std::{env::var, net::SocketAddr, time::Duration};
+
 use axum::{
-    http::HeaderMap,
+    http::{HeaderMap, StatusCode},
     response::{Html, Json},
     routing::{get, post},
     Router,
 };
 use serde_json::{json, Value};
 use serenity::interactions_endpoint::Verifier;
-use std::{env::var, net::SocketAddr};
-use tokio::process::Command;
+use tokio::{net::TcpListener, process::Command, signal, time::sleep};
+use tower_http::{timeout::TimeoutLayer, trace::TraceLayer};
+use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
+
+use crate::{commands::create_all_commands, utils::install_global_commands};
 
 mod commands;
 mod utils;
@@ -36,12 +39,20 @@ enum DiscordInteractionResponseType {
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
+    tracing_subscriber::registry()
+        .with(
+            tracing_subscriber::EnvFilter::try_from_default_env()
+                .unwrap_or_else(|_| "mc_discord_bot=debug,tower_http=debug,axum=trace".into()),
+        )
+        .with(tracing_subscriber::fmt::layer().without_time())
+        .init();
+
     if let Err(e) = install_global_commands(create_all_commands()).await {
         eprintln!("Failed to update slash commands\n{e:#?}");
     }
     let host = var("HOST").unwrap_or(String::from("0.0.0.0"));
     let port = var("PORT").unwrap_or(String::from("8080"));
-    match tokio::net::TcpListener::bind(format!("{host}:{port}")).await {
+    match TcpListener::bind(format!("{host}:{port}")).await {
         Ok(listener) => {
             match listener.local_addr() {
                 Ok(addr) => println!("Listening on http://{addr}"),
@@ -49,8 +60,14 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
             }
             if let Err(e) = axum::serve(
                 listener,
-                app().into_make_service_with_connect_info::<SocketAddr>(),
+                app()
+                    .layer((
+                        TraceLayer::new_for_http(),
+                        TimeoutLayer::new(Duration::from_secs(10)),
+                    ))
+                    .into_make_service_with_connect_info::<SocketAddr>(),
             )
+            .with_graceful_shutdown(shutdown_signal())
             .await
             {
                 eprintln!("Failed to start service\n{e:#?}");
@@ -79,6 +96,31 @@ fn app() -> Router {
             "/privacy-policy",
             get(|| async { Html("<h1>Privacy Policy</h1>") }),
         )
+        .route("/slow", get(|| sleep(Duration::from_secs(5))))
+}
+
+async fn shutdown_signal() {
+    let ctrl_c = async {
+        signal::ctrl_c()
+            .await
+            .expect("failed to install Ctrl+C handler");
+    };
+
+    #[cfg(unix)]
+    let terminate = async {
+        signal::unix::signal(signal::unix::SignalKind::terminate())
+            .expect("failed to install signal handler")
+            .recv()
+            .await;
+    };
+
+    #[cfg(not(unix))]
+    let terminate = std::future::pending::<()>();
+
+    tokio::select! {
+        _ = ctrl_c => {},
+        _ = terminate => {},
+    }
 }
 
 /// Interactions endpoint URL where Discord will send HTTP requests

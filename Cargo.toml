@@ -1,9 +1,9 @@
 [package]
-name = "mc-discord-bot"
+name = "mc_discord_bot"
 version = "0.1.0"
 authors = ["Collin Diekvoss <collin@diekvoss.com>"]
 edition = "2021"
-repository = "https://github.com/toyvo/mc-discord-bot"
+repository = "https://github.com/toyvo/mc_discord_bot"
 
 [dependencies]
 axum = "0"
@@ -19,9 +19,7 @@ serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 serenity = { version = "0", features = ["interactions_endpoint"] }
 tokio = { version = "1", features = ["full"] }
-tower-http = { version = "0", features = ["trace"] }
+tower = { version = "0", features = ["util"] }
+tower-http = { version = "0", features = ["trace", "timeout"] }
 tracing = "0"
 tracing-subscriber = { version = "0", features = ["env-filter"] }
-
-[dev-dependencies]
-tower = { version = "0", features = ["util"] }
