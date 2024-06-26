@@ -3,8 +3,8 @@ use std::{env::var, net::SocketAddr, time::Duration};
 use axum::{
     http::{HeaderMap, StatusCode},
     response::{Html, Json},
-    routing::{get, post},
     Router,
+    routing::{get, post},
 };
 use serde_json::{json, Value};
 use serenity::interactions_endpoint::Verifier;
@@ -67,8 +67,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
                     ))
                     .into_make_service_with_connect_info::<SocketAddr>(),
             )
-            .with_graceful_shutdown(shutdown_signal())
-            .await
+                .with_graceful_shutdown(shutdown_signal())
+                .await
             {
                 eprintln!("Failed to start service\n{e:#?}");
             }
@@ -213,20 +213,24 @@ async fn interactions(headers: HeaderMap, body: String) -> (StatusCode, Json<Val
         println!("Received discord slash command request, {command:#?}");
         if command == Some("mc") {
             // TODO: verify the argument and single source of truth for this and install_global_commands
-            let content = match Command::new("systemctl").args(&["restart", "podman-minecraft.service"]).output().await {
-                Ok(_) => String::from("Successfully restarted minecraft server, it might take a couple minutes to come up"),
-                Err(e) => {
-                    eprintln!("Could not restart minecraft server\n{e:#?}");
-                    String::from("There was an issue restarting minecraft server")
-                },
-            };
+            tokio::spawn(async move || {
+                let content = match Command::new("systemctl").args(&["restart", "podman-minecraft.service"]).output().await {
+                    Ok(_) => {
+                        String::from("Successfully restarted minecraft server, it might take a couple minutes to come up")
+                    }
+                    Err(e) => {
+                        eprintln!("Could not restart minecraft server\n{e:#?}");
+                        String::from("There was an issue restarting minecraft server")
+                    }
+                };
+            });
 
             return (
                 StatusCode::OK,
                 Json(json!({
                     "type": DiscordInteractionResponseType::ChannelMessageWithSource as u64,
                     "data": {
-                        "content": content,
+                        "content": "Successfully requested restart of minecraft server, it might take a couple minutes to come up",
                     },
                 })),
             );
