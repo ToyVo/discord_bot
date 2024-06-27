@@ -5,7 +5,7 @@ FROM nixos/nix
 RUN mkdir /src
 WORKDIR /src
 ADD . ./
-RUN nix build .#mc_discord_bot
+RUN nix --extra-experimental-features "nix-command flakes" build .#mc_discord_bot
 
 EXPOSE 8080
 CMD ["./result/bin/mc_discord_bot"]

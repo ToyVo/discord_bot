@@ -3,8 +3,8 @@ use std::{env::var, net::SocketAddr, time::Duration};
 use axum::{
     http::{HeaderMap, StatusCode},
     response::{Html, Json},
-    Router,
     routing::{get, post},
+    Router,
 };
 use serde_json::{json, Value};
 use serenity::interactions_endpoint::Verifier;
@@ -67,8 +67,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
                     ))
                     .into_make_service_with_connect_info::<SocketAddr>(),
             )
-                .with_graceful_shutdown(shutdown_signal())
-                .await
+            .with_graceful_shutdown(shutdown_signal())
+            .await
             {
                 eprintln!("Failed to start service\n{e:#?}");
             }
@@ -213,7 +213,7 @@ async fn interactions(headers: HeaderMap, body: String) -> (StatusCode, Json<Val
         println!("Received discord slash command request, {command:#?}");
         if command == Some("mc") {
             // TODO: verify the argument and single source of truth for this and install_global_commands
-            tokio::spawn(async move || {
+            tokio::spawn(async move {
                 let content = match Command::new("systemctl").args(&["restart", "podman-minecraft.service"]).output().await {
                     Ok(_) => {
                         String::from("Successfully restarted minecraft server, it might take a couple minutes to come up")
