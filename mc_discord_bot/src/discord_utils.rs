@@ -2,7 +2,7 @@ use std::env::var;
 use axum::http::HeaderMap;
 use reqwest::{Method, Response};
 use serde::Serialize;
-use serenity::builder::CreateCommandOption;
+use serenity::builder::CreateCommand;
 use serenity::interactions_endpoint::Verifier;
 use lib::AppError;
 
@@ -34,7 +34,7 @@ pub async fn discord_request<S: AsRef<str>, T: Serialize + ?Sized>(
     Ok(builder.send().await?.error_for_status()?)
 }
 
-pub async fn install_global_commands(commands: &[CreateCommandOption]) -> Result<Response, AppError> {
+pub async fn install_global_commands(commands: &[CreateCommand]) -> Result<Response, AppError> {
     let app_id = var("DISCORD_CLIENT_ID").unwrap_or_default();
     let endpoint = format!("applications/{app_id}/commands");
     discord_request(endpoint, Method::PUT, Some(&commands)).await

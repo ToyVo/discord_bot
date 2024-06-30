@@ -1,5 +1,5 @@
 use std::{env::var, net::SocketAddr, time::Duration};
-use serenity::all::{CommandOptionType, CreateCommandOption};
+use serenity::all::{CommandOptionType, CommandType, CreateCommand, CreateCommandOption};
 use tokio::{net::TcpListener, signal};
 use tower_http::{timeout::TimeoutLayer, trace::TraceLayer};
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
@@ -21,16 +21,14 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
         .init();
 
     let commands = [
-        CreateCommandOption::new(
-            CommandOptionType::SubCommand,
-            "mc",
-            "Minecraft Slash Commands",
-        )
-        .add_sub_option(
-            CreateCommandOption::new(CommandOptionType::String, "action", "available actions")
-                .required(true)
-                .add_string_choice("Reboot", "reboot"),
-        )
+        CreateCommand::new("mc")
+            .kind(CommandType::ChatInput)
+            .description("Minecraft slash commands")
+            .add_option(
+                CreateCommandOption::new(CommandOptionType::String, "action", "available actions")
+                    .required(true)
+                    .add_string_choice("Reboot", "reboot"),
+            )
     ];
 
     #[cfg(not(debug_assertions))]
