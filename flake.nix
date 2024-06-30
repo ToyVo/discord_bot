@@ -32,7 +32,7 @@
                 cargo = rustToolchain;
                 rustc = rustToolchain;
               };
-              cargoToml = builtins.fromTOML (builtins.readFile ./Cargo.toml);
+              cargoToml = builtins.fromTOML (builtins.readFile ./mc_discord_bot/Cargo.toml);
             in
             rustPlatform.buildRustPackage {
               name = "${cargoToml.package.name}-${cargoToml.package.version}-${version}";
@@ -45,9 +45,6 @@
               OPENSSL_NO_VENDOR = 1;
               OPENSSL_LIB_DIR = "${lib.getLib openssl}/lib";
               OPENSSL_DIR = "${lib.getDev openssl}";
-              # Not that I'm using this bot anywhere other than linux... but this should only be used on nixos,
-              # not any other linux distro with nix installed or darwin.
-              SYSTEMCTL_PATH="/run/current-system/sw/bin/systemctl";
             })
           { };
       };
