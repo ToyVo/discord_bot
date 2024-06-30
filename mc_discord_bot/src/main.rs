@@ -29,7 +29,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
         .add_sub_option(
             CreateCommandOption::new(CommandOptionType::String, "action", "available actions")
                 .required(true)
-                .add_string_choice("reboot", "Reboot"),
+                .add_string_choice("Reboot", "reboot"),
         )
     ];
 
