@@ -28,7 +28,7 @@ pub fn app() -> Router {
 }
 
 pub async fn interactions(headers: HeaderMap, body: String) -> impl IntoResponse {
-    println!("Request received: {body}");
+    println!("Request received: {headers:#?} {body}");
 
     // Parse request body and verifies incoming requests
     // Disable for debugging purposes when receiving requests from the test_server
