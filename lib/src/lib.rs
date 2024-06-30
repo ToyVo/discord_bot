@@ -4,6 +4,7 @@ pub enum AppError {
     Request(reqwest::Error),
     Json(serde_json::Error),
     Io(std::io::Error),
+    Serenity(serenity::Error),
     Other(String),
 }
 
@@ -14,6 +15,7 @@ impl std::fmt::Display for AppError {
             AppError::Request(e) => write!(f, "Request error: {}", e),
             AppError::Json(e) => write!(f, "JSON error: {}", e),
             AppError::Io(e) => write!(f, "IO error: {}", e),
+            AppError::Serenity(e) => write!(f, "Serenity error: {}", e),
             AppError::Other(e) => write!(f, "Other error: {}", e),
         }
     }
@@ -42,6 +44,12 @@ impl From<serde_json::Error> for AppError {
 impl From<std::io::Error> for AppError {
     fn from(err: std::io::Error) -> Self {
         AppError::Io(err)
+    }
+}
+
+impl From<serenity::Error> for AppError {
+    fn from(err: serenity::Error) -> Self {
+        AppError::Serenity(err)
     }
 }
 

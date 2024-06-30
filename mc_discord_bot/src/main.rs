@@ -1,14 +1,9 @@
 use std::{env::var, net::SocketAddr, time::Duration};
-use axum::response::IntoResponse;
-use serde::Serialize;
-use serenity::{
-    all::{CommandOptionType, CreateCommandOption},
-    builder::*,
-    model::application::*,
-};
+use serenity::all::{CommandOptionType, CreateCommandOption};
 use tokio::{net::TcpListener, signal};
 use tower_http::{timeout::TimeoutLayer, trace::TraceLayer};
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
+use crate::discord_utils::install_global_commands;
 use crate::routes::app;
 
 mod routes;

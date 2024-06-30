@@ -1,4 +1,3 @@
-use std::time::Duration;
 use axum::http::{HeaderMap, StatusCode};
 use axum::response::{Html, IntoResponse};
 use axum::{Json, Router};
@@ -7,7 +6,7 @@ use serde_json::{json, Value};
 use serenity::all::InteractionType;
 use serenity::builder::CreateInteractionResponse;
 use serenity::json;
-use tokio::time::sleep;
+use crate::discord_utils::verify_discord_request;
 use crate::handlers::handle_slash_command;
 
 pub fn app() -> Router {
@@ -34,7 +33,7 @@ pub async fn interactions(headers: HeaderMap, body: String) -> impl IntoResponse
     // Parse request body and verifies incoming requests
     // Disable for debugging purposes when receiving requests from the test_server
     #[cfg(not(debug_assertions))]
-    if (verify_discord_request(&headers, &body)).is_err() {
+    if (verify_discord_request(&headers, &body)).await.is_err() {
         return (StatusCode::UNAUTHORIZED, Json(json!({})));
     }
 
@@ -60,10 +59,12 @@ pub async fn interactions(headers: HeaderMap, body: String) -> impl IntoResponse
             )
         }
         Some(InteractionType::Command) => {
-            return if let Some(value) = handle_slash_command(payload) {
-                (StatusCode::OK, Json(value))
-            } else {
-                (StatusCode::OK, Json(json!({})))
+            match handle_slash_command(payload).await {
+                Ok(value) => (StatusCode::OK, Json(value)),
+                Err(e) => {
+                    eprintln!("Slash command error {e:#?}");
+                    (StatusCode::OK, Json(json!({})))
+                }
             }
         }
         _ => (StatusCode::OK, Json(json!({})))
