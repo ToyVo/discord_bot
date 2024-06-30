@@ -3,9 +3,9 @@
   # Nixpkgs / NixOS version to use.
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-    rust-overlay.url = "github:oxalica/rust-overlay";
+    crate2nix.url = "github:nix-community/crate2nix";
   };
-  outputs = { self, nixpkgs, rust-overlay }:
+  outputs = { self, nixpkgs, crate2nix }:
     let
       # to work with older version of flakes
       lastModifiedDate = self.lastModifiedDate or self.lastModified or "19700101";
@@ -16,7 +16,7 @@
       # Helper function to generate an attrset '{ x86_64-linux = f "x86_64-linux"; ... }'.
       forAllSystems = f: nixpkgs.lib.genAttrs supportedSystems (system: f system);
       # Nixpkgs instantiated for supported system types.
-      nixpkgsFor = forAllSystems (system: import nixpkgs { inherit system; overlays = [ self.overlays.default (import rust-overlay) ]; });
+      nixpkgsFor = forAllSystems (system: import nixpkgs { inherit system; overlays = [ self.overlays.default ]; });
     in
     {
       # A Nixpkgs overlay.
@@ -24,28 +24,30 @@
         mc_discord_bot = with final; final.callPackage
           ({ inShell ? false }:
             let
-              rustToolchain = rust-bin.selectLatestNightlyWith (toolchain: toolchain.default.override {
-                # In 'nix develop', provide some developer tools.
-                extensions = [ "rust-src" "rust-std" ] ++ lib.optionals inShell [ "rust-analyzer" "rustfmt" "clippy" ];
-              });
-              rustPlatform = makeRustPlatform {
-                cargo = rustToolchain;
-                rustc = rustToolchain;
+              generated = crate2nix.tools.${stdenv.hostPlatform.system}.generatedCargoNix {
+                name = "mc_discord_bot";
+                src = ./.;
               };
-              cargoToml = builtins.fromTOML (builtins.readFile ./mc_discord_bot/Cargo.toml);
+              crates = pkgs.callPackage "${generated}/default.nix" {
+                buildRustCrateForPkgs = pkgs: pkgs.buildRustCrate.override {
+                  defaultCrateOverrides = pkgs.defaultCrateOverrides // {
+                    mc_discord_bot = attrs: {
+                      buildInputs = with final.darwin.apple_sdk.frameworks; [] ++ lib.optionals (stdenv.isDarwin) [
+                        SystemConfiguration
+                        CoreServices
+                      ];
+                      nativeBuildInputs = with pkgs; [ libiconv pkg-config openssl ];
+                      # Needed to get openssl-sys to use pkg-config.
+                      OPENSSL_NO_VENDOR = 1;
+                      OPENSSL_LIB_DIR = "${lib.getLib pkgs.openssl}/lib";
+                      OPENSSL_DIR = "${lib.getDev pkgs.openssl}";
+                    };
+                  };
+                };
+              };
             in
-            rustPlatform.buildRustPackage {
-              name = "${cargoToml.package.name}-${cargoToml.package.version}-${version}";
-              pname = cargoToml.package.name;
-              version = cargoToml.package.version;
-              src = ./.;
-              cargoLock.lockFile = ./Cargo.lock;
-              nativeBuildInputs = [ pkg-config rustPlatform.bindgenHook openssl ];
-              # Needed to get openssl-sys to use pkg-config.
-              OPENSSL_NO_VENDOR = 1;
-              OPENSSL_LIB_DIR = "${lib.getLib openssl}/lib";
-              OPENSSL_DIR = "${lib.getDev openssl}";
-            })
+            crates.workspaceMembers.mc_discord_bot.build
+            )
           { };
       };
       # Provide some binary packages for selected system types.
