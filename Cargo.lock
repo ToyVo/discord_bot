@@ -931,6 +931,15 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "db13adb97ab515a3691f56e4dbab09283d0b86cb45abd991d8634a9d6f501760"
 
 [[package]]
+name = "lib"
+version = "0.1.0"
+dependencies = [
+ "reqwest",
+ "serde",
+ "serde_json",
+]
+
+[[package]]
 name = "libc"
 version = "0.2.155"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -983,6 +992,7 @@ dependencies = [
  "http-body-util",
  "hyper 1.3.1",
  "hyper-util",
+ "lib",
  "mime",
  "rand",
  "reqwest",
@@ -1906,6 +1916,7 @@ name = "test_server"
 version = "0.1.0"
 dependencies = [
  "axum",
+ "reqwest",
  "serde_json",
  "tokio",
  "uuid",

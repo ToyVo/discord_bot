@@ -1,7 +1,8 @@
 ###
-POST http://0.0.0.0:3000/start_task HTTP/1.1
-
+POST http://0.0.0.0:8081/start_task HTTP/1.1
 ###
-
-GET http://0.0.0.0:3000/check_status HTTP/1.1
-
+GET http://0.0.0.0:8081/check_status HTTP/1.1
+###
+POST http://0.0.0.0:8081/sample_slash_command HTTP/1.1
+###
+POST http://0.0.0.0:8081/webhooks/app_id/token HTTP/1.1
