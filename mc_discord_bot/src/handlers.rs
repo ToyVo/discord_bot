@@ -28,7 +28,7 @@ pub async fn handle_slash_command(payload: Json<Value>) -> Result<Value, AppErro
             for option in options {
                 let name = option.get("name").and_then(|s| s.as_str()).unwrap_or_default();
                 let value = option.get("value").and_then(|s| s.as_str()).unwrap_or_default();
-                if name == "action" && value == "Reboot" {
+                if name == "action" && value == "reboot" {
                     // TODO: single source of truth for this and install_global_commands
                     tokio::spawn(async move {
                         let content = match Command::new("systemctl").args(&["restart", "podman-minecraft.service"]).output().await {
