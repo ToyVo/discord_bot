@@ -1,47 +1,61 @@
-use std::env::var;
-use axum::http::HeaderMap;
+use axum::http::{header, HeaderMap};
 use reqwest::{Method, Response};
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
+use serenity::all::{User, UserId};
 use serenity::builder::CreateCommand;
 use serenity::interactions_endpoint::Verifier;
+
 use lib::AppError;
+use crate::routes::AppState;
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct DiscordTokens<S: AsRef<str>> {
+    pub access_token: S,
+    pub refresh_token: S,
+    pub expires_at: i64,
+    pub expires_in: i64,
+}
+
+pub async fn store_discord_tokens(user_id: &UserId, tokens: &DiscordTokens<String>) -> Result<(), AppError> {
+    println!("{user_id}, {tokens:#?}");
+    Ok(())
+}
 
 pub async fn discord_request<S: AsRef<str>, T: Serialize + ?Sized>(
     endpoint: S,
     method: Method,
     body: Option<&T>,
+    state: &AppState,
 ) -> Result<Response, AppError> {
-    let bot_token = var("DISCORD_BOT_TOKEN").unwrap_or_default();
-    let repo = env!("CARGO_PKG_REPOSITORY");
-    let version = env!("CARGO_PKG_VERSION");
-
-    #[cfg(not(debug_assertions))]
     let url = format!("https://discord.com/api/v10/{}", endpoint.as_ref());
-    #[cfg(debug_assertions)]
-    let url = format!("http://localhost:8081/{}", endpoint.as_ref());
 
     let mut builder = reqwest::Client::new()
         .request(method, url)
-        .header("Authorization", format!("Bot {bot_token}"))
-        .header("User-Agent", format!("DiscordBot ({repo}, {version})"));
+        .header(header::AUTHORIZATION.as_str(), format!("Bot {}", {state.bot_token.as_str()}))
+        .header(
+            header::USER_AGENT.as_str(),
+            state.user_agent.as_str(),
+        );
 
     if let Some(b) = body {
         builder = builder
-            .header("Content-Type", "application/json; charset=UTF-8")
+            .header(
+                header::CONTENT_TYPE.as_str(),
+                mime::APPLICATION_JSON.as_ref(),
+            )
             .json(b);
     }
 
     Ok(builder.send().await?.error_for_status()?)
 }
 
-pub async fn install_global_commands(commands: &[CreateCommand]) -> Result<Response, AppError> {
-    let app_id = var("DISCORD_CLIENT_ID").unwrap_or_default();
-    let endpoint = format!("applications/{app_id}/commands");
-    discord_request(endpoint, Method::PUT, Some(&commands)).await
+pub async fn install_global_commands(commands: &[CreateCommand], state: &AppState) -> Result<(), AppError> {
+    let endpoint = format!("applications/{}/commands", state.client_id);
+    discord_request(endpoint, Method::PUT, Some(&commands), state).await?;
+    Ok(())
 }
 
-pub async fn verify_discord_request(headers: &HeaderMap, body: &str) -> Result<(), AppError> {
-    let public_key = var("DISCORD_PUBLIC_KEY")?;
+pub async fn verify_request<S: AsRef<str>>(headers: &HeaderMap, body: S, state: &AppState) -> Result<(), AppError> {
     let signature = headers
         .get("X-Signature-Ed25519")
         .ok_or_else(|| AppError::Other("Missing Discord signature".to_string()))?
@@ -53,7 +67,58 @@ pub async fn verify_discord_request(headers: &HeaderMap, body: &str) -> Result<(
         .to_str()
         .map_err(|_| AppError::Other("Invalid Discord timestamp".to_string()))?;
 
-    Verifier::new(public_key.as_str())
-        .verify(signature, timestamp, body.as_bytes())
+    Verifier::new(state.public_key.as_str())
+        .verify(signature, timestamp, body.as_ref().as_bytes())
         .map_err(|_| AppError::Other("Signature verification failed".to_string()))
+}
+
+pub async fn get_oauth_url(state: &AppState) -> Result<(String, String), AppError> {
+    let user_state = uuid::Uuid::new_v4().to_string();
+    let url = url::Url::parse_with_params(
+        "https://discord.com/api/oauth2/authorize",
+        &[
+            ("client_id", state.client_id.as_str()),
+            (
+                "redirect_url",
+                &format!("{}/discord-oauth-callback", state.base_url),
+            ),
+            ("response_type", "code"),
+            ("state", user_state.as_str()),
+            ("scope", "role_connections.write identify"),
+            ("prompt", "consent"),
+        ],
+    )?;
+
+    Ok((url.to_string(), user_state))
+}
+
+pub async fn get_oauth_tokens<S: AsRef<str>>(code: S, state: &AppState) -> Result<DiscordTokens<String>, AppError> {
+    let response = reqwest::Client::new()
+        .post("https://discord.com/api/v10/oauth2/token")
+        .form(&[
+            ("client_id", state.client_id.as_str()),
+            ("client_secret", state.client_secret.as_str()),
+            ("grant_type", "authorization_code"),
+            ("code", code.as_ref()),
+            (
+                "redirect_uri",
+                &format!("{}/discord-oauth-callback", state.base_url),
+            ),
+        ])
+        .send()
+        .await?
+        .error_for_status()?;
+    let data = response.json::<DiscordTokens<String>>().await?;
+    Ok(data)
+}
+
+pub async fn get_user_data(tokens: &DiscordTokens<String>) -> Result<User, AppError> {
+    Ok(reqwest::Client::new()
+        .get("https://discord.com/api/v10/users/@me")
+        .bearer_auth(tokens.access_token.as_str())
+        .send()
+        .await?
+        .error_for_status()?
+        .json::<User>()
+        .await?)
 }

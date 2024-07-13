@@ -1,0 +1,13 @@
+name = "nixmc"
+author = "Toy_Vo"
+version = "1.0.0"
+pack-format = "packwiz:1.1.0"
+
+[index]
+file = "index.toml"
+hash-format = "sha256"
+hash = "ab4aad74723d11df59c3693410dfe0eadea80391eac5f915d9940b16aa5cd0a5"
+
+[versions]
+forge = "47.3.5"
+minecraft = "1.20.1"

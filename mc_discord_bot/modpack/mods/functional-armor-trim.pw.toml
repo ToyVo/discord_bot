@@ -1,0 +1,13 @@
+name = "Functional Armor Trim"
+filename = "functionalarmortrim-1.20.1-4.jar"
+side = "both"
+
+[download]
+hash-format = "sha1"
+hash = "5d09b91ff5b9d86f22a6025ae6efa82dc8e73db0"
+mode = "metadata:curseforge"
+
+[update]
+[update.curseforge]
+file-id = 4831009
+project-id = 838212

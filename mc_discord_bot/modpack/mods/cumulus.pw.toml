@@ -1,0 +1,13 @@
+name = "Cumulus"
+filename = "cumulus_menus-1.20.1-1.0.0-neoforge.jar"
+side = "both"
+
+[download]
+hash-format = "sha1"
+hash = "7ffdcf1e205d1e894a74d31e9535621b8647a63e"
+mode = "metadata:curseforge"
+
+[update]
+[update.curseforge]
+file-id = 4974248
+project-id = 915473

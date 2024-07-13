@@ -1,0 +1,13 @@
+name = "iFly"
+filename = "ifly-1.0.3+mc1.20.1.jar"
+side = "both"
+
+[download]
+hash-format = "sha1"
+hash = "a111360ffb9d10908c7a9179bd1ffb1b0db6e2ea"
+mode = "metadata:curseforge"
+
+[update]
+[update.curseforge]
+file-id = 4821541
+project-id = 907685

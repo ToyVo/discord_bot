@@ -1,0 +1,13 @@
+name = "Voluminous Energy"
+filename = "VoluminousEnergy-1.20.1-0.4.0.1.jar"
+side = "both"
+
+[download]
+hash-format = "sha1"
+hash = "e424483d03f822c94f24656e169a3e76ce43dc5c"
+mode = "metadata:curseforge"
+
+[update]
+[update.curseforge]
+file-id = 5170889
+project-id = 416704

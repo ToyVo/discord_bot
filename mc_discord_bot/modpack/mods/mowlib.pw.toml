@@ -1,0 +1,13 @@
+name = "MowLib"
+filename = "mowlib-0.4.54.jar"
+side = "both"
+
+[download]
+hash-format = "sha1"
+hash = "d2525d62aadd43ab7010546c625576d4e3121f49"
+mode = "metadata:curseforge"
+
+[update]
+[update.curseforge]
+file-id = 4687098
+project-id = 631455

@@ -1,0 +1,13 @@
+name = "L2 Weaponry"
+filename = "l2weaponry-2.4.32.jar"
+side = "both"
+
+[download]
+hash-format = "sha1"
+hash = "ddbf540e1a3f10699aec01681bc38ff4247f5298"
+mode = "metadata:curseforge"
+
+[update]
+[update.curseforge]
+file-id = 5512455
+project-id = 843723

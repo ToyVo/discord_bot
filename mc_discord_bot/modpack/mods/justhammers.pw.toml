@@ -1,0 +1,13 @@
+name = "JustHammers"
+filename = "justhammers-forge-2.0.3+mc1.20.1.jar"
+side = "both"
+
+[download]
+hash-format = "sha1"
+hash = "31acccb1458c1c3c7b5e712a86e4a5ff7b9e95c9"
+mode = "metadata:curseforge"
+
+[update]
+[update.curseforge]
+file-id = 4995650
+project-id = 681606

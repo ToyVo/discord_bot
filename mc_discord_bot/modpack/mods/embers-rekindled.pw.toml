@@ -1,0 +1,13 @@
+name = "Embers Rekindled"
+filename = "embersrekindled-1.20.1-1.3.8.jar"
+side = "both"
+
+[download]
+hash-format = "sha1"
+hash = "bab5af7fe32b95f898d72f4e11d5c3cb0357be81"
+mode = "metadata:curseforge"
+
+[update]
+[update.curseforge]
+file-id = 5507160
+project-id = 300777

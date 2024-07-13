@@ -1,0 +1,13 @@
+name = "Crossroads MC"
+filename = "crossroads-1.20.1-2.10.2.jar"
+side = "both"
+
+[download]
+hash-format = "sha1"
+hash = "9cb211dbe121ae03ce1c5f4b05f89d24739c35f6"
+mode = "metadata:curseforge"
+
+[update]
+[update.curseforge]
+file-id = 5208926
+project-id = 250231

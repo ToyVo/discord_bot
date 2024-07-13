@@ -1,0 +1,13 @@
+name = "Pedestals"
+filename = "pedestals-0.4.56.jar"
+side = "both"
+
+[download]
+hash-format = "sha1"
+hash = "42a5028a7b7e37d9e379d68e23361e645c69400d"
+mode = "metadata:curseforge"
+
+[update]
+[update.curseforge]
+file-id = 4687522
+project-id = 392039

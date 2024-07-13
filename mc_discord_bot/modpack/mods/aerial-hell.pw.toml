@@ -1,0 +1,13 @@
+name = "Aerial Hell"
+filename = "aerialhell-0.7.0_forge1.20.1.jar"
+side = "both"
+
+[download]
+hash-format = "sha1"
+hash = "bbcf546f26f3228a616aaf6047c1ccf2c6a643fd"
+mode = "metadata:curseforge"
+
+[update]
+[update.curseforge]
+file-id = 5423795
+project-id = 674630

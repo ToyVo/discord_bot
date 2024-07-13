@@ -1,0 +1,13 @@
+name = "I Like Wood - Immersive Engineering Plugin"
+filename = "ilikewoodximmersiveengineering-1.20.1-11.0.0.jar"
+side = "both"
+
+[download]
+hash-format = "sha1"
+hash = "60e90c425e5a5f29548cca8cbc982653173252a5"
+mode = "metadata:curseforge"
+
+[update]
+[update.curseforge]
+file-id = 4811286
+project-id = 466712

@@ -1,0 +1,13 @@
+name = "Create Chunkloading"
+filename = "createchunkloading-1.6.0-forge.jar"
+side = "both"
+
+[download]
+hash-format = "sha1"
+hash = "62afa747e54df276de86a4be653e786ffbf3f16a"
+mode = "metadata:curseforge"
+
+[update]
+[update.curseforge]
+file-id = 4684478
+project-id = 494206

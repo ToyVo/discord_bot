@@ -1,0 +1,13 @@
+name = "L2 Archery"
+filename = "l2archery-2.4.13.jar"
+side = "both"
+
+[download]
+hash-format = "sha1"
+hash = "548938ea809a1c62fd17990b6ba94facab29a046"
+mode = "metadata:curseforge"
+
+[update]
+[update.curseforge]
+file-id = 5073098
+project-id = 758353

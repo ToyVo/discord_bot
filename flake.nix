@@ -56,6 +56,9 @@
           systemd.services = {
             mc_discord_bot = {
               wantedBy = [ "multi-user.target" ];
+              serviceConfig = {
+                WorkingDirectory = ./mc_discord_bot;
+              };
               script = ''
                 export $(cat ${config.services.mc_discord_bot.env_file} | xargs)
                 ${pkgs.mc_discord_bot}/bin/mc_discord_bot

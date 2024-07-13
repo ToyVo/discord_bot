@@ -1,0 +1,13 @@
+name = "I Like Wood"
+filename = "ilikewood-1.20.1-11.0.2.0.jar"
+side = "both"
+
+[download]
+hash-format = "sha1"
+hash = "0c7dec3227e47cd06d94b3598b53be5e3af0b65a"
+mode = "metadata:curseforge"
+
+[update]
+[update.curseforge]
+file-id = 4810688
+project-id = 324164
