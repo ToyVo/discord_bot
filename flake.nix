@@ -95,8 +95,9 @@
               EXISTING_OPS_FILE = "MERGE";
               MOTD = "ToyVo Custom Server";
               MAX_TICK_TIME = "-1";
-              MAX_WORLD_SIZE = "100000";
               PACKWIZ_URL="https://mc.toyvo.dev/modpack/pack.toml";
+              LEVEL_TYPE="botania-skyblock";
+              MAX_PLAYERS="10";
             };
             volumes = [
               "${cfg.datadir}:/data"
