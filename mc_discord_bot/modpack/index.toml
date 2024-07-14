@@ -831,11 +831,6 @@ hash = "799a1e945853fb75bfa3aaa45a1d120714f62c619535cb0e15b6d89af1d34fe4"
 metafile = true
 
 [[files]]
-file = "mods/netherending-ores.pw.toml"
-hash = "2e831e176397254d435a4c71dfcbeadf9d99a6964b22f8cfdcc260384b43c279"
-metafile = true
-
-[[files]]
 file = "mods/netherex.pw.toml"
 hash = "78c2a3d060bb60a73e797ce2c3036729a9cc471d37601149181b030ee8b7b6c9"
 metafile = true
