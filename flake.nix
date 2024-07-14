@@ -38,7 +38,7 @@
     ];
 
     flake = {
-      nixosModules.mc_discord_bot = { pkgs, lib, config, ... }: {
+      nixosModules.mc_discord_bot = { pkgs, lib, config, ... }: let cfg = config.services.mc_discord_bot; in {
         options.services.mc_discord_bot = {
           enable = lib.mkEnableOption "enable minecraft discord bot";
           env_file = lib.mkOption {
@@ -50,8 +50,23 @@
               DISCORD_BOT_TOKEN
             '';
           };
+          MCport = lib.mkOption {
+            type = lib.types.int;
+            default = 25565;
+            description = "Port to expose minecraft server on";
+          };
+          RCONPort = lib.mkOption {
+            type = lib.types.int;
+            default = 25575;
+            description = "Port to expose minecraft server on";
+          };
+          datadir = lib.mkOption {
+            type = lib.types.path;
+            description = "Path to store minecraft data";
+          };
+          openFirewall = lib.mkEnableOption "Open firewall for minecraft";
         };
-        config = lib.mkIf config.services.mc_discord_bot.enable {
+        config = lib.mkIf cfg.enable {
           nixpkgs.overlays = [ self.overlays.default ];
           systemd.services = {
             mc_discord_bot = {
@@ -60,10 +75,31 @@
                 WorkingDirectory = ./mc_discord_bot;
               };
               script = ''
-                export $(cat ${config.services.mc_discord_bot.env_file} | xargs)
+                export $(cat ${cfg.env_file} | xargs)
                 ${pkgs.mc_discord_bot}/bin/mc_discord_bot
               '';
             };
+          };
+          networking.firewall.allowedTCPPorts = lib.optionals cfg.openFirewall [ cfg.MCport ];
+          virtualisation.oci-containers.containers.minecraft = {
+            image = "docker.io/itzg/minecraft-server:latest";
+            # I plan to make a web interface that I want to be able to use RCON to get information but keep it internal
+            ports = [ "${toString cfg.MCport}:25565" "${toString cfg.RCONPort}:25575" ];
+            environment = {
+              EULA = "TRUE";
+              TYPE = "MOHIST";
+              VERSION = "1.12.2";
+              MEMORY = "20g";
+              OPS = "4cb4aff4-a0ed-4eaf-b912-47825b2ed30d";
+              EXISTING_OPS_FILE = "MERGE";
+              MOTD = "ToyVo Custom Server";
+              MAX_TICK_TIME = "-1";
+              MAX_WORLD_SIZE = "100000";
+              PACKWIZ_URL="https://mc.toyvo.dev/modpack/pack.toml";
+            };
+            volumes = [
+              "${cfg.datadir}:/data"
+            ];
           };
         };
       };

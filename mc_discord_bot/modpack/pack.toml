@@ -1,13 +1,13 @@
-name = "nixmc"
-author = "Toy_Vo"
+name = "ToyVo_Project_Oasis_3"
+author = "ToyVo + originals"
 version = "1.0.0"
 pack-format = "packwiz:1.1.0"
 
 [index]
 file = "index.toml"
 hash-format = "sha256"
-hash = "be57527b6c81265b4ba38b38f2f59ec01617690f9e7716629bd1e67169b03dfe"
+hash = "7b81c9e9d9e6e21a9865a2dded0dfd77e7683d679b98fe5b0114eaed9a31f17e"
 
 [versions]
-forge = "47.3.5"
-minecraft = "1.20.1"
+forge = "14.23.5.2860"
+minecraft = "1.12.2"
