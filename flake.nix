@@ -82,7 +82,7 @@
           };
           networking.firewall.allowedTCPPorts = lib.optionals cfg.openFirewall [ cfg.MCport ];
           virtualisation.oci-containers.containers.minecraft = {
-            image = "docker.io/itzg/minecraft-server:latest";
+            image = "docker.io/itzg/minecraft-server:java8";
             # I plan to make a web interface that I want to be able to use RCON to get information but keep it internal
             ports = [ "${toString cfg.MCport}:25565" "${toString cfg.RCONPort}:25575" ];
             environment = {
