@@ -671,6 +671,16 @@ hash = "2163c7612873d0d56aedce3d164534b899da0bec98c945e31dd1db4c551237d2"
 metafile = true
 
 [[files]]
+file = "mods/iron-chests.pw.toml"
+hash = "4aba12c2a18205fe6d25d1af817ee8c0baa580a74048cb30c659f6be66f31d2e"
+metafile = true
+
+[[files]]
+file = "mods/irons-spells-n-spellbooks.pw.toml"
+hash = "23dff10d5a444a09e5ca0a0d9823e692b79cf33bb18ae8459c2bda879d279405"
+metafile = true
+
+[[files]]
 file = "mods/jei.pw.toml"
 hash = "8e564ffebd3892f46ebad830733cb9f68e45895c53da42526aec2cbe7b5a9707"
 metafile = true
@@ -763,6 +773,11 @@ metafile = true
 [[files]]
 file = "mods/placebo.pw.toml"
 hash = "0f807372e11d5a8a28266ab214fd243fa7558fe3f5a0cc6505090faede8c2dd6"
+metafile = true
+
+[[files]]
+file = "mods/playeranimator.pw.toml"
+hash = "b52622122c19a3894e62fc5506d7c3332d202504fd406d6718be646f979feb40"
 metafile = true
 
 [[files]]
