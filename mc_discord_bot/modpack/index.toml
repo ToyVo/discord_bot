@@ -26,13 +26,73 @@ hash = "8f7696617249a4be35a9d1a2caecce4e17bbffe823f904d10c6fc8b72c4352ca"
 metafile = true
 
 [[files]]
+file = "mods/aether-enhanced-extinguishing.pw.toml"
+hash = "b9f94997f59d0b96fb730d6c738faf83a570573d710aada2ee404d38a759bcf5"
+metafile = true
+
+[[files]]
 file = "mods/aether.pw.toml"
 hash = "60a6223b39c88bca7dbf372c8560cf437377b2d4024c20712d36588216c858b2"
 metafile = true
 
 [[files]]
+file = "mods/aethersteel-tweaks.pw.toml"
+hash = "6de4da1f4faa6cd716563382051cc1e07c72e840884d7d28fedbad9f1c7807b2"
+metafile = true
+
+[[files]]
+file = "mods/aethersteel.pw.toml"
+hash = "c54e0bf449b02f89d0d2edad99752557e3bc8cd28f8e5634230d331e0aab40f7"
+metafile = true
+
+[[files]]
+file = "mods/ai-improvements.pw.toml"
+hash = "11c40209898628cc8ca75d28f539c449384b40600bfc88272306f6138f4e4428"
+metafile = true
+
+[[files]]
+file = "mods/almost-unified.pw.toml"
+hash = "6c1abc7203698f420023a1655bc803113babd2dc00b2ced0e071de8b46147b5a"
+metafile = true
+
+[[files]]
+file = "mods/angel-block-renewed.pw.toml"
+hash = "91fdcb5154a0582504cd8958babbc4176c6d0d604c59cd58f7e59e7767b1ea51"
+metafile = true
+
+[[files]]
 file = "mods/angel-ring.pw.toml"
 hash = "48043d1268df7dbf91e52289fbf89d2e73f151b989c68a00195beb10240aa9cc"
+metafile = true
+
+[[files]]
+file = "mods/antsportation.pw.toml"
+hash = "44933ed73c6f9ec18a0b473c1a641738ec6d44d8d5173d7388c7d6b661892321"
+metafile = true
+
+[[files]]
+file = "mods/apotheosis.pw.toml"
+hash = "bfff4a8be74c7d02e62cc7ba3b75183dbbff98e550dfc648d49f9f721688e730"
+metafile = true
+
+[[files]]
+file = "mods/apothic-attributes.pw.toml"
+hash = "ad85f1847b402498fdad38731c632ca0167ccbdade0c1884776aa5ee88463f28"
+metafile = true
+
+[[files]]
+file = "mods/appleskin.pw.toml"
+hash = "8d0321177fed4a0b48554c40158b43db62f6cdaa768f584ef6a11575dfaa6223"
+metafile = true
+
+[[files]]
+file = "mods/applied-botanics-addon.pw.toml"
+hash = "276ce628e43d33191605204300202bae93973005a5ed51eb74908f12ce200253"
+metafile = true
+
+[[files]]
+file = "mods/applied-cooking.pw.toml"
+hash = "426446bc043d83e2463ab4bae4ba86f4c2fc9c2ed3b28a96101ccb1d977b920e"
 metafile = true
 
 [[files]]
@@ -56,8 +116,18 @@ hash = "8a27a482bf7dbf9b8a96fe9a3e8bf8e08ca1d376c6cf13bccf49f0d5191d56fa"
 metafile = true
 
 [[files]]
+file = "mods/balm.pw.toml"
+hash = "a96886fe12b0156b383437c664125ca8989e7c972728a37e2ac36b35dcf29bec"
+metafile = true
+
+[[files]]
 file = "mods/bdlib.pw.toml"
 hash = "e086a397f19b76a5b7ca0f6bcb917c4f8c25171d353ec7d131bd7f16bcaa7574"
+metafile = true
+
+[[files]]
+file = "mods/botania.pw.toml"
+hash = "1c6c8139bf2e1926070fab667eca7bfdf71898515ef4447487c6d7755d0f7382"
 metafile = true
 
 [[files]]
@@ -78,6 +148,16 @@ metafile = true
 [[files]]
 file = "mods/codechicken-lib-1-8.pw.toml"
 hash = "8628a832792c54b2328c60672fe122479bcf8c791f1bc7dbab37204432eeff7d"
+metafile = true
+
+[[files]]
+file = "mods/configured.pw.toml"
+hash = "c1bdeff356cd2ac164e2c0e6d0ceeda234db9774c2df44fb9f0e71d3960cc3f1"
+metafile = true
+
+[[files]]
+file = "mods/cooking-for-blockheads.pw.toml"
+hash = "4ae0eca22eeeb6cbcd629b24e32c2617c9a73032b89fff188bef10b98ca791a5"
 metafile = true
 
 [[files]]
@@ -116,6 +196,16 @@ hash = "97abd23496116a8b3fb4b832ae5a7ef7c84063909b16dcbf1a403963893f2ea3"
 metafile = true
 
 [[files]]
+file = "mods/patchouli.pw.toml"
+hash = "3a7eaa64434e7449e5fe6bd089bc784499432dae7d6ca07174b55b10a3b32ec8"
+metafile = true
+
+[[files]]
+file = "mods/placebo.pw.toml"
+hash = "0f807372e11d5a8a28266ab214fd243fa7558fe3f5a0cc6505090faede8c2dd6"
+metafile = true
+
+[[files]]
 file = "mods/projecte.pw.toml"
 hash = "26b6891625bf09317245200e3adb871cea00dbd41859d68cf57062544c0e6041"
 metafile = true
@@ -133,4 +223,9 @@ metafile = true
 [[files]]
 file = "mods/scalable-cats-force.pw.toml"
 hash = "ef695ed57ccacb432666fdfa3672131e4d48eb0d84ee88b6bffd59c5f59f46ce"
+metafile = true
+
+[[files]]
+file = "mods/sebastrnlib.pw.toml"
+hash = "293c2540f4490e6c25a660dfcad115ed952a63c1b66b1dfdaab25f18d0154946"
 metafile = true
