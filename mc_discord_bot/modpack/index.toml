@@ -36,11 +36,6 @@ hash = "60a6223b39c88bca7dbf372c8560cf437377b2d4024c20712d36588216c858b2"
 metafile = true
 
 [[files]]
-file = "mods/aethersteel-tweaks.pw.toml"
-hash = "6de4da1f4faa6cd716563382051cc1e07c72e840884d7d28fedbad9f1c7807b2"
-metafile = true
-
-[[files]]
 file = "mods/aethersteel.pw.toml"
 hash = "c54e0bf449b02f89d0d2edad99752557e3bc8cd28f8e5634230d331e0aab40f7"
 metafile = true
@@ -846,6 +841,21 @@ hash = "8dcded48817b3313cc796df6e3e193c399f17d19377ff6bc6b4a97b5f18bd75c"
 metafile = true
 
 [[files]]
+file = "mods/mekanism-additions.pw.toml"
+hash = "8e3069d86afb9db4eb1d66809376e7def8ae49d8b49b034f579edd374de3d69f"
+metafile = true
+
+[[files]]
+file = "mods/mekanism-generators.pw.toml"
+hash = "31bedc841cd4f28284805ce9b2c1ab53a39c2fa062816e1e520ef1b7d631f7db"
+metafile = true
+
+[[files]]
+file = "mods/mekanism-tools.pw.toml"
+hash = "5e2627d51cb1079bb3606e5b585d08eca655250276460d6d0140f90e0749261e"
+metafile = true
+
+[[files]]
 file = "mods/mekanism.pw.toml"
 hash = "97abd23496116a8b3fb4b832ae5a7ef7c84063909b16dcbf1a403963893f2ea3"
 metafile = true
@@ -978,6 +988,11 @@ metafile = true
 [[files]]
 file = "mods/thermal-foundation.pw.toml"
 hash = "626f0ea226f55c453930ef387b32ad090c8defdd07792fe0aefc4b5afa87cb46"
+metafile = true
+
+[[files]]
+file = "mods/timeless-and-classics-zero.pw.toml"
+hash = "f888963ae45477f223a86386989d6928cb9541750a76388a365437d98242c76d"
 metafile = true
 
 [[files]]
