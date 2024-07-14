@@ -186,7 +186,7 @@ metafile = true
 
 [[files]]
 file = "mods/bisecthosting-server-integration-menu-forge.pw.toml"
-hash = "25cd7d38c7ab601b56338b5f1dbf2634479cdea2a12c06624419a3c9f342dcc7"
+hash = "68b979235e0287dc2823c78ed4ef0f809d8e6a5a24b071a3ba331e6d792e72bd"
 metafile = true
 
 [[files]]
