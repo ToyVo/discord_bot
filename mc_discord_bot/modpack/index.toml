@@ -7093,10 +7093,6 @@ file = "config/brandon3055/ProjectIntelligence/DocUpdater/Mods/projectintelligen
 hash = "bbfcc39c42265637c29406f9d96f14b6d6a7d187350012d97a9bf8c4b7909097"
 
 [[files]]
-file = "config/brandon3055/ProjectIntelligence/DocUpdater/manifest.json"
-hash = "82c6433273e6a50f56c1e92dec11793944ac808c8a832afa137223036adc2d1d"
-
-[[files]]
 file = "config/brandon3055/ProjectIntelligence/GuiConfig.json"
 hash = "5440b3ecbb44ec31216815c2c34eff5b642764bc87ad4427191de2a60e578d6f"
 
@@ -7735,10 +7731,6 @@ hash = "0091e985e0a389d9b217fa05d58de6219978ace1425ef934b51dcdff808dd086"
 [[files]]
 file = "config/brandon3055/ProjectIntelligence/ModDocs/projectintelligence/1.0.0/structure/zh_cn/projectintelligence_88e33.md"
 hash = "cd1d02300c930ddea6e504542305cd70ac4bb840c1376321e07480ccab19d534"
-
-[[files]]
-file = "config/brandon3055/ProjectIntelligence/manifest.json"
-hash = "9c7a5e458ce75f08278aac7c353c3946d9dc3c74e24bf644f739bb158a4f9e94"
 
 [[files]]
 file = "config/brandon3055/ProjectIntelligence/options.json"
@@ -8687,10 +8679,6 @@ hash = "fcd69afd1d19e0efb47f4ff2c65eb5d6689241f011af005f5a47737d1915080e"
 [[files]]
 file = "config/itemphysic.json"
 hash = "211692fbd85c72b821583bdb4c4072edcfe7af63fcf8d995edb1233126242d19"
-
-[[files]]
-file = "config/jei/bookmarks.ini"
-hash = "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
 
 [[files]]
 file = "config/jei/itemBlacklist.cfg"
@@ -11869,6 +11857,10 @@ hash = "9a4c404b5541f9217d8891f22f4e725e3b306485974a36d27ebfc932a44a0b20"
 [[files]]
 file = "resources/modpack/texts/splashes.txt"
 hash = "a25639076b892157673bd005d4b78a045dfa4ef2cf28e8813d06dc7f1d63b031"
+
+[[files]]
+file = "resources/modpack/textures/gui/Untitled.pdn"
+hash = "7aed75baebcb84db7f5962de8ab5f3f029c7b051613bce239748a833a03101b0"
 
 [[files]]
 file = "resources/modpack/textures/gui/background.png"
