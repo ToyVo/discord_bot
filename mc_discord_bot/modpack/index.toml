@@ -8286,7 +8286,7 @@ hash = "249a3177db6d7e055493cd22a7a3c567e445695a71d2d90b8b671b6a9f3e0d26"
 
 [[files]]
 file = "config/enderio/recipes/examples/recipes.xsd"
-hash = "58a23d0ecca21d286270bd695fdf1227d7e59cdfaaecfd2ee9ec1a17eaca2155"
+hash = "01809c69a4a167ec04709c6a82d73309cc2b1b00e487e44c974a3c03b155b08c"
 
 [[files]]
 file = "config/enderio/recipes/examples/sagmill_dupe_recipe_patches.xml"
@@ -8350,7 +8350,7 @@ hash = "cd30f74cf87476ea726e2e03ec96acb276c93569f13577db4eb100e0f769c4d7"
 
 [[files]]
 file = "config/enderio/recipes/recipes.xsd"
-hash = "eba7a25cdec3c1bb9917eed955c73ffe4282d044a988e055ccab42ac8cf61e8d"
+hash = "2d24bcaa57abb10fc3cfebbbbcb813461fbe3c7adee25e1c6f7de859a7e0df2c"
 
 [[files]]
 file = "config/enderio/recipes/sagmill.pdf"
@@ -8394,7 +8394,7 @@ hash = "0bda0b84438560887cc1e5dd078407c7dce473e84eda6ff7f5827ba77cfb6490"
 
 [[files]]
 file = "config/enderio/recipes/user/recipes.xsd"
-hash = "58a23d0ecca21d286270bd695fdf1227d7e59cdfaaecfd2ee9ec1a17eaca2155"
+hash = "01809c69a4a167ec04709c6a82d73309cc2b1b00e487e44c974a3c03b155b08c"
 
 [[files]]
 file = "config/enderio/recipes/user/user_recipes.xml"
