@@ -641,6 +641,36 @@ hash = "8db43c90ffb5b4d4deb7746384b13f6a7eb52f4f95dcd53982fce3e28694113b"
 metafile = true
 
 [[files]]
+file = "mods/industrial-foregoing-souls.pw.toml"
+hash = "4eff3ed5921f2c26cc7c27c587dce6a7a65beae56e831f63686e31108920db2f"
+metafile = true
+
+[[files]]
+file = "mods/industrial-foregoing.pw.toml"
+hash = "58fa0876dab1829a955937f3868fd6fead05fe347021758e6166e04c716c8917"
+metafile = true
+
+[[files]]
+file = "mods/integrated-crafting.pw.toml"
+hash = "fe4286af21aba85c6eb1d348e344b85738f5f0160ab6f6cd79c6bbbd5435dc00"
+metafile = true
+
+[[files]]
+file = "mods/integrated-dynamics.pw.toml"
+hash = "8fd822a5dde2425d202a9e81871c2571e45f185ba87286f49fad33131063bb6f"
+metafile = true
+
+[[files]]
+file = "mods/integrated-terminals.pw.toml"
+hash = "7861ddd0ba6c0da4708391bb8b7c6196bbf6c876d2ac774c735a77c42671cbe3"
+metafile = true
+
+[[files]]
+file = "mods/integrated-tunnels.pw.toml"
+hash = "2163c7612873d0d56aedce3d164534b899da0bec98c945e31dd1db4c551237d2"
+metafile = true
+
+[[files]]
 file = "mods/jei.pw.toml"
 hash = "8e564ffebd3892f46ebad830733cb9f68e45895c53da42526aec2cbe7b5a9707"
 metafile = true
