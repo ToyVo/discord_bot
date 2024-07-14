@@ -88,6 +88,7 @@
             environment = {
               EULA = "TRUE";
               TYPE = "MOHIST";
+              MOHIST_BUILD = "315";
               VERSION = "1.12.2";
               MEMORY = "20g";
               OPS = "4cb4aff4-a0ed-4eaf-b912-47825b2ed30d";
