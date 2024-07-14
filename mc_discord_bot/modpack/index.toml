@@ -172,12 +172,12 @@ metafile = true
 
 [[files]]
 file = "mods/better-than-bunnies.pw.toml"
-hash = "055d8a78156588e257dcd584401fe633b5dae3cea1884782cfa6863f561102c2"
+hash = "d5c0d0d8960a73049f250dff598109e83a885f088bbfab5db7728caaa232d1e8"
 metafile = true
 
 [[files]]
 file = "mods/better-than-llamas.pw.toml"
-hash = "6ea5bdda6bbcc17ab60dd25d1add7ccabf1381e57511531f8b474183aa5f2d0d"
+hash = "4125f9e8c51d6a9d912d3f5f1b4e19260bf0d29cf8ddd1157ccfe1bc247b1c0a"
 metafile = true
 
 [[files]]
@@ -407,7 +407,7 @@ metafile = true
 
 [[files]]
 file = "mods/ding.pw.toml"
-hash = "abf68c7b90b93d7223c6ed856e7a4ae89ebdccf7780277e4de6aa3d707f7e27f"
+hash = "a98292cb6bff4b6a481306dc38b95b6c781f5b284433f8938573379ed0f39ed0"
 metafile = true
 
 [[files]]
