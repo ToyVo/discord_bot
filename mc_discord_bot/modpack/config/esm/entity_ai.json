@@ -1,0 +1,72 @@
+{
+  "default": {
+    "Awareness Radius": 16,
+    "Xray Distance": -1,
+    "Attack Everything": false,
+    "Attack Pets": false,
+    "Attack Villagers": true,
+    "Neutral Mob": false,
+    "Strafe Evade": true,
+    "Animal Retaliate": false,
+    "Ranged Atk Dist": 32,
+    "Ranged Atk Error": 5,
+    "Arrow Tips": [
+      "minecraft:slowness:60:0"
+    ],
+    "Thrown Potions": [
+      "minecraft:harming:1:0",
+      "minecraft:slowness:300:0",
+      "minecraft:blindness:300:0",
+      "minecraft:poison:300:0",
+      "minecraft:weakness:300:1",
+      "minecraft:mining_fatigue:300:2"
+    ],
+    "Pillaring": false,
+    "Pillar Block": "minecraft:cobblestone:0",
+    "Digging": false,
+    "Digging Blacklist": [],
+    "Invert Blacklist": false,
+    "Requires Tools": true,
+    "Griefing": false,
+    "Grief Targets": [
+      ""
+    ],
+    "Demolition": 0.0,
+    "Spider Webbing": 0.12,
+    "Ender-Tele-Target": false,
+    "Infectious": false,
+    "Wither Skeletons": 0.05,
+    "Jockey": 0.0,
+    "Powered": 0.1,
+    "Walking Fuse": false,
+    "Napalm": false,
+    "Breaching": false,
+    "Cena": 0.1,
+    "Health": 1.0,
+    "Damage": 1.0,
+    "Speed": 1.0,
+    "Knockback": 1.0,
+    "Boss Mod Health": false,
+    "Boss Mod Damage": true,
+    "Boss Mod Speed": false,
+    "Boss Mod Knockback": false,
+    "Debug Targets": false
+  },
+  "entities": {
+    "minecraft:spider": {
+      "Spider Webbing": 0.12
+    },
+    "minecraft:": {
+      "Digging": false,
+      "Griefing": false,
+      "Demolition": 0.0,
+      "Pillaring": false
+    },
+    "minecraft:zombie": {
+      "Infectious": false
+    },
+    "minecraft:cave_spider": {
+      "Spider Webbing": 0.12
+    }
+  }
+}

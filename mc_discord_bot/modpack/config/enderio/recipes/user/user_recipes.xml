@@ -1,0 +1,113 @@
+<enderio:recipes xmlns:enderio="http://enderio.com/recipes" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://enderio.com/recipes recipes.xsd ">
+
+<recipe name="Tweak: Stick from Wood" disabled="true">
+    <crafting>
+      <grid size="1x2">
+        <item name="logWood"/>
+        <item name="logWood"/>
+      </grid>
+      <output name="minecraft:stick, stickWood" amount="16" />
+    </crafting>
+  </recipe>
+  
+  <recipe name="Alloy: Neutral Steel, Variant: Tungsten, Vivid Alloy" required="false">
+    <alloying energy="20000" exp="0.4">
+      <input name="ingotTungsten"/>
+	  <input name="contenttweaker:neutral_steel_4" amount="3"/>
+	  <input name="ingotVividAlloy"/>
+      <output name="contenttweaker:neutral_steel_5"/>
+    </alloying>
+  </recipe>
+  
+  <recipe name="Alloy: Electrical Steel" disabled="false">
+	<alloying energy="10000" exp="0.5">
+		<input name="ingotIron"/>
+		<input name="dustCoal"/>
+		<input name="itemSilicon"/>
+		<output name="ingotElectricalSteel"/>
+	</alloying>
+ </recipe>
+ 
+ <recipe name="Alloy: Electrical Steel, Variant" disabled="false">
+	<alloying energy="10000" exp="0.4">
+		<input name="ingotSteel"/>
+		<input name="itemSilicon"/>
+	<output name="ingotElectricalSteel"/>
+	</alloying>
+ </recipe>
+ 
+ <recipe name="Alloy: Energetic Alloy" disabled="false">
+	<alloying energy="10000" exp="0.7">
+		<input name="dustRedstone"/>
+		<input name="ingotGold"/>
+		<input name="dustGlowstone"/>
+		<output name="ingotEnergeticAlloy"/>
+	</alloying>
+ </recipe>
+ 
+ <recipe name="Alloy: Vibrant Alloy" disabled="false">
+ <alloying energy="10000" exp="1">
+ <input name="ingotEnergeticAlloy"/>
+ <input name="oredict:enderpearl"/>
+ <output name="ingotVibrantAlloy"/>
+ </alloying>
+ </recipe>
+ 
+ <recipe name="Alloy: Redstone Alloy" disabled="false">
+ <alloying energy="10000" exp="0.5">
+ <input name="dustRedstone"/>
+ <input name="itemSilicon"/>
+ <output name="ingotRedstoneAlloy"/>
+ </alloying>
+ </recipe>
+ 
+ <recipe name="Alloy: Conductive Iron" disabled="false">
+ <alloying energy="10000" exp="0.5">
+ <input name="dustRedstone"/>
+ <input name="ingotIron"/>
+ <output name="ingotConductiveIron"/>
+ </alloying>
+ </recipe>
+ 
+ <recipe name="Alloy: Pulsating Iron" disabled="false">
+ <alloying energy="10000" exp="0.7">
+ <input name="ingotIron"/>
+ <input name="oredict:enderpearl"/>
+ <output name="ingotPulsatingIron"/>
+ </alloying>
+ </recipe>
+ 
+ <recipe name="Alloy: Dark Steel" disabled="false">
+ <alloying energy="20000" exp="0.5">
+ <input name="ingotIron"/>
+ <input name="dustCoal"/>
+ <input name="obsidian"/>
+ <output name="ingotDarkSteel"/>
+ </alloying>
+ </recipe>
+ 
+ <recipe name="Alloy: Dark Steel, Variant" disabled="false">
+ <alloying energy="10500" exp="0.4">
+ <input name="ingotSteel"/>
+ <input name="obsidian"/>
+ <output name="ingotDarkSteel"/>
+ </alloying>
+ </recipe>
+ 
+ <recipe name="Alloy: End Steel" disabled="false">
+ <alloying energy="20000" exp="0.5">
+ <input name="oredict:endstone"/>
+ <input name="ingotDarkSteel"/>
+ <input name="obsidian"/>
+ <output name="ingotEndSteel"/>
+ </alloying>
+ </recipe>
+
+ <recipe name="Alloy: Soularium" disabled="false">
+ <alloying energy="10000" exp="0.7">
+ <input name="minecraft:soul_sand"/>
+ <input name="ingotGold"/>
+ <output name="ingotSoularium"/>
+ </alloying>
+ </recipe>
+ </enderio:recipes>

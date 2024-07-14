@@ -1,0 +1,48 @@
+{
+    "machine": "mechanical_empowerer",
+    "registryName": "me_void",
+    "recipeTime": 10,
+    "requirements": [
+       {
+            "type": "modularmachinery:item",
+            "io-type": "input",
+            "item": "ore:charcoal",
+            "amount": 1
+        },
+        {
+            "type": "modularmachinery:item",
+            "io-type": "input",
+            "item": "ore:flint",
+            "amount": 1
+        },
+		{
+            "type": "modularmachinery:item",
+            "io-type": "input",
+            "item": "ore:dyeBlack",
+            "amount": 1
+        },
+		{
+            "type": "modularmachinery:item",
+            "io-type": "input",
+            "item": "ore:stone",
+            "amount": 1
+        },
+		{
+            "type": "modularmachinery:item",
+            "io-type": "input",
+            "item": "actuallyadditions:block_crystal@3",
+            "amount": 1
+        },
+		{
+            "type": "modularmachinery:item",
+            "io-type": "output",
+            "item": "actuallyadditions:block_crystal_empowered@3",
+            "amount": 1
+        },
+		{
+            "type": "modularmachinery:energy",
+            "io-type": "input",
+            "energyPerTick": 55000
+        }
+    ]
+}

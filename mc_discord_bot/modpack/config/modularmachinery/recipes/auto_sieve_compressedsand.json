@@ -1,0 +1,46 @@
+{
+    "machine": "auto_sieve",
+    "registryName": "auto_sieve_compressedsand",
+    "recipeTime": 5,
+    "requirements": [
+        {
+            "type": "modularmachinery:energy",
+            "io-type": "input",
+            "energyPerTick": 2048
+        },
+        {
+            "type": "modularmachinery:item",
+            "io-type": "output",
+            "item": "minecraft:dye@3",
+            "amount": 2,
+			"chance": 1
+        },
+        {
+            "type": "modularmachinery:item",
+            "io-type": "output",
+            "item": "appliedenergistics2:material@0",
+            "amount": 2,
+            "chance": 0.32
+        },
+        {
+            "type": "modularmachinery:item",
+            "io-type": "output",
+            "item": "appliedenergistics2:material@1",
+            "amount": 2,
+            "chance": 0.24
+        },
+		{
+            "type": "modularmachinery:item",
+            "io-type": "output",
+            "item": "projectred-core:resource_item@105",
+            "amount": 2,
+			"chance": 0.5
+        },
+        {
+            "type": "modularmachinery:item",
+            "io-type": "input",
+            "item": "extrautils2:compressedsand@0",
+            "amount": 1
+        }
+    ]
+}

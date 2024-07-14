@@ -1,0 +1,36 @@
+{
+    "machine": "mechanical_empowerer",
+    "registryName": "me_palis",
+    "recipeTime": 10,
+    "requirements": [
+       {
+            "type": "modularmachinery:item",
+            "io-type": "input",
+            "item": "ore:gemPrismarine",
+            "amount": 3
+        },
+        {
+            "type": "modularmachinery:item",
+            "io-type": "input",
+            "item": "ore:dyeCyan",
+            "amount": 1
+        },
+		{
+            "type": "modularmachinery:item",
+            "io-type": "input",
+            "item": "actuallyadditions:block_crystal@1",
+            "amount": 1
+        },
+		{
+            "type": "modularmachinery:item",
+            "io-type": "output",
+            "item": "actuallyadditions:block_crystal_empowered@1",
+            "amount": 1
+        },
+		{
+            "type": "modularmachinery:energy",
+            "io-type": "input",
+            "energyPerTick": 50000
+        }
+    ]
+}

@@ -1,0 +1,123 @@
+{
+    "machine": "auto_sieve",
+    "registryName": "auto_sieve_gravel",
+    "recipeTime": 5,
+    "requirements": [
+        {
+            "type": "modularmachinery:energy",
+            "io-type": "input",
+            "energyPerTick": 1256
+        },
+        {
+            "type": "modularmachinery:item",
+            "io-type": "output",
+            "item": "minecraft:flint",
+            "amount": 2,
+			"chance": 0.5
+        },
+        {
+            "type": "modularmachinery:item",
+            "io-type": "output",
+            "item": "minecraft:coal",
+            "amount": 2,
+            "chance": 0.25
+        },
+        {
+            "type": "modularmachinery:item",
+            "io-type": "output",
+            "item": "minecraft:dye@4",
+            "amount": 2,
+            "chance": 0.21
+        },
+        {
+            "type": "modularmachinery:item",
+            "io-type": "output",
+            "item": "minecraft:diamond",
+            "amount": 2,
+            "chance": 0.02
+        },
+		{
+            "type": "modularmachinery:item",
+            "io-type": "output",
+            "item": "minecraft:emerald",
+            "amount": 2,
+            "chance": 0.02
+        },
+		{
+            "type": "modularmachinery:item",
+            "io-type": "output",
+            "item": "exnihilocreatio:item_ore_gold@0",
+            "amount": 2,
+            "chance": 0.2
+        },
+		{
+            "type": "modularmachinery:item",
+            "io-type": "output",
+            "item": "exnihilocreatio:item_ore_iron@0",
+            "amount": 2,
+            "chance": 1.0
+        },
+		{
+            "type": "modularmachinery:item",
+            "io-type": "output",
+            "item": "exnihilocreatio:item_ore_copper@0",
+            "amount": 2,
+            "chance": 0.22
+        },
+		{
+            "type": "modularmachinery:item",
+            "io-type": "output",
+            "item": "exnihilocreatio:item_ore_osmium@0",
+            "amount": 2,
+            "chance": 0.16
+        },
+		{
+            "type": "modularmachinery:item",
+            "io-type": "output",
+            "item": "exnihilocreatio:item_ore_tin@0",
+            "amount": 2,
+            "chance": 0.22
+        },
+		{
+            "type": "modularmachinery:item",
+            "io-type": "output",
+            "item": "exnihilocreatio:item_ore_silver@0",
+            "amount": 2,
+            "chance": 0.22
+        },
+		{
+            "type": "modularmachinery:item",
+            "io-type": "output",
+            "item": "exnihilocreatio:item_ore_lead@0",
+            "amount": 2,
+            "chance": 0.22
+        },
+		{
+            "type": "modularmachinery:item",
+            "io-type": "output",
+            "item": "exnihilocreatio:item_ore_nickel@0",
+            "amount": 2,
+            "chance": 0.22
+        },
+		{
+            "type": "modularmachinery:item",
+            "io-type": "output",
+            "item": "exnihilocreatio:item_ore_platinum@0",
+            "amount": 2,
+            "chance": 0.22
+        },
+		{
+            "type": "modularmachinery:item",
+            "io-type": "output",
+            "item": "exnihilocreatio:item_ore_aluminum@0",
+            "amount": 2,
+            "chance": 0.25
+        },
+        {
+            "type": "modularmachinery:item",
+            "io-type": "input",
+            "item": "minecraft:gravel",
+            "amount": 1
+        }
+    ]
+}
