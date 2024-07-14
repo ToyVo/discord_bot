@@ -941,6 +941,16 @@ hash = "bb8dd1fa0f1ee88f8f947a2ab2101c414cb2808dac81c21ac66c8ad32cdfec29"
 metafile = true
 
 [[files]]
+file = "mods/mouse-tweaks.pw.toml"
+hash = "e72f73611904e14d915418f0e3c6cb483cdc600e211375c2eceb393fec5b80f1"
+metafile = true
+
+[[files]]
+file = "mods/mute.pw.toml"
+hash = "ce9e78e8d4f36887d49ee3cbe3d53d47e51095776906b9032652d5c3fb02a082"
+metafile = true
+
+[[files]]
 file = "mods/natures-aura.pw.toml"
 hash = "252f0822fccd24bb3c615c95c4d5acdad853ce8482c71e06b79f50a3520652c5"
 metafile = true
