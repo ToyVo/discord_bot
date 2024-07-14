@@ -381,6 +381,31 @@ hash = "9420095c09381c58d2b261b72cd518a546701fcc18ddca39a48d2bfb2a6f3e74"
 metafile = true
 
 [[files]]
+file = "mods/dark-utilities.pw.toml"
+hash = "73d04361ac8c44b7128d1acf9bf4384f8e573ff3308065047f8675112540c9c9"
+metafile = true
+
+[[files]]
+file = "mods/deep-resonance.pw.toml"
+hash = "8a664a47b97fa9e2dddea761e9c18d620695e090eeb86553c67bd52e2f6a6680"
+metafile = true
+
+[[files]]
+file = "mods/default-options.pw.toml"
+hash = "1cb1ed842db59e479dc2b21cf8afb8eeb9ff4577d292e6b51ed8df98e24411d5"
+metafile = true
+
+[[files]]
+file = "mods/default-server-properties.pw.toml"
+hash = "56bd14a0ca4af14ed44b4bd25c6013a3c0210e53ca29d14477a72a0f1b9fae8e"
+metafile = true
+
+[[files]]
+file = "mods/ding.pw.toml"
+hash = "abf68c7b90b93d7223c6ed856e7a4ae89ebdccf7780277e4de6aa3d707f7e27f"
+metafile = true
+
+[[files]]
 file = "mods/draconic-evolution.pw.toml"
 hash = "e603a3af7a08e57e14df5bba3a12c0465087adae7a894c3dd609a97a6a8871d2"
 metafile = true
@@ -431,6 +456,11 @@ hash = "40026875ee9b7d25a4ece48faa2b70a338100e87a689d5a8d4ba1ee608b878f6"
 metafile = true
 
 [[files]]
+file = "mods/mcjtylib.pw.toml"
+hash = "c7912aabbb629d0fb2d1c0cecf0923a1742feae7056dd1b9feb2c81b2c9aef73"
+metafile = true
+
+[[files]]
 file = "mods/mega-cells.pw.toml"
 hash = "8dcded48817b3313cc796df6e3e193c399f17d19377ff6bc6b4a97b5f18bd75c"
 metafile = true
@@ -461,6 +491,11 @@ hash = "3a7eaa64434e7449e5fe6bd089bc784499432dae7d6ca07174b55b10a3b32ec8"
 metafile = true
 
 [[files]]
+file = "mods/pig-pen-cipher.pw.toml"
+hash = "f896fefa7466845181da9db06ba4a89865f54b406ff3b1fb65773c66614b6f1b"
+metafile = true
+
+[[files]]
 file = "mods/placebo.pw.toml"
 hash = "0f807372e11d5a8a28266ab214fd243fa7558fe3f5a0cc6505090faede8c2dd6"
 metafile = true
@@ -488,6 +523,16 @@ metafile = true
 [[files]]
 file = "mods/resourceful-lib.pw.toml"
 hash = "2ebc9366a396634d88e2ca05600797edf48edd1005318256aa35e4ffc740e516"
+metafile = true
+
+[[files]]
+file = "mods/rftools-base.pw.toml"
+hash = "984db11b069d45ee175a8f20e25b26cbd87db633aa83c2ed3e61a9c3a81b40f5"
+metafile = true
+
+[[files]]
+file = "mods/runelic.pw.toml"
+hash = "53254c5c7af6238845518f9e289b8b91337e88b6dad4566c2e1b223f6901f456"
 metafile = true
 
 [[files]]
