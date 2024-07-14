@@ -121,6 +121,11 @@ hash = "a96886fe12b0156b383437c664125ca8989e7c972728a37e2ac36b35dcf29bec"
 metafile = true
 
 [[files]]
+file = "mods/baritone.pw.toml"
+hash = "729cd7ef52acf2ae6e4572a2482db7998cbb5cd70fe20b48b8693a999ce6d96f"
+metafile = true
+
+[[files]]
 file = "mods/bdlib.pw.toml"
 hash = "e086a397f19b76a5b7ca0f6bcb917c4f8c25171d353ec7d131bd7f16bcaa7574"
 metafile = true
@@ -171,6 +176,11 @@ hash = "e603a3af7a08e57e14df5bba3a12c0465087adae7a894c3dd609a97a6a8871d2"
 metafile = true
 
 [[files]]
+file = "mods/embeddium.pw.toml"
+hash = "df9fa54fc9635b60d8788138da56e972dabb350e6b55e0ce6709c29f029926d6"
+metafile = true
+
+[[files]]
 file = "mods/ender-io.pw.toml"
 hash = "136f54e08d37b112d9849e6e23a8b0ecfefb21d1103f595477e7d7869e6b576f"
 metafile = true
@@ -193,6 +203,11 @@ metafile = true
 [[files]]
 file = "mods/mekanism.pw.toml"
 hash = "97abd23496116a8b3fb4b832ae5a7ef7c84063909b16dcbf1a403963893f2ea3"
+metafile = true
+
+[[files]]
+file = "mods/oculus.pw.toml"
+hash = "0663919544b1f185be64b69269f5e914d2fae910fb8ee16d4cd9549d809e71cd"
 metafile = true
 
 [[files]]
@@ -228,4 +243,9 @@ metafile = true
 [[files]]
 file = "mods/sebastrnlib.pw.toml"
 hash = "293c2540f4490e6c25a660dfcad115ed952a63c1b66b1dfdaab25f18d0154946"
+metafile = true
+
+[[files]]
+file = "shaderpacks/makeup.pw.toml"
+hash = "083a5335a923a850a9a56a39d87a2c2cd6e72c0bcfd115adc58abff01a453fa0"
 metafile = true
