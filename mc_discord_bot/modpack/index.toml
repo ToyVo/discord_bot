@@ -351,6 +351,11 @@ hash = "366f9c2e792ea818ce0c2642ad6fb0415d0390dd000e0e6f0cce5779ec363f36"
 metafile = true
 
 [[files]]
+file = "mods/creeperhost-minetogether.pw.toml"
+hash = "4cfb219588d3b45345049f82c090528451a98eba0f2a6f67ced49650d5a84b38"
+metafile = true
+
+[[files]]
 file = "mods/creeperhost-presents-soul-shards.pw.toml"
 hash = "46ab71e0d7d7300ec015bc9d44becf9ac3c232e481315d5f541f8956e9ec075c"
 metafile = true
