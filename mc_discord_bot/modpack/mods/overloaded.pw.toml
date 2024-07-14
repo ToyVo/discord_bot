@@ -1,0 +1,13 @@
+name = "Overloaded"
+filename = "Overloaded-1.12.2-0.0.59.jar"
+side = "both"
+
+[download]
+hash-format = "sha1"
+hash = "b281c3f6322a42b459e09579ee6656ac4e8697fa"
+mode = "metadata:curseforge"
+
+[update]
+[update.curseforge]
+file-id = 2875265
+project-id = 264601

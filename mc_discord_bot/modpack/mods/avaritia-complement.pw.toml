@@ -1,0 +1,13 @@
+name = "Avaritia's Complement"
+filename = "Avaritia's Complement-1.12.2-1.4.jar"
+side = "both"
+
+[download]
+hash-format = "sha1"
+hash = "5f03984d67d6cc75df4a0a1bff8d8f63940babcd"
+mode = "metadata:curseforge"
+
+[update]
+[update.curseforge]
+file-id = 2997023
+project-id = 323553

@@ -1,0 +1,13 @@
+name = "Soot"
+filename = "Soot-1.10-hotfix.jar"
+side = "both"
+
+[download]
+hash-format = "sha1"
+hash = "43d704c1c0bde24c280fd42fce99a85e045c8822"
+mode = "metadata:curseforge"
+
+[update]
+[update.curseforge]
+file-id = 3056967
+project-id = 281528

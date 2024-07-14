@@ -1,0 +1,13 @@
+name = "Knob Control"
+filename = "knobcontrol-1.12-4.0.20.jar"
+side = "both"
+
+[download]
+hash-format = "sha1"
+hash = "86d92fb94254b4498f771323db1b7072b80f633c"
+mode = "metadata:curseforge"
+
+[update]
+[update.curseforge]
+file-id = 2512487
+project-id = 246333

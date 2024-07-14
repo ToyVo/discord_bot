@@ -1,0 +1,13 @@
+name = "Mapmaker's Gadgets"
+filename = "Mapmaker's Gadgets-1.2_for_1.12.x.jar"
+side = "both"
+
+[download]
+hash-format = "sha1"
+hash = "d9676d95e50dd5e16ece3226a0a33d11bee577e2"
+mode = "metadata:curseforge"
+
+[update]
+[update.curseforge]
+file-id = 2530117
+project-id = 286717

@@ -1,0 +1,13 @@
+name = "EverlastingAbilities"
+filename = "EverlastingAbilities-1.12.2-1.5.3.jar"
+side = "both"
+
+[download]
+hash-format = "sha1"
+hash = "068c35095d39bb6e05e3227e9d90b651491a9967"
+mode = "metadata:curseforge"
+
+[update]
+[update.curseforge]
+file-id = 2988576
+project-id = 248353

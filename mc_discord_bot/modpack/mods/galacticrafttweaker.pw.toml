@@ -1,0 +1,13 @@
+name = "Galacticraft Tweaker"
+filename = "GalacticraftTweaker-1.12.2-1.0.3.jar"
+side = "both"
+
+[download]
+hash-format = "sha1"
+hash = "fd5cc679a2fb81b617e3baf17ef00b5bcc9f18af"
+mode = "metadata:curseforge"
+
+[update]
+[update.curseforge]
+file-id = 2647978
+project-id = 286116

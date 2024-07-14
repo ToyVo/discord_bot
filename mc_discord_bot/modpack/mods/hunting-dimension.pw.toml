@@ -1,0 +1,13 @@
+name = "Hunting Dimension"
+filename = "HuntingDimension-1.12.2-1.0.42.jar"
+side = "both"
+
+[download]
+hash-format = "sha1"
+hash = "33c8f8975c52e9fbd6d13772599ac595724dde29"
+mode = "metadata:curseforge"
+
+[update]
+[update.curseforge]
+file-id = 2827888
+project-id = 283235

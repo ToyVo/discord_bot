@@ -1,0 +1,13 @@
+name = "TESLA"
+filename = "Tesla-1.12.2-1.0.63.jar"
+side = "both"
+
+[download]
+hash-format = "sha1"
+hash = "66545eea6ab0032cc61dc86b9910b250f3c1bd6a"
+mode = "metadata:curseforge"
+
+[update]
+[update.curseforge]
+file-id = 2487959
+project-id = 244651

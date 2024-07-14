@@ -1,0 +1,13 @@
+name = "Fence Jumper"
+filename = "fencejumper-1.12-1.0.5.jar"
+side = "both"
+
+[download]
+hash-format = "sha1"
+hash = "e6f23c18081d59deb55a625e1291b9fe9c1157de"
+mode = "metadata:curseforge"
+
+[update]
+[update.curseforge]
+file-id = 2591087
+project-id = 254652

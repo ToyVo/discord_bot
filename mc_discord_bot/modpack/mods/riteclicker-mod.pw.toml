@@ -1,0 +1,13 @@
+name = "RiteClicker Mod"
+filename = "riteclicker-1.12.2_2.jar"
+side = "both"
+
+[download]
+hash-format = "sha1"
+hash = "21b8be09efbbb06c15764a0e9176eee7700f0b94"
+mode = "metadata:curseforge"
+
+[update]
+[update.curseforge]
+file-id = 2711980
+project-id = 248819

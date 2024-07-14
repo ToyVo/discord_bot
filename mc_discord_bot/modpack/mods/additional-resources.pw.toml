@@ -1,0 +1,13 @@
+name = "Additional Resources"
+filename = "additionalresources-1.9.4-0.2.0.28+47cd0bd_signed.jar"
+side = "both"
+
+[download]
+hash-format = "sha1"
+hash = "172091d1af818f257c3f4c3769cb19b4bb8d456d"
+mode = "metadata:curseforge"
+
+[update]
+[update.curseforge]
+file-id = 2447369
+project-id = 225124

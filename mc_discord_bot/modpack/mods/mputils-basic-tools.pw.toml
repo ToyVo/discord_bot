@@ -1,0 +1,13 @@
+name = "MPUtils Basic Tools"
+filename = "mpbasic-1.12.2-1.4.11.jar"
+side = "both"
+
+[download]
+hash-format = "sha1"
+hash = "d033d21e0806203e5daa173259691f0f1c8e6255"
+mode = "metadata:curseforge"
+
+[update]
+[update.curseforge]
+file-id = 2686355
+project-id = 245889

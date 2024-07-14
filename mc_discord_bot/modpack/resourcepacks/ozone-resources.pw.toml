@@ -1,0 +1,13 @@
+name = "Ozone Resources"
+filename = "Ozone_Resources_3.zip"
+side = "both"
+
+[download]
+hash-format = "sha1"
+hash = "643a0d1fa45a944faf60f597dd1b8873764d8b22"
+mode = "metadata:curseforge"
+
+[update]
+[update.curseforge]
+file-id = 2663614
+project-id = 237567
