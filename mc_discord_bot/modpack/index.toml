@@ -896,6 +896,26 @@ hash = "b86209dc0d6108a07d9335980346f0f307c1d10fdc5117d174edaf8f2e105ae2"
 metafile = true
 
 [[files]]
+file = "mods/natures-aura.pw.toml"
+hash = "252f0822fccd24bb3c615c95c4d5acdad853ce8482c71e06b79f50a3520652c5"
+metafile = true
+
+[[files]]
+file = "mods/natures-compass.pw.toml"
+hash = "464e83a35e22e9bbdf7be38cf7a7a98c39462a0a50b01d2a1355bcae9167ea7a"
+metafile = true
+
+[[files]]
+file = "mods/neat.pw.toml"
+hash = "384e3e32a8ed080b941497fca9aeb7ded2ad1602ad93689caab5dc013dbfb54b"
+metafile = true
+
+[[files]]
+file = "mods/nomowanderer.pw.toml"
+hash = "0082b13e9e48db325b123941413ddea3dfde2171df6bc847d8e7af3966c236ee"
+metafile = true
+
+[[files]]
 file = "mods/occultism.pw.toml"
 hash = "576d6ad9b1f75ae114204b0a0671f7790aa477077ab917da5225308d59b708fc"
 metafile = true
