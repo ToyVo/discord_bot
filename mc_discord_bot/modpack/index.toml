@@ -211,8 +211,53 @@ hash = "8461b7344559646b5051a6d812e2cd4d43e62c8c817d17f0b2552f65306f43d4"
 metafile = true
 
 [[files]]
+file = "mods/cable-tiers.pw.toml"
+hash = "a377bba14ea525ae341001546adccc8d1d0b6f254666d38d72f57297b045e8aa"
+metafile = true
+
+[[files]]
+file = "mods/caelus.pw.toml"
+hash = "5155ae1ca2c606df2001422a48cd167d2449160d5fe12a302753dee69af7fe92"
+metafile = true
+
+[[files]]
+file = "mods/canary.pw.toml"
+hash = "e5df83a3dd1686106741d1d61da5869aed0537c2931a40234e1b3bd2d09e1971"
+metafile = true
+
+[[files]]
+file = "mods/cc-tweaked.pw.toml"
+hash = "b5b9fb98a3c556205fec1e4a502b2065c596b86e13d6fdace4b2f209ca496257"
+metafile = true
+
+[[files]]
+file = "mods/charging-gadgets.pw.toml"
+hash = "f5cb29abad0f88ca25bf862f1e012acaeacccd3b7bca2790e8a8a6a3606ab1fc"
+metafile = true
+
+[[files]]
+file = "mods/chisels-bits.pw.toml"
+hash = "aca009f78e1223d44ba4b9683537d7acdd899b30834e25ab04a3092156725bcf"
+metafile = true
+
+[[files]]
+file = "mods/citadel.pw.toml"
+hash = "454a06dd8f4f896dc23545a1ea4dcf304ca1265cdfe6c98b729d2943fb0b0341"
+metafile = true
+
+[[files]]
+file = "mods/clean-swing-through-grass.pw.toml"
+hash = "98952c950b934d7897e58d3602dab4a1ec64d63fa672d11b1320c7c09ef026fa"
+metafile = true
+
+[[files]]
 file = "mods/cloth-config.pw.toml"
 hash = "d4512023e6eb03c5045365468de16cebe1aea7f14f6cb94902d72848f69c79ce"
+metafile = true
+
+[[files]]
+file = "mods/clumps.pw.toml"
+hash = "e3173aaa4e9078ad7ace2b9ef43ce15ce9919c0b566d8830cea87264f92b3a6a"
 metafile = true
 
 [[files]]
@@ -221,8 +266,43 @@ hash = "8628a832792c54b2328c60672fe122479bcf8c791f1bc7dbab37204432eeff7d"
 metafile = true
 
 [[files]]
+file = "mods/cofh-core.pw.toml"
+hash = "20fcd633516ef654e4a1546ab7e1cd4e22bc96a087544ae583f85df9b7a65468"
+metafile = true
+
+[[files]]
+file = "mods/colorful-hearts.pw.toml"
+hash = "72f2bcd15a158233c3b791238ba9a05e597a9b0224390b8be974dd56a8603d40"
+metafile = true
+
+[[files]]
+file = "mods/comforts.pw.toml"
+hash = "db01ff332b926267e5343601473582e51cddd1dff7c0bfef0809dc9802c07480"
+metafile = true
+
+[[files]]
+file = "mods/common-capabilities.pw.toml"
+hash = "9c5d5bcc84c2d398fc242d9ec672a70942b085535e112d9f601397620d842578"
+metafile = true
+
+[[files]]
 file = "mods/configured.pw.toml"
 hash = "c1bdeff356cd2ac164e2c0e6d0ceeda234db9774c2df44fb9f0e71d3960cc3f1"
+metafile = true
+
+[[files]]
+file = "mods/connected-glass.pw.toml"
+hash = "d5ed5aff0921d0e95d0d470b31fb7ad2d132de4a23adb3096b4c8d1a2020ff79"
+metafile = true
+
+[[files]]
+file = "mods/connectivity.pw.toml"
+hash = "43bd0de3b867581d9e806c36d70096f427100bcb47c248121247e81f1f07a0d5"
+metafile = true
+
+[[files]]
+file = "mods/construction-wand.pw.toml"
+hash = "1613f68b9bdd242a957a3a20c5193b640672d11087abcb5c3abe5da45b235e35"
 metafile = true
 
 [[files]]
@@ -236,8 +316,18 @@ hash = "6ecc31d75d379730df8fe950438b4ca26ed1daa8612406374552665f9222f9ea"
 metafile = true
 
 [[files]]
+file = "mods/cupboard.pw.toml"
+hash = "2eb26b157c4159bfeff6a00147afa35284397d558f84b55367d1a41064d7456a"
+metafile = true
+
+[[files]]
 file = "mods/curios.pw.toml"
 hash = "ef203cfb9e4703fc48e154ccc2da9f0a1af4770d49f403f3ed0a581e5498a515"
+metafile = true
+
+[[files]]
+file = "mods/cyclops-core.pw.toml"
+hash = "9420095c09381c58d2b261b72cd518a546701fcc18ddca39a48d2bfb2a6f3e74"
 metafile = true
 
 [[files]]
@@ -253,6 +343,16 @@ metafile = true
 [[files]]
 file = "mods/ender-io.pw.toml"
 hash = "136f54e08d37b112d9849e6e23a8b0ecfefb21d1103f595477e7d7869e6b576f"
+metafile = true
+
+[[files]]
+file = "mods/experience-obelisk.pw.toml"
+hash = "87b53a599300bebb086d5bed700e07a0175a5802f8376caa39e16dd38f67ef24"
+metafile = true
+
+[[files]]
+file = "mods/fusion-connected-textures.pw.toml"
+hash = "59d22263e36313c43ad7c5e4179cb3554d414f701442b0784d94c0ba2384edfd"
 metafile = true
 
 [[files]]
@@ -316,6 +416,11 @@ hash = "26b6891625bf09317245200e3adb871cea00dbd41859d68cf57062544c0e6041"
 metafile = true
 
 [[files]]
+file = "mods/refined-storage.pw.toml"
+hash = "4f8fa2d8bba834bac3240024294ff9f2881fe20e11d775a93497dec5d25be571"
+metafile = true
+
+[[files]]
 file = "mods/resourceful-config.pw.toml"
 hash = "692ed5c4b3794053fbfb08107a2b0b0f90eec49b005a13be6ca86321e80df7ba"
 metafile = true
@@ -338,6 +443,11 @@ metafile = true
 [[files]]
 file = "mods/smartbrainlib.pw.toml"
 hash = "718ca03fc183ea0285fce253443eb8a64bc0a36d9fbf33d28545c85955d720e7"
+metafile = true
+
+[[files]]
+file = "mods/supermartijn642s-core-lib.pw.toml"
+hash = "436e0c633a689379dfb99745344a6ab0c9cc39955f59d6194aad2a6a44202217"
 metafile = true
 
 [[files]]
