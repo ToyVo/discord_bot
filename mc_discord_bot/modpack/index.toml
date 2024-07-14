@@ -691,6 +691,11 @@ hash = "1d461a57d4e64d5cdb416db0ee911c150e0ac08e13335ff525b2b5d0bef5844f"
 metafile = true
 
 [[files]]
+file = "mods/iron-jetpacks.pw.toml"
+hash = "6eb33f4fd0c6e3b19551fdb311824cf61dea5a19ae3c366b401473f3843725b0"
+metafile = true
+
+[[files]]
 file = "mods/irons-spells-n-spellbooks.pw.toml"
 hash = "23dff10d5a444a09e5ca0a0d9823e692b79cf33bb18ae8459c2bda879d279405"
 metafile = true
