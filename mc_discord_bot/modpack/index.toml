@@ -306,13 +306,58 @@ hash = "1613f68b9bdd242a957a3a20c5193b640672d11087abcb5c3abe5da45b235e35"
 metafile = true
 
 [[files]]
+file = "mods/controlling.pw.toml"
+hash = "1e56f528d8e21b0cf9c52c3d6deea2a4eafa408170b39a070195dbf66617f373"
+metafile = true
+
+[[files]]
 file = "mods/cooking-for-blockheads.pw.toml"
 hash = "4ae0eca22eeeb6cbcd629b24e32c2617c9a73032b89fff188bef10b98ca791a5"
 metafile = true
 
 [[files]]
+file = "mods/crafting-tweaks.pw.toml"
+hash = "9a6d944e6518ef55ec14dcdac4ec8fad74f02572874d37769590aeca616ad4d5"
+metafile = true
+
+[[files]]
+file = "mods/crafttweaker.pw.toml"
+hash = "e312f2039a8d63f719c4de567a6fd140a17b380e57e0135f1d7cd9817e13e917"
+metafile = true
+
+[[files]]
+file = "mods/create-chunkloading.pw.toml"
+hash = "4d4c31e67204d3381f826c05e02e041126c5f7c10a26894cbcce924f6407a027"
+metafile = true
+
+[[files]]
+file = "mods/create-teleporters.pw.toml"
+hash = "4dda34f77f86f86997dd2a6bf0a2d09f7aa8684e75b5ed2911cd868b421df983"
+metafile = true
+
+[[files]]
 file = "mods/create.pw.toml"
 hash = "6ecc31d75d379730df8fe950438b4ca26ed1daa8612406374552665f9222f9ea"
+metafile = true
+
+[[files]]
+file = "mods/createaddition.pw.toml"
+hash = "2f27bc6b84433eb0bec1338dadba55037635ab7eb7209bc4609f539c89c4c65d"
+metafile = true
+
+[[files]]
+file = "mods/createtweaker.pw.toml"
+hash = "366f9c2e792ea818ce0c2642ad6fb0415d0390dd000e0e6f0cce5779ec363f36"
+metafile = true
+
+[[files]]
+file = "mods/creeperhost-presents-soul-shards.pw.toml"
+hash = "46ab71e0d7d7300ec015bc9d44becf9ac3c232e481315d5f541f8956e9ec075c"
+metafile = true
+
+[[files]]
+file = "mods/cucumber.pw.toml"
+hash = "e35517b83b74491569b8b39d1727d52bcd4fc604fa8e549f3adc97b14f621306"
 metafile = true
 
 [[files]]
@@ -323,6 +368,11 @@ metafile = true
 [[files]]
 file = "mods/curios.pw.toml"
 hash = "ef203cfb9e4703fc48e154ccc2da9f0a1af4770d49f403f3ed0a581e5498a515"
+metafile = true
+
+[[files]]
+file = "mods/cyclic.pw.toml"
+hash = "70f8dd494cbfce53bacabb7ac449c23d9ba4fc27f0a5fd4c2831b03518ac9c17"
 metafile = true
 
 [[files]]
@@ -376,6 +426,11 @@ hash = "2f4dd47f2ac99a55c332638116596bbdc38a06ac86336bb662e42c604c3a96e6"
 metafile = true
 
 [[files]]
+file = "mods/kotlin-for-forge.pw.toml"
+hash = "40026875ee9b7d25a4ece48faa2b70a338100e87a689d5a8d4ba1ee608b878f6"
+metafile = true
+
+[[files]]
 file = "mods/mega-cells.pw.toml"
 hash = "8dcded48817b3313cc796df6e3e193c399f17d19377ff6bc6b4a97b5f18bd75c"
 metafile = true
@@ -411,6 +466,11 @@ hash = "0f807372e11d5a8a28266ab214fd243fa7558fe3f5a0cc6505090faede8c2dd6"
 metafile = true
 
 [[files]]
+file = "mods/polylib.pw.toml"
+hash = "947d5f3b9213360b68e9b65a8d2d5111939e82e248cf61eb02137f119c6eaeb6"
+metafile = true
+
+[[files]]
 file = "mods/projecte.pw.toml"
 hash = "26b6891625bf09317245200e3adb871cea00dbd41859d68cf57062544c0e6041"
 metafile = true
@@ -436,8 +496,18 @@ hash = "ef695ed57ccacb432666fdfa3672131e4d48eb0d84ee88b6bffd59c5f59f46ce"
 metafile = true
 
 [[files]]
+file = "mods/searchables.pw.toml"
+hash = "2cb8dd9a3944a6430b49916a4fe1b6cf0bd7efd907054f8e679a02717149404f"
+metafile = true
+
+[[files]]
 file = "mods/sebastrnlib.pw.toml"
 hash = "293c2540f4490e6c25a660dfcad115ed952a63c1b66b1dfdaab25f18d0154946"
+metafile = true
+
+[[files]]
+file = "mods/slice-and-dice.pw.toml"
+hash = "6068cdff2ed4152619680b61ec139e35ac3ef3f867ec34c3a1fc41a24b446465"
 metafile = true
 
 [[files]]
