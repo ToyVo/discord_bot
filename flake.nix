@@ -97,6 +97,7 @@
               MAX_TICK_TIME = "-1";
               PACKWIZ_URL="https://mc.toyvo.dev/modpack/pack.toml";
               LEVEL_TYPE="botania-skyblock";
+              SPAWN_PROTECTION="0";
               MAX_PLAYERS="10";
             };
             volumes = [
