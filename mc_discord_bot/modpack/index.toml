@@ -911,6 +911,11 @@ hash = "0f37846b5bc38059aad5800e48e22a7d24b915ef553e3241af2b63e9ba864237"
 metafile = true
 
 [[files]]
+file = "mods/modernfix.pw.toml"
+hash = "a57bc1e770ea4c0caae72f0de43960ebfc446b2d3b75744111e4bc75298b208b"
+metafile = true
+
+[[files]]
 file = "mods/modonomicon.pw.toml"
 hash = "b86209dc0d6108a07d9335980346f0f307c1d10fdc5117d174edaf8f2e105ae2"
 metafile = true
@@ -943,6 +948,11 @@ metafile = true
 [[files]]
 file = "mods/mouse-tweaks.pw.toml"
 hash = "e72f73611904e14d915418f0e3c6cb483cdc600e211375c2eceb393fec5b80f1"
+metafile = true
+
+[[files]]
+file = "mods/mowlib.pw.toml"
+hash = "1fada5acf66a14e811670e1f32490bd7ad07dd234d4349a22486c202b8c58359"
 metafile = true
 
 [[files]]
