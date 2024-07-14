@@ -1,0 +1,13 @@
+name = "PowerRanks"
+filename = "PowerRanks.jar"
+side = "server"
+
+[download]
+url = "https://cdn.modrinth.com/data/ecVvYtj3/versions/Wx0oHWfS/PowerRanks.jar"
+hash-format = "sha1"
+hash = "e493b0c36f75813a20c115bb76e6a6437dda8d85"
+
+[update]
+[update.modrinth]
+mod-id = "ecVvYtj3"
+version = "Wx0oHWfS"

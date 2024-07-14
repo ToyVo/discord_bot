@@ -11330,6 +11330,11 @@ hash = "424ed75337a2834cae6e318d47c9c1d57b9e08ae4f1e10db09160b84da320ecd"
 metafile = true
 
 [[files]]
+file = "plugins/powerranks.pw.toml"
+hash = "90d2a4799aeb73fced6f394eaf98b4ab9bde90b8755cd17959fff09ffbba4e4e"
+metafile = true
+
+[[files]]
 file = "resourcepacks/ozone-resources.pw.toml"
 hash = "4c60179a81a93c7480970b319a625ed5a610f541b837c94fe4fc247de2a09bff"
 metafile = true
