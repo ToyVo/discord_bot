@@ -146,13 +146,48 @@ hash = "a96886fe12b0156b383437c664125ca8989e7c972728a37e2ac36b35dcf29bec"
 metafile = true
 
 [[files]]
+file = "mods/bamboo-everything.pw.toml"
+hash = "4ba8c8e5f8d1de58aecde7d9dc6b6d2a4c0ec1fc12d2ae21117e743e5f247380"
+metafile = true
+
+[[files]]
 file = "mods/baritone.pw.toml"
 hash = "729cd7ef52acf2ae6e4572a2482db7998cbb5cd70fe20b48b8693a999ce6d96f"
 metafile = true
 
 [[files]]
+file = "mods/baubley-heart-canisters.pw.toml"
+hash = "19f53b210f35626cd418c40cdd2e12fba2764e66197be2c0de086f99632f9dd3"
+metafile = true
+
+[[files]]
 file = "mods/bdlib.pw.toml"
 hash = "e086a397f19b76a5b7ca0f6bcb917c4f8c25171d353ec7d131bd7f16bcaa7574"
+metafile = true
+
+[[files]]
+file = "mods/better-compatibility-checker.pw.toml"
+hash = "a167c88b43b73530c14b77d8cfa8c3546ee665ffa317f0451a6767e46bdae0de"
+metafile = true
+
+[[files]]
+file = "mods/better-than-bunnies.pw.toml"
+hash = "055d8a78156588e257dcd584401fe633b5dae3cea1884782cfa6863f561102c2"
+metafile = true
+
+[[files]]
+file = "mods/better-than-llamas.pw.toml"
+hash = "6ea5bdda6bbcc17ab60dd25d1add7ccabf1381e57511531f8b474183aa5f2d0d"
+metafile = true
+
+[[files]]
+file = "mods/blood-magic.pw.toml"
+hash = "488623331de35d0132795aeb028cca441fc0d5c2e358faf25e973894fb3859a7"
+metafile = true
+
+[[files]]
+file = "mods/bookshelf.pw.toml"
+hash = "058699e4832d0cf5396c5ea29244100f0c0e39a8d7aa5b64c2afdcc3cb8c8145"
 metafile = true
 
 [[files]]
@@ -168,6 +203,11 @@ metafile = true
 [[files]]
 file = "mods/brandons-core.pw.toml"
 hash = "dcfcb5a0d4132f1baa0f66e824531d1bbcb77c1b7ca2b5d3497514e233564dd8"
+metafile = true
+
+[[files]]
+file = "mods/building-gadgets.pw.toml"
+hash = "8461b7344559646b5051a6d812e2cd4d43e62c8c817d17f0b2552f65306f43d4"
 metafile = true
 
 [[files]]
@@ -218,6 +258,11 @@ metafile = true
 [[files]]
 file = "mods/geckolib.pw.toml"
 hash = "060760770ff9523f85467d066f73b2dbf8f03abadbf57dbdaaa98b92bce8d92b"
+metafile = true
+
+[[files]]
+file = "mods/ichunutil.pw.toml"
+hash = "8db43c90ffb5b4d4deb7746384b13f6a7eb52f4f95dcd53982fce3e28694113b"
 metafile = true
 
 [[files]]
