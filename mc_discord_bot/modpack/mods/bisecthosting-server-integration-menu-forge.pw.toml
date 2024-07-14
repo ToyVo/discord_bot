@@ -1,6 +1,6 @@
 name = "BisectHosting Server Integration Menu [FORGE]"
 filename = "BH-Menu-1.12.2-1.3.jar"
-side = "client"
+side = "both"
 
 [download]
 hash-format = "sha1"

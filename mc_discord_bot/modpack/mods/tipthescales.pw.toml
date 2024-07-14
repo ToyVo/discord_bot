@@ -1,6 +1,6 @@
 name = "TipTheScales"
 filename = "TipTheScales-1.12.2-1.0.4.jar"
-side = "client"
+side = "both"
 
 [download]
 hash-format = "sha1"

@@ -1,6 +1,6 @@
 name = "ConnectedTexturesMod"
 filename = "CTM-MC1.12.2-1.0.2.31.jar"
-side = "client"
+side = "both"
 
 [download]
 hash-format = "sha1"

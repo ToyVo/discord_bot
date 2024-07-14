@@ -1,6 +1,6 @@
 name = "DiscordSuite"
 filename = "DiscordSuite-2.2.4.jar"
-side = "client"
+side = "both"
 
 [download]
 hash-format = "sha1"

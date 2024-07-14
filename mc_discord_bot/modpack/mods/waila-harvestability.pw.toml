@@ -1,6 +1,6 @@
 name = "Waila Harvestability"
 filename = "WailaHarvestability-mc1.12-1.1.12.jar"
-side = "client"
+side = "both"
 
 [download]
 hash-format = "sha1"
