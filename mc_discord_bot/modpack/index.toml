@@ -261,6 +261,11 @@ hash = "e3173aaa4e9078ad7ace2b9ef43ce15ce9919c0b566d8830cea87264f92b3a6a"
 metafile = true
 
 [[files]]
+file = "mods/cobweb.pw.toml"
+hash = "ee520bf93f6ee23f24ccf53eb1afb8673944147d7c122bb520c28c4cbc59c931"
+metafile = true
+
+[[files]]
 file = "mods/codechicken-lib-1-8.pw.toml"
 hash = "8628a832792c54b2328c60672fe122479bcf8c791f1bc7dbab37204432eeff7d"
 metafile = true
@@ -581,8 +586,53 @@ hash = "59d22263e36313c43ad7c5e4179cb3554d414f701442b0784d94c0ba2384edfd"
 metafile = true
 
 [[files]]
+file = "mods/gateways-to-eternity.pw.toml"
+hash = "47df5c1deae2b57313f1e1f42ca0b9a69eaf97fb3052bc89e716416007d3f3a3"
+metafile = true
+
+[[files]]
 file = "mods/geckolib.pw.toml"
 hash = "060760770ff9523f85467d066f73b2dbf8f03abadbf57dbdaaa98b92bce8d92b"
+metafile = true
+
+[[files]]
+file = "mods/growthcraft-community-edition.pw.toml"
+hash = "bcf21e604552bcb6035b5a0d0de5119095741ccfa2049690f6e1458b63a24e05"
+metafile = true
+
+[[files]]
+file = "mods/gunpowderlib.pw.toml"
+hash = "fceee3c4da54bb71f2eceede2ea964c05b3e38032504dfc1e5d66b96b6fbc18e"
+metafile = true
+
+[[files]]
+file = "mods/hammer-lib.pw.toml"
+hash = "dc2d33109c6d785ac53b0af16565c122a0caa7faa8b27fbd920accbc31ac8de6"
+metafile = true
+
+[[files]]
+file = "mods/handcrafted.pw.toml"
+hash = "b9a7e71472f5f88229bf2f9e214b223b3900052bdc56075906d7a22acf74568c"
+metafile = true
+
+[[files]]
+file = "mods/harvest-with-ease.pw.toml"
+hash = "aae8bee33d346f6792ccbf83f683541ffcdd55974bf7c2b8239eef949fb36d0d"
+metafile = true
+
+[[files]]
+file = "mods/hole-filler-mod.pw.toml"
+hash = "fefc04ebbaaf42435370a3397a6dc356bb28f1ed425dc5706bc89dfceea1b1c0"
+metafile = true
+
+[[files]]
+file = "mods/hostile-neural-networks.pw.toml"
+hash = "865f3d49713a5e5d284a858c724fdbef873e89434e6ebb2bee1a43386ae9ec98"
+metafile = true
+
+[[files]]
+file = "mods/hyperbox.pw.toml"
+hash = "82ef251513ef10da2ff8e120fd998e4808821ab74e0e5a16070c1afd0b56ed25"
 metafile = true
 
 [[files]]
