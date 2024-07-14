@@ -661,6 +661,31 @@ hash = "40026875ee9b7d25a4ece48faa2b70a338100e87a689d5a8d4ba1ee608b878f6"
 metafile = true
 
 [[files]]
+file = "mods/kubejs-additions.pw.toml"
+hash = "b175e1a1408708cf78e211c8e768540d23e942f34a1efef1772e06abe820a5b0"
+metafile = true
+
+[[files]]
+file = "mods/kubejs-create.pw.toml"
+hash = "432015ce62e9acfd7f305102eb0aa8423e3d424f06193c333b71dc21f1fba29e"
+metafile = true
+
+[[files]]
+file = "mods/kubejs-enderio.pw.toml"
+hash = "96579244f190817a0d778c839019f5a15a296ed1b370c3586e5191c9fa9b77b4"
+metafile = true
+
+[[files]]
+file = "mods/kubejs-thermal.pw.toml"
+hash = "be2fd618cc61b8eee5ab16c03b4780809da0f3de76bf5224a463cfffeebd6385"
+metafile = true
+
+[[files]]
+file = "mods/kubejs.pw.toml"
+hash = "07efd4cf1c3424849a3b79a7213a3655ebdada80fd901dba0cdcae11d1bbb6af"
+metafile = true
+
+[[files]]
 file = "mods/mcjtylib.pw.toml"
 hash = "c7912aabbb629d0fb2d1c0cecf0923a1742feae7056dd1b9feb2c81b2c9aef73"
 metafile = true
@@ -741,6 +766,11 @@ hash = "984db11b069d45ee175a8f20e25b26cbd87db633aa83c2ed3e61a9c3a81b40f5"
 metafile = true
 
 [[files]]
+file = "mods/rhino.pw.toml"
+hash = "6be79c8aeb5bddbe5957a1292a7977d8e03926c3126472edeaa906ef54f51b58"
+metafile = true
+
+[[files]]
 file = "mods/runelic.pw.toml"
 hash = "53254c5c7af6238845518f9e289b8b91337e88b6dad4566c2e1b223f6901f456"
 metafile = true
@@ -783,6 +813,16 @@ metafile = true
 [[files]]
 file = "mods/supermartijn642s-core-lib.pw.toml"
 hash = "436e0c633a689379dfb99745344a6ab0c9cc39955f59d6194aad2a6a44202217"
+metafile = true
+
+[[files]]
+file = "mods/thermal-expansion.pw.toml"
+hash = "1603a2d57a71762925e57c61ae45649bf6aab128295a31efec214b0676c79024"
+metafile = true
+
+[[files]]
+file = "mods/thermal-foundation.pw.toml"
+hash = "626f0ea226f55c453930ef387b32ad090c8defdd07792fe0aefc4b5afa87cb46"
 metafile = true
 
 [[files]]
