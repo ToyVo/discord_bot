@@ -876,6 +876,16 @@ hash = "0b9cc190139b0eb2d5f0153f05717ed53edd499ad2a3eeee99ea75d22fd0ef1c"
 metafile = true
 
 [[files]]
+file = "mods/mining-gadgets.pw.toml"
+hash = "d4a42351be29d476b540e810a2339b05f2f0cf789d62404da7c708b685c9ecda"
+metafile = true
+
+[[files]]
+file = "mods/mmmmmmmmmmmm.pw.toml"
+hash = "bce56a595682b811d74cc4e30a0104927723a4375135d255d3cdfa158b2a0669"
+metafile = true
+
+[[files]]
 file = "mods/mod-name-tooltip.pw.toml"
 hash = "0f37846b5bc38059aad5800e48e22a7d24b915ef553e3241af2b63e9ba864237"
 metafile = true
@@ -978,6 +988,11 @@ metafile = true
 [[files]]
 file = "mods/sebastrnlib.pw.toml"
 hash = "293c2540f4490e6c25a660dfcad115ed952a63c1b66b1dfdaab25f18d0154946"
+metafile = true
+
+[[files]]
+file = "mods/selene.pw.toml"
+hash = "14134e708ec8e9bee6329df46e188b33a07ed86cff9657a597f53def05cb15df"
 metafile = true
 
 [[files]]
