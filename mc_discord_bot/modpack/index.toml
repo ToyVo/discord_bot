@@ -10021,10 +10021,6 @@ file = "mods-resourcepacks/extrautils2/lang/en_US.lang"
 hash = "f123c00585548726dfb6b13c1c9f53b67a11937707b9682234897d7a29edf580"
 
 [[files]]
-file = "mods/ChickenASM-1.12-1.0.2.7.jar"
-hash = "54c063e72abb6af999d80b94a2f1c9593c6ef0bb7769f3410d2a49f47c1ba3b0"
-
-[[files]]
 file = "mods/Netherending-Ores-1.12.2-1.4.2.jar"
 hash = "84ac74ed254fcc2c7c9d1a9702d636a2c825a8825af7fe2db79f31bfe0cf8849"
 
