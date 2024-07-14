@@ -691,13 +691,28 @@ hash = "1d461a57d4e64d5cdb416db0ee911c150e0ac08e13335ff525b2b5d0bef5844f"
 metafile = true
 
 [[files]]
-file = "mods/iron-jetpacks.pw.toml"
-hash = "6eb33f4fd0c6e3b19551fdb311824cf61dea5a19ae3c366b401473f3843725b0"
+file = "mods/irons-spells-n-spellbooks.pw.toml"
+hash = "23dff10d5a444a09e5ca0a0d9823e692b79cf33bb18ae8459c2bda879d279405"
 metafile = true
 
 [[files]]
-file = "mods/irons-spells-n-spellbooks.pw.toml"
-hash = "23dff10d5a444a09e5ca0a0d9823e692b79cf33bb18ae8459c2bda879d279405"
+file = "mods/item-collectors.pw.toml"
+hash = "4fdb75b6a3ad133e0f80c3b9a55695578c1be63f2e1e034e943adbce3b00545b"
+metafile = true
+
+[[files]]
+file = "mods/jamd.pw.toml"
+hash = "334068286ec4f418b023210341b1c12fa851f2d2de3c4130383a9f96d1c5a785"
+metafile = true
+
+[[files]]
+file = "mods/jaopca.pw.toml"
+hash = "62ab78a708cb3dfcde4d58e0ab1e3046bd93e31421177cef546ca07122ef7efe"
+metafile = true
+
+[[files]]
+file = "mods/javd.pw.toml"
+hash = "3452c3d4cc9cb17ae96759c799857c742c48e2e53b9b7dd38c190c8b804b95eb"
 metafile = true
 
 [[files]]
@@ -706,8 +721,28 @@ hash = "8e564ffebd3892f46ebad830733cb9f68e45895c53da42526aec2cbe7b5a9707"
 metafile = true
 
 [[files]]
+file = "mods/jumpy-boats.pw.toml"
+hash = "29725b9b5379532112f94a3007b2c18ad1cd62be650de78e7574a73eabc98afb"
+metafile = true
+
+[[files]]
+file = "mods/just-enough-archaeology.pw.toml"
+hash = "0e61bdad02c3baa90ff0c6894f533a4b7ac46090095d59f6162f848b99a90280"
+metafile = true
+
+[[files]]
 file = "mods/just-enough-resources-jer.pw.toml"
 hash = "2f4dd47f2ac99a55c332638116596bbdc38a06ac86336bb662e42c604c3a96e6"
+metafile = true
+
+[[files]]
+file = "mods/justhammers.pw.toml"
+hash = "2e5721d05635bdad26f4c4b8f7695356f0e6c7f073a3cc01742f2c2357c98385"
+metafile = true
+
+[[files]]
+file = "mods/kleeslabs.pw.toml"
+hash = "49a0eddb7f8ebeb781012ae0871d0de67a503357ce2041ec85504126f0852a5e"
 metafile = true
 
 [[files]]
@@ -743,6 +778,61 @@ metafile = true
 [[files]]
 file = "mods/kubejs.pw.toml"
 hash = "07efd4cf1c3424849a3b79a7213a3655ebdada80fd901dba0cdcae11d1bbb6af"
+metafile = true
+
+[[files]]
+file = "mods/l2library.pw.toml"
+hash = "61305fbf7f822201c47e695a4f6beb5575fcc0f9fc4994ee73410deba41fffca"
+metafile = true
+
+[[files]]
+file = "mods/laserio.pw.toml"
+hash = "9d85a210e77661032cfbcd930059096be6cfb6afd9abedde21bcdfa4e5b25e54"
+metafile = true
+
+[[files]]
+file = "mods/lemon-lib.pw.toml"
+hash = "6e3647b3a38a9c6fe9d93a75795d81b47bc2fb861ccbfb18e06953db79a50eca"
+metafile = true
+
+[[files]]
+file = "mods/lendercataclysm.pw.toml"
+hash = "07b988cf27e9fc69a41dd5850f693bc73647ea48b4f8ed5f2e176d26c0e25f76"
+metafile = true
+
+[[files]]
+file = "mods/let-me-despawn.pw.toml"
+hash = "f19f61fcce9df3befee6d0d6096a93a9646f93766b2523b27e7903da81e4269b"
+metafile = true
+
+[[files]]
+file = "mods/libx.pw.toml"
+hash = "2c255a6aff5c016d8769777fd9e23f4bbc256d103fb45eef12b1d6af77249ba1"
+metafile = true
+
+[[files]]
+file = "mods/light-overlay.pw.toml"
+hash = "ec1dbea2c473bfd08357e3a31745ba28046debee77242e9c401169ddbc88bcd3"
+metafile = true
+
+[[files]]
+file = "mods/lionfish-api.pw.toml"
+hash = "1fd7013e2b41e76c0d0bccc7f47a88ebcbb4f597d1f5bea3126caa2d7b13200f"
+metafile = true
+
+[[files]]
+file = "mods/lootjs.pw.toml"
+hash = "43aa2c47e284692aa6182abd00929d5753c8660aea9e23b901da68aa75a68930"
+metafile = true
+
+[[files]]
+file = "mods/lootr.pw.toml"
+hash = "3ce0ee2fd738c392ec888583533d0e35b808c6838ccc01a3e7c0068dffcd267b"
+metafile = true
+
+[[files]]
+file = "mods/luggage.pw.toml"
+hash = "1b44cbb394ebb487a960c778048da90b020042fd7958e410cf25312e322eb799"
 metafile = true
 
 [[files]]
@@ -893,6 +983,11 @@ metafile = true
 [[files]]
 file = "mods/titanium.pw.toml"
 hash = "5e41fd8f565e09e83868e4c4776154befd3203b01ed5f09b6f7cd27687ec0041"
+metafile = true
+
+[[files]]
+file = "mods/trenzalore.pw.toml"
+hash = "c66abcf408ad2d6ffe3fe7b2db9fc08ec2540896011047a58394d467669eef9c"
 metafile = true
 
 [[files]]
