@@ -526,6 +526,11 @@ hash = "db352d6ebb9d747fa1ca12a7ede86559293d537d7014dd0c21653c1fa7f585a2"
 metafile = true
 
 [[files]]
+file = "mods/galacticraft-legacy.pw.toml"
+hash = "520e59a5eb106b7f58227e00b5c605ad2f24a20ebaf870dbe91ecb7086b4e42c"
+metafile = true
+
+[[files]]
 file = "mods/galacticrafttweaker.pw.toml"
 hash = "1096a10f0beeddf1ba1ff2e09797260483291c313d0005a8c886713d2ef3d459"
 metafile = true
@@ -828,6 +833,11 @@ metafile = true
 [[files]]
 file = "mods/neat.pw.toml"
 hash = "799a1e945853fb75bfa3aaa45a1d120714f62c619535cb0e15b6d89af1d34fe4"
+metafile = true
+
+[[files]]
+file = "mods/netherending-ores.pw.toml"
+hash = "d522cd942bf66c6ba333d8ad4b4dc88c04961b71459d79ba8d8f796c1faaeebc"
 metafile = true
 
 [[files]]
