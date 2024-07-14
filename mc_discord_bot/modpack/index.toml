@@ -1,6 +1,10 @@
 hash-format = "sha256"
 
 [[files]]
+file = "mods/Netherending-Ores-1.12.2-1.4.2.jar"
+hash = "84ac74ed254fcc2c7c9d1a9702d636a2c825a8825af7fe2db79f31bfe0cf8849"
+
+[[files]]
 file = "mods/abyssalcraft-integration.pw.toml"
 hash = "6a97c7f602431520bfeb8ba415c17ab6f03fd6bb0cac1077713aef15de895cf1"
 metafile = true
@@ -833,11 +837,6 @@ metafile = true
 [[files]]
 file = "mods/neat.pw.toml"
 hash = "799a1e945853fb75bfa3aaa45a1d120714f62c619535cb0e15b6d89af1d34fe4"
-metafile = true
-
-[[files]]
-file = "mods/netherending-ores.pw.toml"
-hash = "d522cd942bf66c6ba333d8ad4b4dc88c04961b71459d79ba8d8f796c1faaeebc"
 metafile = true
 
 [[files]]
