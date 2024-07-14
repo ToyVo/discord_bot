@@ -876,6 +876,11 @@ hash = "0b9cc190139b0eb2d5f0153f05717ed53edd499ad2a3eeee99ea75d22fd0ef1c"
 metafile = true
 
 [[files]]
+file = "mods/mod-name-tooltip.pw.toml"
+hash = "0f37846b5bc38059aad5800e48e22a7d24b915ef553e3241af2b63e9ba864237"
+metafile = true
+
+[[files]]
 file = "mods/modonomicon.pw.toml"
 hash = "b86209dc0d6108a07d9335980346f0f307c1d10fdc5117d174edaf8f2e105ae2"
 metafile = true
@@ -888,6 +893,16 @@ metafile = true
 [[files]]
 file = "mods/oculus.pw.toml"
 hash = "0663919544b1f185be64b69269f5e914d2fae910fb8ee16d4cd9549d809e71cd"
+metafile = true
+
+[[files]]
+file = "mods/openblocks-elevator.pw.toml"
+hash = "9d66478fde6c978312f93734d481bcb9ae9c49b74cb4538fce58c65ef15d593c"
+metafile = true
+
+[[files]]
+file = "mods/openblocks-trophies.pw.toml"
+hash = "d8f7dbb0d148d3474be2d2f9bee8894fc8912f4d8d177fdc5d6ce4884f500394"
 metafile = true
 
 [[files]]
