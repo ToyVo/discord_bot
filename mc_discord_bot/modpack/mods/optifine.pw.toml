@@ -1,0 +1,8 @@
+name = "OptiFine"
+filename = "OptiFine_1.20.4_HD_U_I7.jar"
+side = "client"
+
+[download]
+url = "https://optifine.net/downloadx?f=OptiFine_1.20.4_HD_U_I7.jar&x=9e98a83710733a2776ced035f178c296"
+hash-format = "sha1"
+hash = "9aacdb072f3194207f0450e94a9d206800779fec"

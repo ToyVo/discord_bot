@@ -1,0 +1,8 @@
+name = "Baritone"
+filename = "baritone-api-forge-1.2.19.jar"
+side = "client"
+
+[download]
+url = "https://github.com/cabaletta/baritone/releases/download/v1.2.19/baritone-api-forge-1.2.19.jar"
+hash-format = "sha1"
+hash = "bee2d5e9e35f88614bf92c4238564c49a6c1c791"

@@ -91,7 +91,7 @@
               MOHIST_BUILD = "315";
               VERSION = "1.12.2";
               MEMORY = "20g";
-              OPS = "4cb4aff4-a0ed-4eaf-b912-47825b2ed30d";
+              OPS = "4cb4aff4-a0ed-4eaf-b912-47825b2ed30d,2f3205e9-d01f-4b07-9f1c-6aa96bea8911,921f3122-1b87-4727-9304-35960e038981";
               EXISTING_OPS_FILE = "MERGE";
               MOTD = "ToyVo Custom Server";
               MAX_TICK_TIME = "-1";
@@ -99,6 +99,7 @@
               LEVEL_TYPE="botania-skyblock";
               SPAWN_PROTECTION="0";
               MAX_PLAYERS="10";
+              SPIGET_RESOURCES="60623";
             };
             volumes = [
               "${cfg.datadir}:/data"

@@ -10135,6 +10135,11 @@ hash = "25d0cb5cfaca28e9a8fb64d5fb5f5b8801b69a6974fcf6312b9b669c6126fa11"
 metafile = true
 
 [[files]]
+file = "mods/baritone.pw.toml"
+hash = "20f8eb467899e3a18ef35b50e1b7f21e89fb9631b709108341b26e69e5f9ccec"
+metafile = true
+
+[[files]]
 file = "mods/base.pw.toml"
 hash = "a177b39c27d5529675c2af3a83529a69a2067eefa76e9ffa80e8f642ac9d839f"
 metafile = true
@@ -10725,6 +10730,11 @@ hash = "cf784694195c893548cf2e65e823bb8653f99900720ab0236216ae11c244d099"
 metafile = true
 
 [[files]]
+file = "mods/mcgltf.pw.toml"
+hash = "b0e7fd5304ae9bf8016337cd22daa9d9faf32088cce53e6ab1ec2f27a8b52a68"
+metafile = true
+
+[[files]]
 file = "mods/mcjtylib.pw.toml"
 hash = "46b6fe4b838212d19da58719e4782d0c54689f3cbec148921c41a3297f96caf6"
 metafile = true
@@ -10782,6 +10792,11 @@ metafile = true
 [[files]]
 file = "mods/modular-machinery.pw.toml"
 hash = "e2d50475819d9ba50a74eccc9320f09f648ef0f48a8b4e27b5bcdf4cfaba4179"
+metafile = true
+
+[[files]]
+file = "mods/modularwarfare.pw.toml"
+hash = "7f18ca6496a86be2fae4052e8b6125596bf9372c35e610f08b5228668a67c669"
 metafile = true
 
 [[files]]
@@ -10917,6 +10932,11 @@ metafile = true
 [[files]]
 file = "mods/openmodularturrets.pw.toml"
 hash = "8bfb0749eb020348649c1c7abf3e5b980ac35a52508a52fb329c19135b55b869"
+metafile = true
+
+[[files]]
+file = "mods/optifine.pw.toml"
+hash = "e9469cc4c0905d2eb006f6801e5875ed1279b61e74a399796d101c68a1700119"
 metafile = true
 
 [[files]]
