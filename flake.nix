@@ -100,10 +100,14 @@
               SPAWN_PROTECTION="0";
               MAX_PLAYERS="10";
               SPIGET_RESOURCES="60623";
+              CREATE_CONSOLE_IN_PIPE="true";
             };
             volumes = [
               "${cfg.datadir}:/data"
             ];
+            extraOptions = [
+              "-it"
+            ]
           };
         };
       };
