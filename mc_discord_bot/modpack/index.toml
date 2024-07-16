@@ -10930,11 +10930,6 @@ hash = "8bfb0749eb020348649c1c7abf3e5b980ac35a52508a52fb329c19135b55b869"
 metafile = true
 
 [[files]]
-file = "mods/optifine.pw.toml"
-hash = "e9469cc4c0905d2eb006f6801e5875ed1279b61e74a399796d101c68a1700119"
-metafile = true
-
-[[files]]
 file = "mods/ore-excavation.pw.toml"
 hash = "a550c1ae3f3e585e4ffe2aa7c39b17e8a1066e65865c1dec9f918191786056d0"
 metafile = true
