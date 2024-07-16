@@ -10135,11 +10135,6 @@ hash = "25d0cb5cfaca28e9a8fb64d5fb5f5b8801b69a6974fcf6312b9b669c6126fa11"
 metafile = true
 
 [[files]]
-file = "mods/baritone.pw.toml"
-hash = "20f8eb467899e3a18ef35b50e1b7f21e89fb9631b709108341b26e69e5f9ccec"
-metafile = true
-
-[[files]]
 file = "mods/base.pw.toml"
 hash = "a177b39c27d5529675c2af3a83529a69a2067eefa76e9ffa80e8f642ac9d839f"
 metafile = true
