@@ -10725,11 +10725,6 @@ hash = "cf784694195c893548cf2e65e823bb8653f99900720ab0236216ae11c244d099"
 metafile = true
 
 [[files]]
-file = "mods/mcgltf.pw.toml"
-hash = "b0e7fd5304ae9bf8016337cd22daa9d9faf32088cce53e6ab1ec2f27a8b52a68"
-metafile = true
-
-[[files]]
 file = "mods/mcjtylib.pw.toml"
 hash = "46b6fe4b838212d19da58719e4782d0c54689f3cbec148921c41a3297f96caf6"
 metafile = true
@@ -10790,11 +10785,6 @@ hash = "e2d50475819d9ba50a74eccc9320f09f648ef0f48a8b4e27b5bcdf4cfaba4179"
 metafile = true
 
 [[files]]
-file = "mods/modularwarfare.pw.toml"
-hash = "7f18ca6496a86be2fae4052e8b6125596bf9372c35e610f08b5228668a67c669"
-metafile = true
-
-[[files]]
 file = "mods/moo-fluids.pw.toml"
 hash = "432e78fd317270ff8f948d35c8be1fb54c4ae6c3d6658579da57113f7c8d4d9b"
 metafile = true
@@ -10827,6 +10817,11 @@ metafile = true
 [[files]]
 file = "mods/mputils.pw.toml"
 hash = "4180981efd1001682131f5d306e48b284a6d14f6a70d98546fe1be0701ab9eb8"
+metafile = true
+
+[[files]]
+file = "mods/mrcrayfishs-gun-mod.pw.toml"
+hash = "6d36d42c202c6ad223bcf09f626eca0bbfed8fba21a8ead594bdb50e5023d209"
 metafile = true
 
 [[files]]
@@ -10897,6 +10892,11 @@ metafile = true
 [[files]]
 file = "mods/oauth.pw.toml"
 hash = "2e36215d70a77efa7454bb83247e8766b6dca081f3b56639975dc2a03f58b7a4"
+metafile = true
+
+[[files]]
+file = "mods/obfuscate.pw.toml"
+hash = "056799cc0aa43fa412f48cc524a7f83336bfb0e2f1c0e5084a4b6ca6b1fe0454"
 metafile = true
 
 [[files]]
