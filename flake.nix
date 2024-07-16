@@ -101,6 +101,7 @@
               MAX_PLAYERS="10";
               SPIGET_RESOURCES="60623";
               CREATE_CONSOLE_IN_PIPE="true";
+              JVM_DD_OPTS="fml.queryResult:confirm";
             };
             volumes = [
               "${cfg.datadir}:/data"
