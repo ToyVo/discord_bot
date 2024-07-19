@@ -102,6 +102,7 @@
               SPIGET_RESOURCES="60623";
               CREATE_CONSOLE_IN_PIPE="true";
               JVM_DD_OPTS="fml.queryResult=confirm";
+              ALLOW_FLIGHT="TRUE";
             };
             volumes = [
               "${cfg.datadir}:/data"
