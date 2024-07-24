@@ -93,13 +93,12 @@
               MEMORY = "20g";
               OPS = "4cb4aff4-a0ed-4eaf-b912-47825b2ed30d,2f3205e9-d01f-4b07-9f1c-6aa96bea8911,921f3122-1b87-4727-9304-35960e038981";
               EXISTING_OPS_FILE = "MERGE";
-              MOTD = "ToyVo Custom Server";
+              MOTD = "ToyVo Modded Server";
               MAX_TICK_TIME = "-1";
               PACKWIZ_URL="https://mc.toyvo.dev/modpack/pack.toml";
               LEVEL_TYPE="botania-skyblock";
               SPAWN_PROTECTION="0";
               MAX_PLAYERS="10";
-              SPIGET_RESOURCES="60623";
               CREATE_CONSOLE_IN_PIPE="true";
               JVM_DD_OPTS="fml.queryResult=confirm";
               ALLOW_FLIGHT="TRUE";
