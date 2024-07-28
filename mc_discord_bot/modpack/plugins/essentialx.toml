@@ -1,0 +1,9 @@
+name = "EssentialsX"
+filename = "EssentialsX-2.20.1.jar"
+side = "server"
+
+[download]
+url = "https://dev.bukkit.org/projects/essentialsx/files/4684081/download"
+hash-format = "sha1"
+hash = "e626f9f250470bcf2feffbc3740f738f9cee50ef"
+

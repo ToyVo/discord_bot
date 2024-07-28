@@ -11345,7 +11345,7 @@ hash = "f6c4af5534b562f289cc4eec6bfc7fa624a0daf4dfabd14f917d76adbd9867e1"
 
 [[files]]
 file = "plugins/luckperms.pw.toml"
-hash = "9a50697de0d6b77518bab0738def013604179c45a921e6157b0bb9276d8fdbe7"
+hash = "c5aa111322e4b00295894e8a91fc98ecb456b47e14c0ea2b379d6fd199ca298d"
 metafile = true
 
 [[files]]
