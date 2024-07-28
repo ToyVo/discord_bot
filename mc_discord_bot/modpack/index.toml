@@ -1,6 +1,10 @@
 hash-format = "sha256"
 
 [[files]]
+file = "EssentialsX-2.20.1.jar"
+hash = "802ea30bda460ca4597e818925816933c123b08d8126a814fac28d03a61bf542"
+
+[[files]]
 file = "config/AE2Stuff/readme.txt"
 hash = "0267af34c1928a0ff3a23a40546dbd457eea83726cb4a8cb96ac9340fe9343f0"
 
@@ -11341,7 +11345,7 @@ metafile = true
 
 [[files]]
 file = "plugins/essentialx.toml"
-hash = "f6c4af5534b562f289cc4eec6bfc7fa624a0daf4dfabd14f917d76adbd9867e1"
+hash = "271feda2a4e1dc9628ae32117f1e01e69d53dd97071fd2be705bea661ee6ae0f"
 
 [[files]]
 file = "plugins/luckperms.pw.toml"
