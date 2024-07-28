@@ -1,10 +1,6 @@
 hash-format = "sha256"
 
 [[files]]
-file = "EssentialsX-2.20.1.jar"
-hash = "802ea30bda460ca4597e818925816933c123b08d8126a814fac28d03a61bf542"
-
-[[files]]
 file = "config/AE2Stuff/readme.txt"
 hash = "0267af34c1928a0ff3a23a40546dbd457eea83726cb4a8cb96ac9340fe9343f0"
 
@@ -10029,6 +10025,10 @@ file = "mods/Netherending-Ores-1.12.2-1.4.2.jar"
 hash = "84ac74ed254fcc2c7c9d1a9702d636a2c825a8825af7fe2db79f31bfe0cf8849"
 
 [[files]]
+file = "mods/OptiFine_1.12.2_HD_U_G5.jar"
+hash = "3b0006797771feb97f2d0d2908ae7c9a78cefb2e730af1c2e85d08a839ba271e"
+
+[[files]]
 file = "mods/abyssalcraft-integration.pw.toml"
 hash = "6a97c7f602431520bfeb8ba415c17ab6f03fd6bb0cac1077713aef15de895cf1"
 metafile = true
@@ -10934,6 +10934,11 @@ hash = "8bfb0749eb020348649c1c7abf3e5b980ac35a52508a52fb329c19135b55b869"
 metafile = true
 
 [[files]]
+file = "mods/optifine.pw.toml"
+hash = "a67d2f234c873729a898e3ddeb0dfe7c2530d494f85b77bd25e97c820df9dce5"
+metafile = true
+
+[[files]]
 file = "mods/ore-excavation.pw.toml"
 hash = "a550c1ae3f3e585e4ffe2aa7c39b17e8a1066e65865c1dec9f918191786056d0"
 metafile = true
@@ -11342,6 +11347,10 @@ metafile = true
 file = "mods/zerocore.pw.toml"
 hash = "424ed75337a2834cae6e318d47c9c1d57b9e08ae4f1e10db09160b84da320ecd"
 metafile = true
+
+[[files]]
+file = "plugins/EssentialsX-2.20.1.jar"
+hash = "802ea30bda460ca4597e818925816933c123b08d8126a814fac28d03a61bf542"
 
 [[files]]
 file = "plugins/essentialx.toml"
