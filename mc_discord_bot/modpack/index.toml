@@ -10475,6 +10475,11 @@ hash = "f965daa40324cdfdddd1c9ab7b686a0b8bc3bb94142a148ed3529f62b82f508b"
 metafile = true
 
 [[files]]
+file = "mods/essential-mod.pw.toml"
+hash = "9de51d140072b697257bcd08c709bbd862c01745d2f69d62521c2412447748f1"
+metafile = true
+
+[[files]]
 file = "mods/everlastingabilities.pw.toml"
 hash = "166628b32228a601fc821a34cbdfedfd98c9487e651f9441bf4a38869e01c82a"
 metafile = true
