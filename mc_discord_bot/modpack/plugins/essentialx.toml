@@ -1,3 +1,8 @@
 name = "EssentialsX"
 filename = "EssentialsX-2.20.1.jar"
 side = "server"
+
+[download]
+url = "https://mc.toyvo.dev/modpack/plugins/EssentialsX-2.20.1.jar"
+hash-format = "sha1"
+hash = "e626f9f250470bcf2feffbc3740f738f9cee50ef"
