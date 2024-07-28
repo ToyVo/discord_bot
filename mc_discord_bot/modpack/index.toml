@@ -10475,11 +10475,6 @@ hash = "f965daa40324cdfdddd1c9ab7b686a0b8bc3bb94142a148ed3529f62b82f508b"
 metafile = true
 
 [[files]]
-file = "mods/essential-mod.pw.toml"
-hash = "9de51d140072b697257bcd08c709bbd862c01745d2f69d62521c2412447748f1"
-metafile = true
-
-[[files]]
 file = "mods/everlastingabilities.pw.toml"
 hash = "166628b32228a601fc821a34cbdfedfd98c9487e651f9441bf4a38869e01c82a"
 metafile = true
@@ -11345,8 +11340,12 @@ hash = "424ed75337a2834cae6e318d47c9c1d57b9e08ae4f1e10db09160b84da320ecd"
 metafile = true
 
 [[files]]
+file = "plugins/essentialx.toml"
+hash = "f6c4af5534b562f289cc4eec6bfc7fa624a0daf4dfabd14f917d76adbd9867e1"
+
+[[files]]
 file = "plugins/luckperms.pw.toml"
-hash = "c5aa111322e4b00295894e8a91fc98ecb456b47e14c0ea2b379d6fd199ca298d"
+hash = "9a50697de0d6b77518bab0738def013604179c45a921e6157b0bb9276d8fdbe7"
 metafile = true
 
 [[files]]
