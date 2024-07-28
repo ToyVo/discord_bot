@@ -11345,8 +11345,9 @@ hash = "424ed75337a2834cae6e318d47c9c1d57b9e08ae4f1e10db09160b84da320ecd"
 metafile = true
 
 [[files]]
-file = "plugins/essentialx.toml"
+file = "plugins/essentialx.pw.toml"
 hash = "b1d0aeadedce6540c5bc15beabd5c5a6fda7aa330a78f72bd029bf770e592da6"
+metafile = true
 
 [[files]]
 file = "plugins/luckperms.pw.toml"
@@ -12293,3 +12294,8 @@ hash = "40039a23398624d52d7a1ecf175247a76706d709bf30cbef4df52e2b72cb87d6"
 [[files]]
 file = "scripts/titan/titan_testers.zs"
 hash = "d9a92b529d14d692658fc9164dc2e2a797237d4ead57007654d6a1389855256d"
+
+[[files]]
+file = "shaderpacks/makeup-ultra-fast-shader.pw.toml"
+hash = "b4ccda5ae3718002fdac928f827136a3fa79609b4e211a1a9f347519a3f93151"
+metafile = true
