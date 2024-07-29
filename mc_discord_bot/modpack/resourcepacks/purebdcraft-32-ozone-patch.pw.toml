@@ -1,9 +1,9 @@
-name = "PureBDcraft 32x"
+name = "PureBDcraft 32x Project Ozone Patch"
 filename = "Sphax32x_Project_Ozone_3.zip"
 side = "client"
 
 [download]
-url = "https://static.toyvo.dev/modpack/resourcepacks/Sphax32x_Project_Ozone_3.zip"
+url = "https://static.toyvo.dev/Sphax32x_Project_Ozone_3.zip"
 hash-format = "sha1"
 hash = "f40d12244704e0250610cb4090ec4aad889fb35a"
 
