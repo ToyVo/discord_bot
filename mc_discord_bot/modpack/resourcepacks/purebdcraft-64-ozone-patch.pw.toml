@@ -3,7 +3,7 @@ filename = "Sphax64x_Project_Ozone_3.zip"
 side = "client"
 
 [download]
-url = "https://mc.toyvo.dev/modpack/resourcepacks/Sphax64x_Project_Ozone_3.zip"
+url = "https://static.toyvo.dev/modpack/resourcepacks/Sphax64x_Project_Ozone_3.zip"
 hash-format = "sha1"
 hash = "defc9414038b1d781eb48ed79fcadc33a24b76ba"
 

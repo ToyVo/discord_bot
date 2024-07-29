@@ -3,7 +3,7 @@ filename = "PureBDcraft 32x MC112.zip"
 side = "client"
 
 [download]
-url = "https://mc.toyvo.dev/modpack/resourcepacks/PureBDcraft 32x MC112.zip"
+url = "https://static.toyvo.dev/modpack/resourcepacks/PureBDcraft 32x MC112.zip"
 hash-format = "sha1"
 hash = "55d910d23a053166595d66bcdb40c832b231b44f"
 

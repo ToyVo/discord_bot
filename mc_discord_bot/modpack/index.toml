@@ -11361,32 +11361,32 @@ metafile = true
 
 [[files]]
 file = "resourcepacks/purebdcraft-128-ozone-patch.pw.toml"
-hash = "7872860c0728c630f077b0cb2ad37532ebc7a62c09bd78288f5b0283599e99db"
+hash = "31db2ac3406e496f72471fd61fbce914fd129db15125b6b98d8e1113be815c33"
 metafile = true
 
 [[files]]
 file = "resourcepacks/purebdcraft-128.pw.toml"
-hash = "d01b45fd2467658967ebaada847e6e83ba8a27cb933ea19951c24e5fbe38dd9c"
+hash = "f25bb1a1bad3bd18bdf2eebe141c8e6233eb46063e4443cfdcc81811cba83096"
 metafile = true
 
 [[files]]
 file = "resourcepacks/purebdcraft-32-ozone-patch.pw.toml"
-hash = "0e08efa951c28f5ad4422194d615450730d94a63755a95e2874870852aa50107"
+hash = "f45f0c8b68125fbd062bffc8efd02068c50e8afe5e27f1848c807efeaaef801a"
 metafile = true
 
 [[files]]
 file = "resourcepacks/purebdcraft-32.pw.toml"
-hash = "1ebcc758652257155e0997513aecadc6419ca35aea224c9d9f49717e25cd0440"
+hash = "089ec4a8fde600479b99b8f27b55abfbd057c462159bb738c21522c50e8798a6"
 metafile = true
 
 [[files]]
 file = "resourcepacks/purebdcraft-64-ozone-patch.pw.toml"
-hash = "f096a89c989bb3a001ad223276ed05e27b328d243f537262d35b14d9b381ab61"
+hash = "19c4fac90cd8e77cff460a6794d9bda5088987e122899de361b5d7b64ebd4634"
 metafile = true
 
 [[files]]
 file = "resourcepacks/purebdcraft-64.pw.toml"
-hash = "53151ee4d93d872c29f9cf93ea106ce28124de148783cc3bdae0c256e6a3d946"
+hash = "745f4138f7fad6b8b992b937929eac24402ddec921c2818ee51cdbd5c34b3012"
 metafile = true
 
 [[files]]
