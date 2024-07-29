@@ -1,0 +1,12 @@
+name = "PureBDcraft 128x"
+filename = "PureBDcraft 128x MC112.zip"
+side = "client"
+
+[download]
+url = "https://mc.toyvo.dev/modpack/resourcepacks/PureBDcraft 128x MC112.zip"
+hash-format = "sha1"
+hash = "8e0e56b9c0fa87bd253572acff7dc3662d208c75"
+
+[option]
+optional = true
+default = false

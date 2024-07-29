@@ -11360,6 +11360,36 @@ hash = "4c60179a81a93c7480970b319a625ed5a610f541b837c94fe4fc247de2a09bff"
 metafile = true
 
 [[files]]
+file = "resourcepacks/purebdcraft-128-ozone-patch.pw.toml"
+hash = "7872860c0728c630f077b0cb2ad37532ebc7a62c09bd78288f5b0283599e99db"
+metafile = true
+
+[[files]]
+file = "resourcepacks/purebdcraft-128.pw.toml"
+hash = "d01b45fd2467658967ebaada847e6e83ba8a27cb933ea19951c24e5fbe38dd9c"
+metafile = true
+
+[[files]]
+file = "resourcepacks/purebdcraft-32-ozone-patch.pw.toml"
+hash = "0e08efa951c28f5ad4422194d615450730d94a63755a95e2874870852aa50107"
+metafile = true
+
+[[files]]
+file = "resourcepacks/purebdcraft-32.pw.toml"
+hash = "1ebcc758652257155e0997513aecadc6419ca35aea224c9d9f49717e25cd0440"
+metafile = true
+
+[[files]]
+file = "resourcepacks/purebdcraft-64-ozone-patch.pw.toml"
+hash = "f096a89c989bb3a001ad223276ed05e27b328d243f537262d35b14d9b381ab61"
+metafile = true
+
+[[files]]
+file = "resourcepacks/purebdcraft-64.pw.toml"
+hash = "53151ee4d93d872c29f9cf93ea106ce28124de148783cc3bdae0c256e6a3d946"
+metafile = true
+
+[[files]]
 file = "resources/assets/fml/textures/gui/leg.png"
 hash = "a1233380df1b22c0865ab1e372abb782d15a15aba782013f527a317d4d39a4b1"
 

@@ -1,0 +1,12 @@
+name = "PureBDcraft 128x"
+filename = "Sphax128x_Project_Ozone_3.zip"
+side = "client"
+
+[download]
+url = "https://mc.toyvo.dev/modpack/resourcepacks/Sphax128x_Project_Ozone_3.zip"
+hash-format = "sha1"
+hash = "e570dd1c5ef6bc5b17454302795c63da1ba1ea64"
+
+[option]
+optional = true
+default = false

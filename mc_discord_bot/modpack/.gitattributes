@@ -1,0 +1,6 @@
+resourcepacks/PureBDcraft[[:space:]]32x[[:space:]]MC112.zip filter=lfs diff=lfs merge=lfs -text
+resourcepacks/PureBDcraft[[:space:]]64x[[:space:]]MC112.zip filter=lfs diff=lfs merge=lfs -text
+resourcepacks/PureBDcraft[[:space:]]128x[[:space:]]MC112.zip filter=lfs diff=lfs merge=lfs -text
+resourcepacks/Sphax32x_Project_Ozone_3.zip filter=lfs diff=lfs merge=lfs -text
+resourcepacks/Sphax64x_Project_Ozone_3.zip filter=lfs diff=lfs merge=lfs -text
+resourcepacks/Sphax128x_Project_Ozone_3.zip filter=lfs diff=lfs merge=lfs -text
