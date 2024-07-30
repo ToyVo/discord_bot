@@ -8582,7 +8582,7 @@ hash = "83415f98980826c3c5e5520357f7a1b859733e43fd393b1f005cfd1224657ae4"
 
 [[files]]
 file = "config/ftbbackups.cfg"
-hash = "383ef1c086b1933e471d9b866bc449ec69b971e30ca99a6abb9fab678773cbe3"
+hash = "9cade627c41347aef9e8c522a1421ff8e4f7e08d0d7a34f9ba9282d8b189efd5"
 
 [[files]]
 file = "config/ftblib.cfg"
@@ -8694,7 +8694,7 @@ hash = "aa2d125660ad731dff9aec92c745a6947e204dba56ecc95d6907f1883d26ec33"
 
 [[files]]
 file = "config/jei/worldSettings.cfg"
-hash = "9137b02b26b0ae8dd61649f46b37095546ca15fde7e65ea687668e17d9b40be0"
+hash = "dc273f8df6385d4d64ad7a3d0928605f99d09eaa1134f57315e2461c512794af"
 
 [[files]]
 file = "config/journeymap_ModInfo.cfg"
@@ -9850,7 +9850,7 @@ hash = "dbb71dec7a528dd1455e62fb06e9cf21c81cc32bf1737c275c37425460be8361"
 
 [[files]]
 file = "config/twilightforest.cfg"
-hash = "b564a1eb5f350d89c0ac170ff6e0cedcfe5767fd80a707af5798c2cd688eea8b"
+hash = "5749677ff3f27c48fe28d638d245f52aa088ebc16fae3aecec521513fba224ba"
 
 [[files]]
 file = "config/unidict/IntegrationModule.cfg"
