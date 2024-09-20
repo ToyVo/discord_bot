@@ -476,7 +476,7 @@ dependencies = [
  "hyper-util",
  "lib",
  "mime",
-    "oxford_join",
+ "oxford_join",
  "rand",
  "reqwest",
  "serde",
