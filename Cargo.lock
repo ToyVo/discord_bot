@@ -463,6 +463,35 @@ dependencies = [
 ]
 
 [[package]]
+name = "discord_bot"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "axum",
+ "axum-extra",
+ "bytes",
+ "ed25519-dalek",
+ "http-body-util",
+ "hyper 1.3.1",
+ "hyper-util",
+ "lib",
+ "mime",
+ "rand",
+ "reqwest",
+ "serde",
+ "serde_json",
+ "serenity",
+ "time",
+ "tokio",
+ "tower",
+ "tower-http",
+ "tracing",
+ "tracing-subscriber",
+ "url",
+ "uuid",
+]
+
+[[package]]
 name = "ed25519"
 version = "2.2.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1072,35 +1101,6 @@ name = "matchit"
 version = "0.7.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "0e7465ac9959cc2b1404e8e2367b43684a6d13790fe23056cc8c6c5a6b7bcb94"
-
-[[package]]
-name = "mc_discord_bot"
-version = "0.1.0"
-dependencies = [
- "anyhow",
- "axum",
- "axum-extra",
- "bytes",
- "ed25519-dalek",
- "http-body-util",
- "hyper 1.3.1",
- "hyper-util",
- "lib",
- "mime",
- "rand",
- "reqwest",
- "serde",
- "serde_json",
- "serenity",
- "time",
- "tokio",
- "tower",
- "tower-http",
- "tracing",
- "tracing-subscriber",
- "url",
- "uuid",
-]
 
 [[package]]
 name = "memchr"

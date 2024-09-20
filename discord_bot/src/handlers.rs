@@ -12,13 +12,16 @@ use lib::AppError;
 use crate::discord_utils::discord_request;
 use crate::routes::AppState;
 
-pub async fn handle_slash_command(payload: Json<Value>, state: AppState) -> Result<Value, AppError> {
+pub async fn handle_slash_command(
+    payload: Json<Value>,
+    state: AppState,
+) -> Result<Value, AppError> {
     let command = payload
         .get("data")
         .and_then(|s| s.get("name"))
         .and_then(|s| s.as_str())
         .unwrap_or_default();
-    println!("Received discord slash command request, {command:#?}");
+    tracing::info!("Received discord slash command request, {command:#?}");
     if command == "mc" {
         let token = payload
             .get("token")
@@ -43,12 +46,12 @@ pub async fn handle_slash_command(payload: Json<Value>, state: AppState) -> Resu
                 if name == "action" && value == "reboot" {
                     // TODO: single source of truth for this and install_global_commands
                     tokio::spawn(async move {
-                        let content = match Command::new("systemctl").args(["restart", state.service_name.as_str()]).output().await {
+                        let content = match Command::new("systemctl").args(["restart", state.minecraft_service_name.as_str()]).output().await {
                             Ok(_) => {
                                 String::from("Successfully restarted minecraft server, it might take a couple minutes to come up")
                             }
                             Err(e) => {
-                                eprintln!("Could not restart minecraft server\n{e:#?}");
+                                tracing::error!("Could not restart minecraft server\n{e:#?}");
                                 String::from("There was an issue restarting minecraft server")
                             }
                         };
@@ -60,7 +63,7 @@ pub async fn handle_slash_command(payload: Json<Value>, state: AppState) -> Resu
                         )
                         .await
                         {
-                            eprintln!("Error submitting followup {e:#?}")
+                            tracing::error!("Error submitting followup {e:#?}")
                         }
                     });
                     return Ok(json::to_value(CreateInteractionResponse::Message(

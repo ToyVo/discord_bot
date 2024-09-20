@@ -5,8 +5,8 @@ use serenity::all::{User, UserId};
 use serenity::builder::CreateCommand;
 use serenity::interactions_endpoint::Verifier;
 
-use lib::AppError;
 use crate::routes::AppState;
+use lib::AppError;
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct DiscordTokens<S: AsRef<str>> {
@@ -16,8 +16,11 @@ pub struct DiscordTokens<S: AsRef<str>> {
     pub expires_in: i64,
 }
 
-pub async fn store_discord_tokens(user_id: &UserId, tokens: &DiscordTokens<String>) -> Result<(), AppError> {
-    println!("{user_id}, {tokens:#?}");
+pub async fn store_discord_tokens(
+    user_id: &UserId,
+    tokens: &DiscordTokens<String>,
+) -> Result<(), AppError> {
+    tracing::info!("{user_id}, {tokens:#?}");
     Ok(())
 }
 
@@ -31,11 +34,11 @@ pub async fn discord_request<S: AsRef<str>, T: Serialize + ?Sized>(
 
     let mut builder = reqwest::Client::new()
         .request(method, url)
-        .header(header::AUTHORIZATION.as_str(), format!("Bot {}", {state.bot_token.as_str()}))
         .header(
-            header::USER_AGENT.as_str(),
-            state.user_agent.as_str(),
-        );
+            header::AUTHORIZATION.as_str(),
+            format!("Bot {}", { state.bot_token.as_str() }),
+        )
+        .header(header::USER_AGENT.as_str(), state.user_agent.as_str());
 
     if let Some(b) = body {
         builder = builder
@@ -49,13 +52,20 @@ pub async fn discord_request<S: AsRef<str>, T: Serialize + ?Sized>(
     Ok(builder.send().await?.error_for_status()?)
 }
 
-pub async fn install_global_commands(commands: &[CreateCommand], state: &AppState) -> Result<(), AppError> {
+pub async fn install_global_commands(
+    commands: &[CreateCommand],
+    state: &AppState,
+) -> Result<(), AppError> {
     let endpoint = format!("applications/{}/commands", state.client_id);
     discord_request(endpoint, Method::PUT, Some(&commands), state).await?;
     Ok(())
 }
 
-pub async fn verify_request<S: AsRef<str>>(headers: &HeaderMap, body: S, state: &AppState) -> Result<(), AppError> {
+pub async fn verify_request<S: AsRef<str>>(
+    headers: &HeaderMap,
+    body: S,
+    state: &AppState,
+) -> Result<(), AppError> {
     let signature = headers
         .get("X-Signature-Ed25519")
         .ok_or_else(|| AppError::Other("Missing Discord signature".to_string()))?
@@ -92,7 +102,10 @@ pub async fn get_oauth_url(state: &AppState) -> Result<(String, String), AppErro
     Ok((url.to_string(), user_state))
 }
 
-pub async fn get_oauth_tokens<S: AsRef<str>>(code: S, state: &AppState) -> Result<DiscordTokens<String>, AppError> {
+pub async fn get_oauth_tokens<S: AsRef<str>>(
+    code: S,
+    state: &AppState,
+) -> Result<DiscordTokens<String>, AppError> {
     let response = reqwest::Client::new()
         .post("https://discord.com/api/v10/oauth2/token")
         .form(&[

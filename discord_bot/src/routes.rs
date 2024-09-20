@@ -1,18 +1,18 @@
-use std::collections::HashMap;
-use std::ops::Deref;
-use std::sync::Arc;
 use anyhow::Context;
-use axum::{Json, Router};
 use axum::extract::{FromRef, Query, State};
 use axum::http::{HeaderMap, StatusCode};
 use axum::response::{IntoResponse, Redirect};
 use axum::routing::{get, post};
+use axum::{Json, Router};
 use axum_extra::extract::cookie::{Cookie, Key};
 use axum_extra::extract::SignedCookieJar;
 use serde_json::{json, Value};
 use serenity::all::InteractionType;
 use serenity::builder::CreateInteractionResponse;
 use serenity::json;
+use std::collections::HashMap;
+use std::ops::Deref;
+use std::sync::Arc;
 use tower_http::services::{ServeDir, ServeFile};
 
 use lib::AppError;
@@ -48,7 +48,9 @@ pub struct InnerState {
     pub bot_token: String,
     pub base_url: String,
     pub user_agent: String,
-    pub service_name: String,
+    pub minecraft_service_name: String,
+    pub terraria_service_name: String,
+    pub tshock_base_url: String,
 }
 
 pub fn app() -> Router<AppState> {
@@ -71,8 +73,12 @@ pub fn app() -> Router<AppState> {
         )
 }
 
-pub async fn interactions(headers: HeaderMap, State(state): State<AppState>, body: String) -> Result<impl IntoResponse, AppError> {
-    println!("Request received: {headers:#?} {body}");
+pub async fn interactions(
+    headers: HeaderMap,
+    State(state): State<AppState>,
+    body: String,
+) -> Result<impl IntoResponse, AppError> {
+    tracing::info!("Request received: {headers:#?} {body}");
 
     // Parse request body and verifies incoming requests
     if discord_utils::verify_request(&headers, &body, &state)
@@ -85,7 +91,7 @@ pub async fn interactions(headers: HeaderMap, State(state): State<AppState>, bod
     let payload = match Json::<Value>::from_bytes(body.as_bytes()) {
         Ok(payload) => payload,
         Err(e) => {
-            eprintln!("Could not parse body\n{e:#?}");
+            tracing::error!("Could not parse body\n{e:#?}");
             return Ok((StatusCode::BAD_REQUEST, Json(json!({}))));
         }
     };
@@ -97,7 +103,7 @@ pub async fn interactions(headers: HeaderMap, State(state): State<AppState>, bod
 
     match request_type {
         Some(InteractionType::Ping) => {
-            println!("Received discord ping request, Replying pong");
+            tracing::info!("Received discord ping request, Replying pong");
             Ok((
                 StatusCode::OK,
                 Json(json::to_value(CreateInteractionResponse::Pong).unwrap()),
@@ -106,7 +112,7 @@ pub async fn interactions(headers: HeaderMap, State(state): State<AppState>, bod
         Some(InteractionType::Command) => match handle_slash_command(payload, state).await {
             Ok(value) => Ok((StatusCode::OK, Json(value))),
             Err(e) => {
-                eprintln!("Slash command error {e}");
+                tracing::error!("Slash command error {e}");
                 Ok((StatusCode::OK, Json(json!({}))))
             }
         },
@@ -114,9 +120,16 @@ pub async fn interactions(headers: HeaderMap, State(state): State<AppState>, bod
     }
 }
 
-pub async fn verify_user(jar: SignedCookieJar, State(state): State<AppState>) -> Result<impl IntoResponse, AppError> {
+pub async fn verify_user(
+    jar: SignedCookieJar,
+    State(state): State<AppState>,
+) -> Result<impl IntoResponse, AppError> {
     let (url, state) = discord_utils::get_oauth_url(&state).await?;
-    Ok((StatusCode::FOUND, jar.add(Cookie::new("clientState", state)), Redirect::to(url.as_str())))
+    Ok((
+        StatusCode::FOUND,
+        jar.add(Cookie::new("clientState", state)),
+        Redirect::to(url.as_str()),
+    ))
 }
 
 pub async fn discord_oauth_callback(

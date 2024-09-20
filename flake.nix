@@ -1,5 +1,5 @@
 {
-  description = "mc_discord_bot, A Rust web server including a NixOS module";
+  description = "discord_bot, A Rust web server including a NixOS module";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
@@ -38,9 +38,9 @@
     ];
 
     flake = {
-      nixosModules.mc_discord_bot = { pkgs, lib, config, ... }: let cfg = config.services.mc_discord_bot; in {
-        options.services.mc_discord_bot = {
-          enable = lib.mkEnableOption "enable minecraft discord bot";
+      nixosModules.discord_bot = { pkgs, lib, config, ... }: let cfg = config.services.discord_bot; in {
+        options.services.discord_bot = {
+          enable = lib.mkEnableOption "enable discord bot";
           env_file = lib.mkOption {
             type = lib.types.path;
             description = ''Path to the environment file, to be piped through xargs, must include the following variables:
@@ -58,7 +58,7 @@
           RCONPort = lib.mkOption {
             type = lib.types.int;
             default = 25575;
-            description = "Port to expose minecraft server on";
+            description = "Port to expose minecraft rcon on";
           };
           datadir = lib.mkOption {
             type = lib.types.path;
@@ -69,14 +69,14 @@
         config = lib.mkIf cfg.enable {
           nixpkgs.overlays = [ self.overlays.default ];
           systemd.services = {
-            mc_discord_bot = {
+            discord_bot = {
               wantedBy = [ "multi-user.target" ];
               serviceConfig = {
-                WorkingDirectory = ./mc_discord_bot;
+                WorkingDirectory = ./discord_bot;
               };
               script = ''
                 export $(cat ${cfg.env_file} | xargs)
-                ${pkgs.mc_discord_bot}/bin/mc_discord_bot
+                ${pkgs.discord_bot}/bin/discord_bot
               '';
             };
           };
@@ -117,13 +117,13 @@
     perSystem = { system, pkgs, lib, config, ... }:
       let
         generatedCargoNix = crate2nix.tools.${system}.generatedCargoNix {
-          name = "mc_discord_bot";
+          name = "discord_bot";
           src = ./.;
         };
         cargoNix = pkgs.callPackage "${generatedCargoNix}/default.nix" {
           buildRustCrateForPkgs = pkgs: pkgs.buildRustCrate.override {
             defaultCrateOverrides = pkgs.defaultCrateOverrides // {
-              mc_discord_bot = attrs: {
+              discord_bot = attrs: {
                 buildInputs = with pkgs.darwin.apple_sdk.frameworks; lib.optionals pkgs.stdenv.isDarwin [
                   SystemConfiguration
                   CoreServices
@@ -158,11 +158,11 @@
         };
 
         packages = {
-          mc_discord_bot = cargoNix.workspaceMembers.mc_discord_bot.build;
-          default = packages.mc_discord_bot;
+          discord_bot = cargoNix.workspaceMembers.discord_bot.build;
+          default = packages.discord_bot;
         };
         overlayAttrs = {
-          inherit (packages) mc_discord_bot;
+          inherit (packages) discord_bot;
         };
         devshells.default = {
           imports = [
@@ -173,7 +173,7 @@
           env = [
             {
               name = "RUST_LOG";
-              value = "mc_discord_bot=trace";
+              value = "discord_bot=trace";
             }
             {
               name = "RUST_SRC_PATH";

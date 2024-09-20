@@ -1,9 +1,9 @@
 [package]
-name = "mc_discord_bot"
+name = "discord_bot"
 version = "0.1.0"
 authors = ["Collin Diekvoss <collin@diekvoss.com>"]
 edition = "2021"
-repository = "https://github.com/toyvo/mc_discord_bot"
+repository = "https://github.com/toyvo/discord_bot"
 
 [dependencies]
 anyhow = "1"

@@ -5,10 +5,10 @@ FROM nixos/nix
 RUN mkdir /src
 WORKDIR /src
 ADD . ./
-RUN nix --extra-experimental-features "nix-command flakes" build .#mc_discord_bot
+RUN nix --extra-experimental-features "nix-command flakes" build .#discord_bot
 
 EXPOSE 8080
-CMD ["./result/bin/mc_discord_bot"]
+CMD ["./result/bin/discord_bot"]
 
 ## Create fresh binary project, add toml and lock file and compile dependencies to cache the image build steps
 #RUN mkdir /rust
