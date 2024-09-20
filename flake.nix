@@ -142,8 +142,8 @@
                   ];
                   environment = {
                     EULA = "TRUE";
-                    TYPE = "NEOFORGE";
-                    VERSION = "1.20.1";
+                    TYPE = "FORGE";
+                    VERSION = "1.20.6";
                     MEMORY = "20g";
                     OPS = "4cb4aff4-a0ed-4eaf-b912-47825b2ed30d";
                     EXISTING_OPS_FILE = "MERGE";

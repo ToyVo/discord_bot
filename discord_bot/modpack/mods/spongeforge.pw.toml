@@ -1,0 +1,9 @@
+name = "spongeforge"
+filename = "spongeforge-1.20.6-50.0.22-11.0.0-universal.jar"
+side = "server"
+
+
+[download]
+hash-format = "sha256"
+hash = "634bf20e17ab0197cac710533ae8ff63c5b13a98bd801269f6c996e24d750c3e"
+url = "https://repo.spongepowered.org/repository/maven-releases/org/spongepowered/spongeforge/1.20.6-50.0.22-11.0.0/spongeforge-1.20.6-50.0.22-11.0.0-universal.jar"

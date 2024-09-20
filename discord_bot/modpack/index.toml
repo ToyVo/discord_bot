@@ -1,2 +1,6 @@
 hash-format = "sha256"
-files = []
+
+[[files]]
+file = "makeup-ultra-fast-shader.pw.toml"
+hash = "d615e839625165c4bd81523f140be522718c2f01c42ee50972271437ec6da44c"
+metafile = true
