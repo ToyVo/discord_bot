@@ -88,37 +88,41 @@ pub async fn track_players(state: &AppState) -> Result<(), AppError> {
                 .to_string()
         })
         .collect();
-    let last_player_nicknames = state.terraria_players.read().await;
-    tracing::info!("last players: {:?}", &last_player_nicknames);
-    tracing::info!("players: {:?}", &player_nicknames);
-    let (disconnected, joined) = get_player_diff(&last_player_nicknames, &player_nicknames);
-    tracing::info!("disconnected: {:?}", &disconnected);
-    tracing::info!("joined: {:?}", &joined);
 
-    if !disconnected.is_empty() || !joined.is_empty() {
-        // player1, player2, and player3 have joined. player4, player5, and player6 have disconnected
-        let message = [
-            if !joined.is_empty() {
-                format!(
-                    "{} {} joined",
-                    joined.oxford_join(oxford_join::Conjunction::And),
-                    if joined.len() > 1 { "have" } else { "has" }
-                )
-            } else {
-                "".to_string()
-            },
-            if !disconnected.is_empty() {
-                format!(
-                    "{} {} disconnected",
-                    disconnected.oxford_join(oxford_join::Conjunction::And),
-                    if joined.len() > 1 { "have" } else { "has" }
-                )
-            } else {
-                "".to_string()
-            },
-        ]
-        .join(" ");
-        tracing::info!("{}", message);
+    // put read lock in a scope so we can acquire the write lock
+    {
+        let last_player_nicknames = state.terraria_players.read().await;
+        tracing::info!("last players: {:?}", &last_player_nicknames);
+        tracing::info!("players: {:?}", &player_nicknames);
+        let (disconnected, joined) = get_player_diff(&last_player_nicknames, &player_nicknames);
+        tracing::info!("disconnected: {:?}", &disconnected);
+        tracing::info!("joined: {:?}", &joined);
+
+        if !disconnected.is_empty() || !joined.is_empty() {
+            // player1, player2, and player3 have joined. player4, player5, and player6 have disconnected
+            let message = [
+                if !joined.is_empty() {
+                    format!(
+                        "{} {} joined",
+                        joined.oxford_join(oxford_join::Conjunction::And),
+                        if joined.len() > 1 { "have" } else { "has" }
+                    )
+                } else {
+                    "".to_string()
+                },
+                if !disconnected.is_empty() {
+                    format!(
+                        "{} {} disconnected",
+                        disconnected.oxford_join(oxford_join::Conjunction::And),
+                        if joined.len() > 1 { "have" } else { "has" }
+                    )
+                } else {
+                    "".to_string()
+                },
+            ]
+            .join(" ");
+            tracing::info!("{}", message);
+        }
     }
 
     let mut terraria_players = state.terraria_players.write().await;
