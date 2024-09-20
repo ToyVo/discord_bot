@@ -2,6 +2,7 @@ use axum_extra::extract::cookie::Key;
 use serenity::all::{CommandOptionType, CommandType, CreateCommand, CreateCommandOption};
 use std::sync::Arc;
 use std::{env::var, net::SocketAddr, time::Duration};
+use tokio::sync::RwLock;
 use tokio::{net::TcpListener, signal};
 use tower_http::{timeout::TimeoutLayer, trace::TraceLayer};
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
@@ -43,6 +44,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
         tshock_base_url: var("DISCORD_BOT_TSHOCK_REST_BASE_URL")
             .unwrap_or(String::from("http://localhost:7878")),
         tshock_token: var("TSHOCK_APPLICATION_TOKEN").unwrap_or_default(),
+        terraria_players: RwLock::new(vec![]),
     }));
 
     let interval_state = state.clone();

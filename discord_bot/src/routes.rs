@@ -13,6 +13,7 @@ use serenity::json;
 use std::collections::HashMap;
 use std::ops::Deref;
 use std::sync::Arc;
+use tokio::sync::RwLock;
 use tower_http::services::{ServeDir, ServeFile};
 
 use lib::AppError;
@@ -39,7 +40,6 @@ impl FromRef<AppState> for Key {
     }
 }
 
-#[derive(Clone)]
 pub struct InnerState {
     pub key: Key,
     pub public_key: String,
@@ -52,6 +52,7 @@ pub struct InnerState {
     pub terraria_service_name: String,
     pub tshock_base_url: String,
     pub tshock_token: String,
+    pub terraria_players: RwLock<Vec<String>>,
 }
 
 pub fn app() -> Router<AppState> {

@@ -65,6 +65,9 @@ pub async fn track_players(state: &AppState) -> Result<(), AppError> {
                 .to_string()
         })
         .collect();
+    tracing::info!("last players: {:?}", state.terraria_players);
     tracing::info!("players: {:?}", player_nicknames);
+    let mut terraria_players = state.terraria_players.write().await;
+    *terraria_players = player_nicknames;
     Ok(())
 }
