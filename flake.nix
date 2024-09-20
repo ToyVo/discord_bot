@@ -134,7 +134,7 @@
               };
               virtualisation.oci-containers.containers = {
                 minecraft = {
-                  image = "docker.io/itzg/minecraft-server:java17";
+                  image = "docker.io/itzg/minecraft-server:java21";
                   # I plan to make a web interface that I want to be able to use RCON to get information but keep it internal
                   ports = [
                     "${toString cfg.minecraft.MCport}:25565"
