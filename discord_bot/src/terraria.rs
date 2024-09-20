@@ -35,6 +35,17 @@ pub async fn get_status(state: &AppState) -> Result<Value, AppError> {
     Ok(data)
 }
 
+pub async fn broadcast<T: AsRef<str>>(state: &AppState, message: T) -> Result<(), AppError> {
+    let url = format!(
+        "{}/v2/server/broadcast?msg={}&token={}",
+        state.tshock_base_url,
+        message.as_ref(),
+        state.tshock_token
+    );
+    reqwest::get(url).await?.error_for_status()?;
+    Ok(())
+}
+
 pub async fn track_players(state: &AppState) -> Result<(), AppError> {
     // get nicknames
     let status = get_status(state).await?;

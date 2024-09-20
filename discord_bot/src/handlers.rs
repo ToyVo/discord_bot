@@ -11,17 +11,18 @@ use lib::AppError;
 
 use crate::discord_utils::discord_request;
 use crate::routes::AppState;
+use crate::terraria;
 
 pub async fn handle_slash_command(
     payload: Json<Value>,
     state: AppState,
 ) -> Result<Value, AppError> {
+    tracing::info!("Received discord slash command request, {payload:#?}");
     let command = payload
         .get("data")
         .and_then(|s| s.get("name"))
         .and_then(|s| s.as_str())
         .unwrap_or_default();
-    tracing::info!("Received discord slash command request, {command:#?}");
     if command == "mc" {
         let token = payload
             .get("token")
@@ -43,33 +44,68 @@ pub async fn handle_slash_command(
                     .get("value")
                     .and_then(|s| s.as_str())
                     .unwrap_or_default();
-                if name == "action" && value == "reboot" {
-                    // TODO: single source of truth for this and install_global_commands
-                    tokio::spawn(async move {
-                        let content = match Command::new("systemctl").args(["restart", state.minecraft_service_name.as_str()]).output().await {
-                            Ok(_) => {
-                                String::from("Successfully restarted minecraft server, it might take a couple minutes to come up")
+                // TODO: single source of truth for this and install_global_commands
+                match (name, value) {
+                    ("action", "reboot") => {
+                        tokio::spawn(async move {
+                            let content = match Command::new("systemctl").args(["restart", state.minecraft_service_name.as_str()]).output().await {
+                                Ok(_) => {
+                                    String::from("Successfully restarted minecraft server, it might take a couple minutes to come up")
+                                }
+                                Err(e) => {
+                                    tracing::error!("Could not restart minecraft server\n{e:#?}");
+                                    String::from("There was an issue restarting minecraft server")
+                                }
+                            };
+                            if let Err(e) = discord_request(
+                                format!("webhooks/{}/{token}", state.client_id),
+                                Method::POST,
+                                Some(&CreateInteractionResponseFollowup::new().content(content)),
+                                &state,
+                            )
+                            .await
+                            {
+                                tracing::error!("Error submitting followup {e:#?}")
                             }
-                            Err(e) => {
-                                tracing::error!("Could not restart minecraft server\n{e:#?}");
-                                String::from("There was an issue restarting minecraft server")
+                        });
+                        return Ok(json::to_value(CreateInteractionResponse::Message(
+                            CreateInteractionResponseMessage::new()
+                                .content("Successfully requested restart of minecraft server"),
+                        ))?);
+                    }
+                    ("action", "broadcast") => {
+                        tokio::spawn(async move {
+                            let content = match terraria::broadcast(&state, "").await {
+                                Ok(_) => String::from(
+                                    "Successfully broadcast message to terraria server",
+                                ),
+                                Err(e) => {
+                                    tracing::error!(
+                                        "Could not send message to terraria server\n{e:#?}"
+                                    );
+                                    String::from(
+                                        "There was an issue sending message to terraria server",
+                                    )
+                                }
+                            };
+                            if let Err(e) = discord_request(
+                                format!("webhooks/{}/{token}", state.client_id),
+                                Method::POST,
+                                Some(&CreateInteractionResponseFollowup::new().content(content)),
+                                &state,
+                            )
+                            .await
+                            {
+                                tracing::error!("Error submitting followup {e:#?}")
                             }
-                        };
-                        if let Err(e) = discord_request(
-                            format!("webhooks/{}/{token}", state.client_id),
-                            Method::POST,
-                            Some(&CreateInteractionResponseFollowup::new().content(content)),
-                            &state,
-                        )
-                        .await
-                        {
-                            tracing::error!("Error submitting followup {e:#?}")
-                        }
-                    });
-                    return Ok(json::to_value(CreateInteractionResponse::Message(
-                        CreateInteractionResponseMessage::new()
-                            .content("Successfully requested restart of minecraft server"),
-                    ))?);
+                        });
+                        return Ok(json::to_value(CreateInteractionResponse::Message(
+                            CreateInteractionResponseMessage::new().content(
+                                "Successfully requested broadcast of message to terraria server",
+                            ),
+                        ))?);
+                    }
+                    (_, _) => {}
                 }
             }
         }

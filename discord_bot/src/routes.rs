@@ -51,6 +51,7 @@ pub struct InnerState {
     pub minecraft_service_name: String,
     pub terraria_service_name: String,
     pub tshock_base_url: String,
+    pub tshock_token: String,
 }
 
 pub fn app() -> Router<AppState> {
@@ -106,7 +107,7 @@ pub async fn interactions(
             tracing::info!("Received discord ping request, Replying pong");
             Ok((
                 StatusCode::OK,
-                Json(json::to_value(CreateInteractionResponse::Pong).unwrap()),
+                Json(json::to_value(CreateInteractionResponse::Pong)?),
             ))
         }
         Some(InteractionType::Command) => match handle_slash_command(payload, state).await {
