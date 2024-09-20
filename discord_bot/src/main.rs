@@ -37,14 +37,16 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
             env!("CARGO_PKG_REPOSITORY"),
             env!("CARGO_PKG_VERSION")
         ),
-        minecraft_service_name: var("DISCORD_BOT_MINECRAFT_SERVICE_NAME")
+        minecraft_service_name: var("MINECRAFT_SERVICE_NAME")
             .unwrap_or(String::from("podman-minecraft.service")),
-        terraria_service_name: var("DISCORD_BOT_TERRARIA_SERVICE_NAME")
+        terraria_service_name: var("TERRARIA_SERVICE_NAME")
             .unwrap_or(String::from("podman-terraria.service")),
-        tshock_base_url: var("DISCORD_BOT_TSHOCK_REST_BASE_URL")
+        tshock_base_url: var("TSHOCK_REST_BASE_URL")
             .unwrap_or(String::from("http://localhost:7878")),
         tshock_token: var("TSHOCK_APPLICATION_TOKEN").unwrap_or_default(),
         terraria_players: RwLock::new(vec![]),
+        discord_terraria_channel_id: var("DISCORD_TERRARIA_CHANNEL_ID").unwrap_or_default(),
+        discord_minecraft_channel_id: var("DISCORD_MINECRAFT_CHANNEL_ID").unwrap_or_default(),
     }));
 
     let interval_state = state.clone();
@@ -79,7 +81,6 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
     tokio::spawn(async move {
         let mut interval = tokio::time::interval(Duration::from_secs(60));
         loop {
-            tracing::debug!("Interval tick");
             interval.tick().await;
             if let Err(e) = terraria::track_players(&interval_state).await {
                 tracing::error!("Failed to get status from terraria\n{e:#?}");

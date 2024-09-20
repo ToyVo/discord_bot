@@ -1,7 +1,8 @@
+use crate::discord_utils;
 use crate::routes::AppState;
 use lib::AppError;
 use oxford_join::OxfordJoin;
-use serde_json::Value;
+use serde_json::{json, Value};
 
 /// expected structure:
 /// not returning anything parsed just in case
@@ -92,12 +93,7 @@ pub async fn track_players(state: &AppState) -> Result<(), AppError> {
     // put read lock in a scope so we can acquire the write lock
     {
         let last_player_nicknames = state.terraria_players.read().await;
-        tracing::info!("last players: {:?}", &last_player_nicknames);
-        tracing::info!("players: {:?}", &player_nicknames);
         let (disconnected, joined) = get_player_diff(&last_player_nicknames, &player_nicknames);
-        tracing::info!("disconnected: {:?}", &disconnected);
-        tracing::info!("joined: {:?}", &joined);
-
         if !disconnected.is_empty() || !joined.is_empty() {
             // player1, player2, and player3 have joined. player4, player5, and player6 have disconnected
             let message = [
@@ -119,9 +115,27 @@ pub async fn track_players(state: &AppState) -> Result<(), AppError> {
                 } else {
                     "".to_string()
                 },
+                format!(
+                    "There {} {} player{} online",
+                    if player_nicknames.len() > 1 {
+                        "are"
+                    } else {
+                        "is"
+                    },
+                    player_nicknames.len(),
+                    if player_nicknames.len() > 1 { "s" } else { "" }
+                ),
             ]
             .join(" ");
             tracing::info!("{}", message);
+            discord_utils::create_message(
+                json!({
+                    "content": message,
+                }),
+                &state.discord_terraria_channel_id,
+                state,
+            )
+            .await?;
         }
     }
 

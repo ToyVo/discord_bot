@@ -53,6 +53,8 @@ pub struct InnerState {
     pub tshock_base_url: String,
     pub tshock_token: String,
     pub terraria_players: RwLock<Vec<String>>,
+    pub discord_terraria_channel_id: String,
+    pub discord_minecraft_channel_id: String,
 }
 
 pub fn app() -> Router<AppState> {

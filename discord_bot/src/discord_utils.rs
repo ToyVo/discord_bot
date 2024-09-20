@@ -1,6 +1,7 @@
 use axum::http::{header, HeaderMap};
 use reqwest::{Method, Response};
 use serde::{Deserialize, Serialize};
+use serde_json::Value;
 use serenity::all::{User, UserId};
 use serenity::builder::CreateCommand;
 use serenity::interactions_endpoint::Verifier;
@@ -58,6 +59,16 @@ pub async fn install_global_commands(
 ) -> Result<(), AppError> {
     let endpoint = format!("applications/{}/commands", state.client_id);
     discord_request(endpoint, Method::PUT, Some(&commands), state).await?;
+    Ok(())
+}
+
+pub async fn create_message<S: AsRef<str>>(
+    payload: Value,
+    channel_id: S,
+    state: &AppState,
+) -> Result<(), AppError> {
+    let endpoint = format!("channels/{}/messages", channel_id.as_ref());
+    discord_request(endpoint, Method::POST, Some(&payload), state).await?;
     Ok(())
 }
 
