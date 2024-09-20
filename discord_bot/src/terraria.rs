@@ -101,7 +101,7 @@ pub async fn track_players(state: &AppState) -> Result<(), AppError> {
                     format!(
                         "{} {} joined",
                         joined.oxford_join(oxford_join::Conjunction::And),
-                        if joined.len() > 1 { "have" } else { "has" }
+                        if joined.len() != 1 { "have" } else { "has" }
                     )
                 } else {
                     "".to_string()
@@ -110,20 +110,20 @@ pub async fn track_players(state: &AppState) -> Result<(), AppError> {
                     format!(
                         "{} {} disconnected",
                         disconnected.oxford_join(oxford_join::Conjunction::And),
-                        if joined.len() > 1 { "have" } else { "has" }
+                        if joined.len() != 1 { "have" } else { "has" }
                     )
                 } else {
                     "".to_string()
                 },
                 format!(
                     "There {} {} player{} online",
-                    if player_nicknames.len() > 1 {
+                    if player_nicknames.len() != 1 {
                         "are"
                     } else {
                         "is"
                     },
                     player_nicknames.len(),
-                    if player_nicknames.len() > 1 { "s" } else { "" }
+                    if player_nicknames.len() != 1 { "s" } else { "" }
                 ),
             ]
             .join(" ");
