@@ -89,7 +89,11 @@ pub async fn track_players(state: &AppState) -> Result<(), AppError> {
         })
         .collect();
     let last_player_nicknames = state.terraria_players.read().await;
+    tracing::info!("last players: {:?}", &last_player_nicknames);
+    tracing::info!("players: {:?}", &player_nicknames);
     let (disconnected, joined) = get_player_diff(&last_player_nicknames, &player_nicknames);
+    tracing::info!("disconnected: {:?}", &disconnected);
+    tracing::info!("joined: {:?}", &joined);
 
     if !disconnected.is_empty() || !joined.is_empty() {
         // player1, player2, and player3 have joined. player4, player5, and player6 have disconnected
