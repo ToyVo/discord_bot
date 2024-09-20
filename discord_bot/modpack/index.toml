@@ -1,6 +1,6 @@
 hash-format = "sha256"
 
 [[files]]
-file = "makeup-ultra-fast-shader.pw.toml"
-hash = "d615e839625165c4bd81523f140be522718c2f01c42ee50972271437ec6da44c"
+file = "mods/spongeforge.pw.toml"
+hash = "4bd169f6c4a1e6631b6a29cf172528c455c0ab0f4dd48a947926ddfbb71a70f2"
 metafile = true
