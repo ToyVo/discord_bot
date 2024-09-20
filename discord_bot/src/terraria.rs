@@ -1,5 +1,6 @@
 use crate::routes::AppState;
 use lib::AppError;
+use oxford_join::OxfordJoin;
 use serde_json::Value;
 
 /// expected structure:
@@ -46,6 +47,28 @@ pub async fn broadcast<T: AsRef<str>>(state: &AppState, message: T) -> Result<()
     Ok(())
 }
 
+/// take two lists of player names and return the difference between them.
+/// the first tuple is the list of players who have disconnected. the second tuple is of players who have joined.
+fn get_player_diff(before: &[String], after: &[String]) -> (Vec<String>, Vec<String>) {
+    let disconnected = before
+        .iter()
+        .filter(|&player| !after.contains(player))
+        .cloned()
+        .collect();
+    let joined = after
+        .iter()
+        .filter_map(|player| {
+            if !before.contains(player) {
+                Some(player.clone())
+            } else {
+                None
+            }
+        })
+        .collect();
+
+    (disconnected, joined)
+}
+
 pub async fn track_players(state: &AppState) -> Result<(), AppError> {
     // get nicknames
     let status = get_status(state).await?;
@@ -65,8 +88,35 @@ pub async fn track_players(state: &AppState) -> Result<(), AppError> {
                 .to_string()
         })
         .collect();
-    tracing::info!("last players: {:?}", state.terraria_players);
-    tracing::info!("players: {:?}", player_nicknames);
+    let last_player_nicknames = state.terraria_players.read().await;
+    let (disconnected, joined) = get_player_diff(&last_player_nicknames, &player_nicknames);
+
+    if !disconnected.is_empty() || !joined.is_empty() {
+        // player1, player2, and player3 have joined. player4, player5, and player6 have disconnected
+        let message = [
+            if !joined.is_empty() {
+                format!(
+                    "{} {} joined",
+                    joined.oxford_join(oxford_join::Conjunction::And),
+                    if joined.len() > 1 { "have" } else { "has" }
+                )
+            } else {
+                "".to_string()
+            },
+            if !disconnected.is_empty() {
+                format!(
+                    "{} {} disconnected",
+                    disconnected.oxford_join(oxford_join::Conjunction::And),
+                    if joined.len() > 1 { "have" } else { "has" }
+                )
+            } else {
+                "".to_string()
+            },
+        ]
+        .join(" ");
+        tracing::info!("{}", message);
+    }
+
     let mut terraria_players = state.terraria_players.write().await;
     *terraria_players = player_nicknames;
     Ok(())

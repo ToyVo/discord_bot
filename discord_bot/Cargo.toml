@@ -16,6 +16,7 @@ hyper = { version = "1", features = ["full"] }
 hyper-util = { version = "0", features = ["full"] }
 lib = { path = "../lib" }
 mime = "0"
+oxford_join = "0.2.10"
 rand = "0"
 reqwest = { version = "0", features = ["json"] }
 serde = { version = "1", features = ["derive"] }
