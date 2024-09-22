@@ -181,8 +181,13 @@ hash = "82ffc26ad624cdd846cbbeb99ed40ef44229ec7006a7ae7e8caa8df6409c20db"
 metafile = true
 
 [[files]]
-file = "mods/luckytnt.pw.toml"
-hash = "1683cf59931738f037ebff1beda6d74cd494a80533b7fbea9bc35dc9256e95f0"
+file = "mods/lucky-tnt-lib.pw.toml"
+hash = "102cd6296cfe1e9074dcf3ba68f571755bec582e87a3b6ce3648170310fe177d"
+metafile = true
+
+[[files]]
+file = "mods/lucky-tnt-mod.pw.toml"
+hash = "c6f55693fb2254103a2bbd380552321fa831446590661accf218dae4043ddd1e"
 metafile = true
 
 [[files]]
@@ -308,6 +313,31 @@ metafile = true
 [[files]]
 file = "mods/toms-storage.pw.toml"
 hash = "ad3b53a03146fac5e46803a06836c38ae13bc36eb4fb86b848202152fb76d171"
+metafile = true
+
+[[files]]
+file = "mods/trackwork.pw.toml"
+hash = "8deda3bd6e624e01a1d31187855e5c8bc5a8f1852a35a7ddf18c903921344d65"
+metafile = true
+
+[[files]]
+file = "mods/travelers-titles.pw.toml"
+hash = "43284a55e537cb96d28160cdadab96dfd2ed3712529cc546a1c03313dd99eb46"
+metafile = true
+
+[[files]]
+file = "mods/valkyrien-skies.pw.toml"
+hash = "d0b9e330714c613ba207842facd66054188ad4cb60538f455487a8ca04d1b82a"
+metafile = true
+
+[[files]]
+file = "mods/vmod.pw.toml"
+hash = "af2b30a9db4791298fac6a6da067e680a68dd3b5f85b456d29745700c66f6da4"
+metafile = true
+
+[[files]]
+file = "mods/vs-tournament.pw.toml"
+hash = "e27055a88c182d5f840e18f67e1e69b728ca688775aa2a5c7783b8ae24855360"
 metafile = true
 
 [[files]]

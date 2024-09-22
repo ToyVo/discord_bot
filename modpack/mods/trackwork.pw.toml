@@ -1,0 +1,13 @@
+name = "Trackwork"
+filename = "trackwork-1.20.1-1.0.1-beta.jar"
+side = "both"
+
+[download]
+url = "https://cdn.modrinth.com/data/FXDpZRJG/versions/hvFuJwKw/trackwork-1.20.1-1.0.1-beta.jar"
+hash-format = "sha1"
+hash = "e2b4bbeb7928b90e70837902853c6ee016b88035"
+
+[update]
+[update.modrinth]
+mod-id = "FXDpZRJG"
+version = "hvFuJwKw"
