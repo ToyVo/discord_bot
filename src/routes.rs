@@ -6,6 +6,7 @@ use axum::routing::{get, post};
 use axum::{Json, Router};
 use axum_extra::extract::cookie::{Cookie, Key};
 use axum_extra::extract::SignedCookieJar;
+use dioxus::prelude::*;
 use serde_json::{json, Value};
 use serenity::all::InteractionType;
 use serenity::builder::CreateInteractionResponse;
@@ -15,11 +16,10 @@ use std::ops::Deref;
 use std::sync::Arc;
 use tokio::sync::RwLock;
 use tower_http::services::{ServeDir, ServeFile};
-use dioxus::prelude::*;
 
-use crate::error::AppError;
 use crate::discord_utils;
 use crate::discord_utils::DiscordTokens;
+use crate::error::AppError;
 use crate::handlers::handle_slash_command;
 
 #[derive(Clone)]
@@ -41,22 +41,23 @@ impl FromRef<AppState> for Key {
 }
 
 pub struct InnerState {
-    pub key: Key,
-    pub public_key: String,
-    pub client_secret: String,
-    pub client_id: String,
-    pub bot_token: String,
     pub base_url: String,
-    pub user_agent: String,
-    pub minecraft_service_name: String,
-    pub terraria_service_name: String,
-    pub tshock_base_url: String,
+    pub bot_token: String,
+    pub client_id: String,
+    pub client_secret: String,
+    pub discord_minecraft_channel_id: String,
+    pub discord_terraria_channel_id: String,
+    pub key: Key,
+    pub minecraft_players: RwLock<Vec<String>>,
     pub minecraft_rcon_address: String,
     pub minecraft_rcon_password: String,
-    pub tshock_token: String,
+    pub minecraft_service_name: String,
+    pub public_key: String,
     pub terraria_players: RwLock<Vec<String>>,
-    pub discord_terraria_channel_id: String,
-    pub discord_minecraft_channel_id: String,
+    pub terraria_service_name: String,
+    pub tshock_base_url: String,
+    pub tshock_token: String,
+    pub user_agent: String,
 }
 
 pub fn app() -> Router<AppState> {
@@ -74,9 +75,7 @@ pub fn app() -> Router<AppState> {
         )
         .nest_service("/assets", ServeDir::new("assets"))
         .nest_service("/modpack", ServeDir::new("modpack"))
-        .fallback_service(
-            ServeDir::new("public").not_found_service(get(app_endpoint)),
-        )
+        .fallback_service(ServeDir::new("public").not_found_service(get(app_endpoint)))
 }
 
 async fn app_endpoint() -> Html<String> {

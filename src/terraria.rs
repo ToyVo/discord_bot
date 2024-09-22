@@ -1,6 +1,6 @@
 use crate::discord_utils;
-use crate::routes::AppState;
 use crate::error::AppError;
+use crate::routes::AppState;
 use oxford_join::OxfordJoin;
 use serde_json::{json, Value};
 
@@ -50,7 +50,7 @@ pub async fn broadcast<T: AsRef<str>>(state: &AppState, message: T) -> Result<()
 
 /// take two lists of player names and return the difference between them.
 /// the first tuple is the list of players who have disconnected. the second tuple is of players who have joined.
-fn get_player_diff(before: &[String], after: &[String]) -> (Vec<String>, Vec<String>) {
+pub fn get_player_diff(before: &[String], after: &[String]) -> (Vec<String>, Vec<String>) {
     let disconnected = before
         .iter()
         .filter(|&player| !after.contains(player))
@@ -68,6 +68,43 @@ fn get_player_diff(before: &[String], after: &[String]) -> (Vec<String>, Vec<Str
         .collect();
 
     (disconnected, joined)
+}
+
+pub fn get_player_changes(before: &[String], after: &[String]) -> Option<String> {
+    let (disconnected, joined) = get_player_diff(before, after);
+    if disconnected.is_empty() && joined.is_empty() {
+        return None;
+    }
+    // player1, player2, and player3 have joined. player4, player5, and player6 have disconnected
+    Some(
+        [
+            if !joined.is_empty() {
+                format!(
+                    "{} {} joined",
+                    joined.oxford_join(oxford_join::Conjunction::And),
+                    if joined.len() != 1 { "have" } else { "has" }
+                )
+            } else {
+                "".to_string()
+            },
+            if !disconnected.is_empty() {
+                format!(
+                    "{} {} disconnected",
+                    disconnected.oxford_join(oxford_join::Conjunction::And),
+                    if joined.len() != 1 { "have" } else { "has" }
+                )
+            } else {
+                "".to_string()
+            },
+            format!(
+                "There {} {} player{} online",
+                if after.len() != 1 { "are" } else { "is" },
+                after.len(),
+                if after.len() != 1 { "s" } else { "" }
+            ),
+        ]
+        .join(" "),
+    )
 }
 
 pub async fn track_players(state: &AppState) -> Result<(), AppError> {
@@ -93,40 +130,7 @@ pub async fn track_players(state: &AppState) -> Result<(), AppError> {
     // put read lock in a scope so we can acquire the write lock
     {
         let last_player_nicknames = state.terraria_players.read().await;
-        let (disconnected, joined) = get_player_diff(&last_player_nicknames, &player_nicknames);
-        if !disconnected.is_empty() || !joined.is_empty() {
-            // player1, player2, and player3 have joined. player4, player5, and player6 have disconnected
-            let message = [
-                if !joined.is_empty() {
-                    format!(
-                        "{} {} joined",
-                        joined.oxford_join(oxford_join::Conjunction::And),
-                        if joined.len() != 1 { "have" } else { "has" }
-                    )
-                } else {
-                    "".to_string()
-                },
-                if !disconnected.is_empty() {
-                    format!(
-                        "{} {} disconnected",
-                        disconnected.oxford_join(oxford_join::Conjunction::And),
-                        if joined.len() != 1 { "have" } else { "has" }
-                    )
-                } else {
-                    "".to_string()
-                },
-                format!(
-                    "There {} {} player{} online",
-                    if player_nicknames.len() != 1 {
-                        "are"
-                    } else {
-                        "is"
-                    },
-                    player_nicknames.len(),
-                    if player_nicknames.len() != 1 { "s" } else { "" }
-                ),
-            ]
-            .join(" ");
+        if let Some(message) = get_player_changes(&last_player_nicknames, &player_nicknames) {
             tracing::info!("{}", message);
             discord_utils::create_message(
                 json!({

@@ -11,11 +11,11 @@ use crate::discord_utils::install_global_commands;
 use crate::routes::{app, AppState, InnerState};
 
 mod discord_utils;
+mod error;
 mod handlers;
 mod minecraft;
 mod routes;
 mod terraria;
-mod error;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
@@ -35,6 +35,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
         discord_minecraft_channel_id: var("DISCORD_MINECRAFT_CHANNEL_ID").unwrap_or_default(),
         discord_terraria_channel_id: var("DISCORD_TERRARIA_CHANNEL_ID").unwrap_or_default(),
         key: Key::generate(),
+        minecraft_players: RwLock::new(vec![]),
         minecraft_rcon_address: var("MINECRAFT_RCON_ADDRESS")
             .unwrap_or(String::from("localhost:25575")),
         minecraft_rcon_password: var("RCON_PASSWORD").unwrap_or_default(),
@@ -86,7 +87,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
     tokio::spawn(async move {
         let mut interval = tokio::time::interval(Duration::from_secs(60));
         loop {
-            tracing::trace!("Interval tick");
+            tracing::debug!("Interval tick");
             interval.tick().await;
             if let Err(e) = terraria::track_players(&interval_state).await {
                 tracing::error!("Failed to get status from terraria\n{e:#?}");
