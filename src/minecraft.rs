@@ -27,6 +27,8 @@ pub async fn track_players(state: &AppState) -> Result<(), AppError> {
         .filter(|s| s.is_empty())
         .collect::<Vec<String>>();
 
+    tracing::debug!("Players: {:?}", players);
+
     {
         let last_player_names = state.minecraft_players.read().await;
         if let Some(message) = get_player_changes(&last_player_names, &players) {
