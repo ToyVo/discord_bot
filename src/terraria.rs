@@ -91,7 +91,11 @@ pub fn get_player_changes(before: &[String], after: &[String]) -> Option<String>
                 format!(
                     "{} {} disconnected",
                     disconnected.oxford_join(oxford_join::Conjunction::And),
-                    if joined.len() != 1 { "have" } else { "has" }
+                    if disconnected.len() != 1 {
+                        "have"
+                    } else {
+                        "has"
+                    }
                 )
             } else {
                 "".to_string()
