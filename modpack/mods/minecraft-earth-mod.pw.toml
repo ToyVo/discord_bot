@@ -1,0 +1,13 @@
+name = "Earth Mobs Mod"
+filename = "MinecraftEarthMod-1.20.1-5.3.3.1.jar"
+side = "both"
+
+[download]
+hash-format = "sha1"
+hash = "4793ebae86595fe5df68833a86d3af62705fd7b6"
+mode = "metadata:curseforge"
+
+[update]
+[update.curseforge]
+file-id = 5252581
+project-id = 392290
