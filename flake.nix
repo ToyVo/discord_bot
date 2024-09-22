@@ -143,8 +143,8 @@
                   environmentFiles = [cfg.env_file];
                   environment = {
                     EULA = "TRUE";
-                    TYPE = "FORGE";
-                    VERSION = "1.20.6";
+                    TYPE = "NEOFORGE";
+                    VERSION = "1.20.1";
                     MEMORY = "20g";
                     OPS = "4cb4aff4-a0ed-4eaf-b912-47825b2ed30d";
                     EXISTING_OPS_FILE = "MERGE";
