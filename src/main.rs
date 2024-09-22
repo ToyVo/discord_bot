@@ -90,6 +90,9 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
             if let Err(e) = terraria::track_players(&interval_state).await {
                 tracing::error!("Failed to get status from terraria\n{e:#?}");
             }
+            if let Err(e) = minecraft::track_players(&interval_state).await {
+                tracing::error!("Failed to get status from minecraft\n{e:#?}");
+            }
         }
     });
 
