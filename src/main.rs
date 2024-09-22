@@ -12,8 +12,10 @@ use crate::routes::{app, AppState, InnerState};
 
 mod discord_utils;
 mod handlers;
+mod minecraft;
 mod routes;
 mod terraria;
+mod error;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
@@ -26,27 +28,30 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
         .init();
 
     let state = AppState(Arc::new(InnerState {
-        key: Key::generate(),
+        base_url: var("BASE_URL").unwrap_or_default(),
         bot_token: var("DISCORD_BOT_TOKEN").unwrap_or_default(),
         client_id: var("DISCORD_CLIENT_ID").unwrap_or_default(),
         client_secret: var("DISCORD_CLIENT_SECRET").unwrap_or_default(),
-        public_key: var("DISCORD_PUBLIC_KEY").unwrap_or_default(),
-        base_url: var("BASE_URL").unwrap_or_default(),
-        user_agent: format!(
-            "DiscordBot ({}, {})",
-            env!("CARGO_PKG_REPOSITORY"),
-            env!("CARGO_PKG_VERSION")
-        ),
+        discord_minecraft_channel_id: var("DISCORD_MINECRAFT_CHANNEL_ID").unwrap_or_default(),
+        discord_terraria_channel_id: var("DISCORD_TERRARIA_CHANNEL_ID").unwrap_or_default(),
+        key: Key::generate(),
+        minecraft_rcon_address: var("MINECRAFT_RCON_ADDRESS")
+            .unwrap_or(String::from("localhost:25575")),
+        minecraft_rcon_password: var("MINECRAFT_RCON_PASSWORD").unwrap_or_default(),
         minecraft_service_name: var("MINECRAFT_SERVICE_NAME")
             .unwrap_or(String::from("podman-minecraft.service")),
+        public_key: var("DISCORD_PUBLIC_KEY").unwrap_or_default(),
+        terraria_players: RwLock::new(vec![]),
         terraria_service_name: var("TERRARIA_SERVICE_NAME")
             .unwrap_or(String::from("podman-terraria.service")),
         tshock_base_url: var("TSHOCK_REST_BASE_URL")
             .unwrap_or(String::from("http://localhost:7878")),
         tshock_token: var("TSHOCK_APPLICATION_TOKEN").unwrap_or_default(),
-        terraria_players: RwLock::new(vec![]),
-        discord_terraria_channel_id: var("DISCORD_TERRARIA_CHANNEL_ID").unwrap_or_default(),
-        discord_minecraft_channel_id: var("DISCORD_MINECRAFT_CHANNEL_ID").unwrap_or_default(),
+        user_agent: format!(
+            "DiscordBot ({}, {})",
+            env!("CARGO_PKG_REPOSITORY"),
+            env!("CARGO_PKG_VERSION")
+        ),
     }));
 
     let interval_state = state.clone();

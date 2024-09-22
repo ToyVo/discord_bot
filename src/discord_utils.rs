@@ -7,7 +7,7 @@ use serenity::builder::CreateCommand;
 use serenity::interactions_endpoint::Verifier;
 
 use crate::routes::AppState;
-use lib::AppError;
+use crate::error::AppError;
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct DiscordTokens<S: AsRef<str>> {

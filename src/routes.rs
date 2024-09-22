@@ -1,7 +1,7 @@
 use anyhow::Context;
 use axum::extract::{FromRef, Query, State};
 use axum::http::{HeaderMap, StatusCode};
-use axum::response::{IntoResponse, Redirect};
+use axum::response::{Html, IntoResponse, Redirect};
 use axum::routing::{get, post};
 use axum::{Json, Router};
 use axum_extra::extract::cookie::{Cookie, Key};
@@ -15,9 +15,9 @@ use std::ops::Deref;
 use std::sync::Arc;
 use tokio::sync::RwLock;
 use tower_http::services::{ServeDir, ServeFile};
+use dioxus::prelude::*;
 
-use lib::AppError;
-
+use crate::error::AppError;
 use crate::discord_utils;
 use crate::discord_utils::DiscordTokens;
 use crate::handlers::handle_slash_command;
@@ -51,6 +51,8 @@ pub struct InnerState {
     pub minecraft_service_name: String,
     pub terraria_service_name: String,
     pub tshock_base_url: String,
+    pub minecraft_rcon_address: String,
+    pub minecraft_rcon_password: String,
     pub tshock_token: String,
     pub terraria_players: RwLock<Vec<String>>,
     pub discord_terraria_channel_id: String,
@@ -73,8 +75,13 @@ pub fn app() -> Router<AppState> {
         .nest_service("/assets", ServeDir::new("assets"))
         .nest_service("/modpack", ServeDir::new("modpack"))
         .fallback_service(
-            ServeDir::new("public").not_found_service(ServeFile::new("assets/index.html")),
+            ServeDir::new("public").not_found_service(get(app_endpoint)),
         )
+}
+
+async fn app_endpoint() -> Html<String> {
+    // render the rsx! macro to HTML
+    Html(dioxus_ssr::render_element(rsx! { div { "hello world!" } }))
 }
 
 pub async fn interactions(

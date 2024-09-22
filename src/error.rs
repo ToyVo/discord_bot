@@ -11,6 +11,7 @@ pub enum AppError {
     Serenity(serenity::Error),
     Parse(url::ParseError),
     Other(String),
+    Rcon(rcon::Error),
 }
 
 impl IntoResponse for AppError {
@@ -24,6 +25,7 @@ impl IntoResponse for AppError {
             AppError::Serenity(e) => tracing::error!("Serenity error: {:#}", e),
             AppError::Parse(e) => tracing::error!("Parse error: {:#}", e),
             AppError::Other(e) => tracing::error!("Other error: {:#}", e),
+            AppError::Rcon(e) => tracing::error!("RCON error: {:#}", e),
         }
 
         (StatusCode::INTERNAL_SERVER_ERROR, "Something went wrong").into_response()
@@ -41,6 +43,7 @@ impl std::fmt::Display for AppError {
             AppError::Serenity(e) => write!(f, "Serenity error: {}", e),
             AppError::Parse(e) => write!(f, "Parse error: {}", e),
             AppError::Other(e) => write!(f, "Other error: {}", e),
+            AppError::Rcon(e) => write!(f, "RCON error: {}", e),
         }
     }
 }
@@ -86,5 +89,11 @@ impl From<serenity::Error> for AppError {
 impl From<url::ParseError> for AppError {
     fn from(err: url::ParseError) -> Self {
         AppError::Parse(err)
+    }
+}
+
+impl From<rcon::Error> for AppError {
+    fn from(err: rcon::Error) -> Self {
+        AppError::Rcon(err)
     }
 }

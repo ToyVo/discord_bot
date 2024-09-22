@@ -112,7 +112,7 @@
                 discord_bot = {
                   wantedBy = [ "multi-user.target" ];
                   serviceConfig = {
-                    WorkingDirectory = ./discord_bot;
+                    WorkingDirectory = ./.;
                   };
                   script = ''
                     export $(cat ${cfg.env_file} | xargs)
@@ -250,7 +250,7 @@
           };
 
           packages = {
-            discord_bot = cargoNix.workspaceMembers.discord_bot.build;
+            discord_bot = cargoNix.rootCrate.build;
             default = packages.discord_bot;
           };
           overlayAttrs = {

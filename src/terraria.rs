@@ -1,6 +1,6 @@
 use crate::discord_utils;
 use crate::routes::AppState;
-use lib::AppError;
+use crate::error::AppError;
 use oxford_join::OxfordJoin;
 use serde_json::{json, Value};
 
