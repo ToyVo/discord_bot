@@ -20,10 +20,10 @@ pub async fn track_players(state: &AppState) -> Result<(), AppError> {
 
     // Parse response to get list of player names in a vector
     let start_index = res.find(':').context("Could not find ':' in response")?;
-    let mut players = res[start_index + 1..]
+    let players = res[start_index + 1..]
         .trim()
         .split(',')
-        .map(|s| s.trim())
+        .map(|s| s.trim().to_string())
         .collect::<Vec<String>>();
 
     {
