@@ -37,7 +37,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
         key: Key::generate(),
         minecraft_rcon_address: var("MINECRAFT_RCON_ADDRESS")
             .unwrap_or(String::from("localhost:25575")),
-        minecraft_rcon_password: var("MINECRAFT_RCON_PASSWORD").unwrap_or_default(),
+        minecraft_rcon_password: var("RCON_PASSWORD").unwrap_or_default(),
         minecraft_service_name: var("MINECRAFT_SERVICE_NAME")
             .unwrap_or(String::from("podman-minecraft.service")),
         public_key: var("DISCORD_PUBLIC_KEY").unwrap_or_default(),
