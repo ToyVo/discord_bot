@@ -66,6 +66,11 @@ hash = "29a707cbf84e8664b243d07979bc0ae12e255374b06b2185d7e3bf1868851fb8"
 metafile = true
 
 [[files]]
+file = "mods/framework.pw.toml"
+hash = "ce081a84c6f6ac4a79753761fbe5c48bfcd29077af2c849ea6e3d7824b8f3e20"
+metafile = true
+
+[[files]]
 file = "mods/ftb-essentials.pw.toml"
 hash = "e196c44c69785ae15eb47a10207fee12362d34e63d94f663a00aa58e26313c37"
 metafile = true
