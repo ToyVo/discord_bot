@@ -1,4 +1,4 @@
-name = "toyvo_modpack"
+name = "toyvo_modded"
 author = "toyvo"
 version = "1.0.0"
 pack-format = "packwiz:1.1.0"
@@ -6,8 +6,8 @@ pack-format = "packwiz:1.1.0"
 [index]
 file = "index.toml"
 hash-format = "sha256"
-hash = "58ea488054309193c24399eef042b0fc644a5c409e54272fea064c83bd54694d"
+hash = "3935430b563b120cec0d51b1e34a05e943fcc54cbcc7cb829621b63e8a1492a8"
 
 [versions]
-forge = "50.1.19"
-minecraft = "1.20.6"
+minecraft = "1.20.1"
+neoforge = "47.1.106"
