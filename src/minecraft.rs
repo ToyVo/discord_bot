@@ -24,7 +24,7 @@ pub async fn track_players(state: &AppState) -> Result<(), AppError> {
         .trim()
         .split(',')
         .map(|s| s.trim().to_string())
-        .filter(|s| s != "")
+        .filter(|s| !s.is_empty())
         .collect::<Vec<String>>();
 
     tracing::debug!("Players: {:?}", players);
