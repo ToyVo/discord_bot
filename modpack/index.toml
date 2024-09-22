@@ -182,7 +182,7 @@ metafile = true
 
 [[files]]
 file = "mods/lucky-tnt-lib.pw.toml"
-hash = "102cd6296cfe1e9074dcf3ba68f571755bec582e87a3b6ce3648170310fe177d"
+hash = "28a78112fed24e6caa6fcb26349c95df2b3d182072418acf62bd9886d5b45305"
 metafile = true
 
 [[files]]

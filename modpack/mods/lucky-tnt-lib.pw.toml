@@ -1,6 +1,6 @@
 name = "Lucky TNT Lib"
 filename = "luckytntlib-1.20-47.2.32.0.jar"
-side = "server"
+side = "both"
 
 [download]
 url = "https://cdn.modrinth.com/data/rpuC10sK/versions/qVku3D4j/luckytntlib-1.20-47.2.32.0.jar"
