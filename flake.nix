@@ -140,6 +140,7 @@
                     "${toString cfg.minecraft.MCport}:25565"
                     "${toString cfg.minecraft.RCONPort}:25575"
                   ];
+                  environmentFiles = [cfg.env_file];
                   environment = {
                     EULA = "TRUE";
                     TYPE = "FORGE";
@@ -155,6 +156,7 @@
                     CREATE_CONSOLE_IN_PIPE = "true";
                     JVM_DD_OPTS = "fml.queryResult=confirm";
                     ALLOW_FLIGHT = "TRUE";
+                    RCON_PASSWORD = "\${MINECRAFT_RCON_PASSWORD}";
                   };
                   volumes = [
                     "${cfg.minecraft.datadir}:/data"
