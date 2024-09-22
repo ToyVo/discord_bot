@@ -256,11 +256,6 @@ hash = "fe59719a3c52224e8a02b13b8dfc70f9bfc6625beef19c6b353249eb53714f86"
 metafile = true
 
 [[files]]
-file = "mods/minecraft-earth-mod.pw.toml"
-hash = "383de8c13ad2812e80a459423eabb697b992b4600cc59cf01dcef9658116a583"
-metafile = true
-
-[[files]]
 file = "mods/nullscape.pw.toml"
 hash = "8d93d1db086d63d10edb0a3ad6926aeb6e6aab8985ff3a7eac1ec313ebce4420"
 metafile = true
