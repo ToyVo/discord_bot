@@ -156,7 +156,6 @@
                     CREATE_CONSOLE_IN_PIPE = "true";
                     JVM_DD_OPTS = "fml.queryResult=confirm";
                     ALLOW_FLIGHT = "TRUE";
-                    RCON_PASSWORD = "\${MINECRAFT_RCON_PASSWORD}";
                   };
                   volumes = [
                     "${cfg.minecraft.datadir}:/data"
