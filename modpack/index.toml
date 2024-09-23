@@ -142,7 +142,7 @@ metafile = true
 
 [[files]]
 file = "mods/distanthorizons.pw.toml"
-hash = "5955ac62823eacbf9a6d227e3813451b6a14388aa29e9326fdd62e569d159fab"
+hash = "2b3612d69c2b5c4bd8dfd643b7e34137ce1d753b146f5ba7fb9e08fafcdd6cd0"
 metafile = true
 
 [[files]]
@@ -342,7 +342,7 @@ metafile = true
 
 [[files]]
 file = "mods/travelers-titles.pw.toml"
-hash = "43284a55e537cb96d28160cdadab96dfd2ed3712529cc546a1c03313dd99eb46"
+hash = "e01b9e055dcffe40554cd7bb5ffc5d16f81f3dc71b89d448f851b2729143be41"
 metafile = true
 
 [[files]]
