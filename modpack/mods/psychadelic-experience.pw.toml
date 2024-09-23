@@ -1,0 +1,13 @@
+name = "Psychedelic Drug Chemistry"
+filename = "Psychadelic-Chemistry_1.20.1-1.4.5.jar"
+side = "both"
+
+[download]
+hash-format = "sha1"
+hash = "25341ce860a0bf4b86e72bd31d93ee4d9eddcb2f"
+mode = "metadata:curseforge"
+
+[update]
+[update.curseforge]
+file-id = 5407154
+project-id = 623095

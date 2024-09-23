@@ -1,0 +1,13 @@
+name = "GetDrunk"
+filename = "GetDrunk-1.2.3-forge.jar"
+side = "both"
+
+[download]
+hash-format = "sha1"
+hash = "02412e06f0ab0764f8afe07d878c5f15041e2b15"
+mode = "metadata:curseforge"
+
+[update]
+[update.curseforge]
+file-id = 5635758
+project-id = 1014075

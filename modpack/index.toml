@@ -31,6 +31,11 @@ hash = "7fbee422bf0c8308757b7159767572b3fe920c82c137cc2408f8555fbfc9ef9b"
 metafile = true
 
 [[files]]
+file = "mods/beer-craft-mod.pw.toml"
+hash = "c7961c5e9a433ce255a0e9f67c8ec66e2ef7504950bf5046caf1c135bc87e0b3"
+metafile = true
+
+[[files]]
 file = "mods/botarium.pw.toml"
 hash = "15f70ccb7c7b0ff27ec791788d24de00fc6f6715311644b0fe374f006c9f230e"
 metafile = true
@@ -53,6 +58,11 @@ metafile = true
 [[files]]
 file = "mods/cloth-config.pw.toml"
 hash = "5ac32407263c973bebc5aee61fe000d29d9879020fafb6631581396b64e55dfe"
+metafile = true
+
+[[files]]
+file = "mods/configured.pw.toml"
+hash = "c1bdeff356cd2ac164e2c0e6d0ceeda234db9774c2df44fb9f0e71d3960cc3f1"
 metafile = true
 
 [[files]]
@@ -166,6 +176,11 @@ hash = "842114b0822d9c2b8b3f474afa55bb973687e8c779aa1cf83548d6ed49b348cd"
 metafile = true
 
 [[files]]
+file = "mods/getdrunk.pw.toml"
+hash = "23d8d2fe2c48c7183d7eea21a92dc32aa283fa026fcb0b68362ee81cb6932189"
+metafile = true
+
+[[files]]
 file = "mods/incendium.pw.toml"
 hash = "45cbe5240c7d30d141494ff4cf3683aedfa99e3d12e55e007b6368bd258f7620"
 metafile = true
@@ -276,6 +291,11 @@ hash = "26b6891625bf09317245200e3adb871cea00dbd41859d68cf57062544c0e6041"
 metafile = true
 
 [[files]]
+file = "mods/psychadelic-experience.pw.toml"
+hash = "44029a582f23df85ddcc7282fb77e372b4ca97aaabb07cca5b7091460e1c958b"
+metafile = true
+
+[[files]]
 file = "mods/ribbits.pw.toml"
 hash = "997ffdba6e6eb8f73bb0ccc415116df76760dd052f4adc0b71269ae1864f24e9"
 metafile = true
@@ -283,6 +303,11 @@ metafile = true
 [[files]]
 file = "mods/scorched-guns-2.pw.toml"
 hash = "2b2ce5728a863af40f874ed0c6c8553f2a7a96741bb8cc51c4787ed4f27ab138"
+metafile = true
+
+[[files]]
+file = "mods/shrink_.pw.toml"
+hash = "f67791f11a1656ff2c54b16be086b490b64e88ed70508fd7639a8b169fe4dcf9"
 metafile = true
 
 [[files]]

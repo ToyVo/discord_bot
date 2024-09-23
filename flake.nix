@@ -148,6 +148,7 @@
                     MEMORY = "20g";
                     OPS = "4cb4aff4-a0ed-4eaf-b912-47825b2ed30d";
                     EXISTING_OPS_FILE = "MERGE";
+                    EXISTING_WHITELIST_FILE = "MERGE";
                     MOTD = "ToyVo Modded Server";
                     MAX_TICK_TIME = "-1";
                     PACKWIZ_URL = "https://mc.toyvo.dev/modpack/pack.toml";
@@ -156,6 +157,7 @@
                     CREATE_CONSOLE_IN_PIPE = "true";
                     JVM_DD_OPTS = "fml.queryResult=confirm";
                     ALLOW_FLIGHT = "TRUE";
+                    DIFFICULTY="hard";
                   };
                   volumes = [
                     "${cfg.minecraft.datadir}:/data"
