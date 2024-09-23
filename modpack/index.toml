@@ -26,11 +26,6 @@ hash = "13a3593cd47946c34d07c2a379f0ec70a7dcdb11b6260a676b04ff95c47f8195"
 metafile = true
 
 [[files]]
-file = "mods/applied-energistics-2.pw.toml"
-hash = "9bd97f776c321a330b117f83f3632c867dd60c61cffabe51ce18c2dd19e24458"
-metafile = true
-
-[[files]]
 file = "mods/architectury-api.pw.toml"
 hash = "fa34a3117af7f8ed553ec563a7c90c1d6462184c7df5b837c831cb482c6ae582"
 metafile = true
@@ -78,6 +73,11 @@ metafile = true
 [[files]]
 file = "mods/cc-tweaked.pw.toml"
 hash = "1b7c49374b0a87723138d12ef15d1d8374787e012cc6de6dd58a68602664ff2a"
+metafile = true
+
+[[files]]
+file = "mods/clockworkadditions.pw.toml"
+hash = "30d39b58938a55163e8a1872889f1430aa80bf622bbb7fb735bd6cd5e316682a"
 metafile = true
 
 [[files]]
