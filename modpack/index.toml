@@ -36,6 +36,11 @@ hash = "c7961c5e9a433ce255a0e9f67c8ec66e2ef7504950bf5046caf1c135bc87e0b3"
 metafile = true
 
 [[files]]
+file = "mods/better-compatibility-checker.pw.toml"
+hash = "deece4e278b0ef6d2b96dc69561ab11e34106ea8d3c29289e6060404f7614a87"
+metafile = true
+
+[[files]]
 file = "mods/botarium.pw.toml"
 hash = "15f70ccb7c7b0ff27ec791788d24de00fc6f6715311644b0fe374f006c9f230e"
 metafile = true
@@ -142,7 +147,7 @@ metafile = true
 
 [[files]]
 file = "mods/distanthorizons.pw.toml"
-hash = "2b3612d69c2b5c4bd8dfd643b7e34137ce1d753b146f5ba7fb9e08fafcdd6cd0"
+hash = "5955ac62823eacbf9a6d227e3813451b6a14388aa29e9326fdd62e569d159fab"
 metafile = true
 
 [[files]]
