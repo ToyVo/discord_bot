@@ -82,6 +82,11 @@
                   default = 25575;
                   description = "Port to expose minecraft rcon on";
                 };
+                RCONPort = lib.mkOption {
+                  type = lib.types.int;
+                  default = 24454;
+                  description = "Port to expose minecraft simple voice chat on";
+                };
                 datadir = lib.mkOption {
                   type = lib.types.path;
                   description = "Path to store minecraft data";
@@ -124,6 +129,7 @@
                 allowedTCPPorts =
                   lib.optionals cfg.minecraft.openFirewall [
                     cfg.minecraft.MCport
+                    cfg.minecraft.voicePort
                   ]
                   ++ lib.optionals cfg.terraria.openFirewall [
                     cfg.terraria.port
@@ -139,6 +145,7 @@
                   ports = [
                     "${toString cfg.minecraft.MCport}:25565"
                     "${toString cfg.minecraft.RCONPort}:25575"
+                    "${toString cfg.minecraft.voicePort}:24454"
                   ];
                   environmentFiles = [cfg.env_file];
                   environment = {
