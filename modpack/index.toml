@@ -1,6 +1,10 @@
 hash-format = "sha256"
 
 [[files]]
+file = "config/bcc-common.toml"
+hash = "c6c22ff741f6c3f925a53ea0dba54678518b97bdcac914b02b3a7dbee23355d2"
+
+[[files]]
 file = "mods/aaa-particles.pw.toml"
 hash = "56f2fa30d8a9c0787d396f7830516a2456fe9c9e3bab7ffec558a011640d1022"
 metafile = true
