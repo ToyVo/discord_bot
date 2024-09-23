@@ -171,11 +171,6 @@ hash = "ef744ef9850c42a100e7ba88527b7bc486079f43c0e5234162df25391a2197a3"
 metafile = true
 
 [[files]]
-file = "mods/distanthorizons.pw.toml"
-hash = "5955ac62823eacbf9a6d227e3813451b6a14388aa29e9326fdd62e569d159fab"
-metafile = true
-
-[[files]]
 file = "mods/dtns-palette-of-paws.pw.toml"
 hash = "8cb478ca083b46b8d3712d94639ff34f2cc76dcbf03422ce47b97a9ab16e55ac"
 metafile = true
@@ -223,16 +218,6 @@ metafile = true
 [[files]]
 file = "mods/kotlin-for-forge.pw.toml"
 hash = "82ffc26ad624cdd846cbbeb99ed40ef44229ec7006a7ae7e8caa8df6409c20db"
-metafile = true
-
-[[files]]
-file = "mods/lucky-tnt-lib.pw.toml"
-hash = "28a78112fed24e6caa6fcb26349c95df2b3d182072418acf62bd9886d5b45305"
-metafile = true
-
-[[files]]
-file = "mods/lucky-tnt-mod.pw.toml"
-hash = "c6f55693fb2254103a2bbd380552321fa831446590661accf218dae4043ddd1e"
 metafile = true
 
 [[files]]
