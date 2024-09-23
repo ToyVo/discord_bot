@@ -1,0 +1,13 @@
+name = "Kontraption"
+filename = "kontraption-0.0.2+82af737bfe.jar"
+side = "both"
+
+[download]
+url = "https://cdn.modrinth.com/data/5yJ5IDKm/versions/x3oh2lqe/kontraption-0.0.2%2B82af737bfe.jar"
+hash-format = "sha1"
+hash = "724d06c1f6370f87e48f122724c22e895a7a9137"
+
+[update]
+[update.modrinth]
+mod-id = "5yJ5IDKm"
+version = "x3oh2lqe"

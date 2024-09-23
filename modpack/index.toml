@@ -1,6 +1,11 @@
 hash-format = "sha256"
 
 [[files]]
+file = "mods/aaa-particles.pw.toml"
+hash = "56f2fa30d8a9c0787d396f7830516a2456fe9c9e3bab7ffec558a011640d1022"
+metafile = true
+
+[[files]]
 file = "mods/ae2-things-forge.pw.toml"
 hash = "8f7696617249a4be35a9d1a2caecce4e17bbffe823f904d10c6fc8b72c4352ca"
 metafile = true
@@ -171,6 +176,16 @@ hash = "ef744ef9850c42a100e7ba88527b7bc486079f43c0e5234162df25391a2197a3"
 metafile = true
 
 [[files]]
+file = "mods/desert-behemoths-sandworms!.pw.toml"
+hash = "93c1e1afca2f3409187b1ef3555609302d1876178452cba7053be86fc842bbce"
+metafile = true
+
+[[files]]
+file = "mods/distanthorizons.pw.toml"
+hash = "a505c59953646e0434a878cff105b9e6c416b3c0660fb60917a2bd4ed2b150f1"
+metafile = true
+
+[[files]]
 file = "mods/dtns-palette-of-paws.pw.toml"
 hash = "8cb478ca083b46b8d3712d94639ff34f2cc76dcbf03422ce47b97a9ab16e55ac"
 metafile = true
@@ -216,8 +231,23 @@ hash = "ce98a60cbe3a9ff735fa97de935c3a9949b5b8a2a35ae6a82192251ef795d0b1"
 metafile = true
 
 [[files]]
+file = "mods/kontraption.pw.toml"
+hash = "bc8915f9f37a3ad69b5570cd16a5679f17365a206bad1ae74ef0c4fc7198c00c"
+metafile = true
+
+[[files]]
 file = "mods/kotlin-for-forge.pw.toml"
 hash = "82ffc26ad624cdd846cbbeb99ed40ef44229ec7006a7ae7e8caa8df6409c20db"
+metafile = true
+
+[[files]]
+file = "mods/lodestonelib.pw.toml"
+hash = "2b0f2b84667e292579f16838a3b3cf8dd34ee90dd0d9973186a786eafc884f12"
+metafile = true
+
+[[files]]
+file = "mods/lucky-block.pw.toml"
+hash = "ecbf67162e047b2b2138ec85129abc5321abcd61f5fa4a96322bdfe151f50dfb"
 metafile = true
 
 [[files]]
@@ -296,6 +326,11 @@ hash = "3a7eaa64434e7449e5fe6bd089bc784499432dae7d6ca07174b55b10a3b32ec8"
 metafile = true
 
 [[files]]
+file = "mods/paxi.pw.toml"
+hash = "e63b436dba4a80db68e4c79e5d9f030096fad75fe264490403d75dee3dab72de"
+metafile = true
+
+[[files]]
 file = "mods/ping-wheel.pw.toml"
 hash = "dcf9f39e61450656765c300f03df2151ebde872ac004428b5f2532c2fbe7c1c1"
 metafile = true
@@ -338,6 +373,11 @@ metafile = true
 [[files]]
 file = "mods/sophisticated-core.pw.toml"
 hash = "c2da3974f21a70aa72781aa392b69ae897d37151837128dcb5d4b6426b611e34"
+metafile = true
+
+[[files]]
+file = "mods/spark.pw.toml"
+hash = "dbe2c430bf58c773082d7fd9d1bee2d510a2e0c08f390f7465e819b6e321ae09"
 metafile = true
 
 [[files]]

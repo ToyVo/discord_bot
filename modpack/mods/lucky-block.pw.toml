@@ -1,0 +1,13 @@
+name = "Lucky Block"
+filename = "lucky-block-forge-1.20.1-13.0.jar"
+side = "both"
+
+[download]
+hash-format = "sha1"
+hash = "8fffcca3aa5fa8f934449bf7f1f3225cf629dad2"
+mode = "metadata:curseforge"
+
+[update]
+[update.curseforge]
+file-id = 4817267
+project-id = 576825
