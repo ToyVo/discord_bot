@@ -191,8 +191,18 @@ hash = "8cb478ca083b46b8d3712d94639ff34f2cc76dcbf03422ce47b97a9ab16e55ac"
 metafile = true
 
 [[files]]
+file = "mods/edf-remastered.pw.toml"
+hash = "c6d6e0e569ee03b705fe01ee5fc98505362d3a90a1a2cd919c2eb26dfa3cf5bd"
+metafile = true
+
+[[files]]
 file = "mods/enderio.pw.toml"
 hash = "29a707cbf84e8664b243d07979bc0ae12e255374b06b2185d7e3bf1868851fb8"
+metafile = true
+
+[[files]]
+file = "mods/endrem.pw.toml"
+hash = "0b7f848ade3bdd7eae4f5af35f22b013d5bd44ed2476f12da3dca2db5675b0a6"
 metafile = true
 
 [[files]]
@@ -231,11 +241,6 @@ hash = "ce98a60cbe3a9ff735fa97de935c3a9949b5b8a2a35ae6a82192251ef795d0b1"
 metafile = true
 
 [[files]]
-file = "mods/kontraption.pw.toml"
-hash = "bc8915f9f37a3ad69b5570cd16a5679f17365a206bad1ae74ef0c4fc7198c00c"
-metafile = true
-
-[[files]]
 file = "mods/kotlin-for-forge.pw.toml"
 hash = "82ffc26ad624cdd846cbbeb99ed40ef44229ec7006a7ae7e8caa8df6409c20db"
 metafile = true
@@ -243,6 +248,11 @@ metafile = true
 [[files]]
 file = "mods/lodestonelib.pw.toml"
 hash = "2b0f2b84667e292579f16838a3b3cf8dd34ee90dd0d9973186a786eafc884f12"
+metafile = true
+
+[[files]]
+file = "mods/lootr.pw.toml"
+hash = "da63657599461e9c8141f45042bf1423aa96f80e9dca9260992bcc5871e6daaf"
 metafile = true
 
 [[files]]
@@ -338,6 +348,11 @@ metafile = true
 [[files]]
 file = "mods/placebo.pw.toml"
 hash = "0f807372e11d5a8a28266ab214fd243fa7558fe3f5a0cc6505090faede8c2dd6"
+metafile = true
+
+[[files]]
+file = "mods/polymorph.pw.toml"
+hash = "00322f0c2a1ed0b9e28f823b3c7f5b40d3ede06db32f3d4aa4d1391a994c306a"
 metafile = true
 
 [[files]]
