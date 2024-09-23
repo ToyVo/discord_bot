@@ -82,7 +82,7 @@
                   default = 25575;
                   description = "Port to expose minecraft rcon on";
                 };
-                RCONPort = lib.mkOption {
+                voicePort = lib.mkOption {
                   type = lib.types.int;
                   default = 24454;
                   description = "Port to expose minecraft simple voice chat on";
