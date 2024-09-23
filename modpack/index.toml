@@ -271,8 +271,18 @@ hash = "08ed517d07b3c29bcfea2498ae0e7016f3f62e1faddbc272cf8c3f7f2b160e45"
 metafile = true
 
 [[files]]
+file = "mods/flat-bedrock.pw.toml"
+hash = "58bb88014ad25293958956e0b2ad80bcb32a94766e143616534f9519e6df3e62"
+metafile = true
+
+[[files]]
 file = "mods/framework.pw.toml"
 hash = "ce081a84c6f6ac4a79753761fbe5c48bfcd29077af2c849ea6e3d7824b8f3e20"
+metafile = true
+
+[[files]]
+file = "mods/ftb-chunks-forge.pw.toml"
+hash = "3e6cd0338e376c0b84fbdbc7fed1b97637782087721c694a0bd6092694331c51"
 metafile = true
 
 [[files]]
@@ -283,6 +293,11 @@ metafile = true
 [[files]]
 file = "mods/ftb-library-forge.pw.toml"
 hash = "a4a0adb85269712ade2399503b6365b87847cac8f34f674c535564bda184bcce"
+metafile = true
+
+[[files]]
+file = "mods/ftb-teams-forge.pw.toml"
+hash = "76c3828b4e7288b79d6b0ca1418410539082a749650f9c85c6b03cf53ed1221e"
 metafile = true
 
 [[files]]
@@ -308,6 +323,11 @@ metafile = true
 [[files]]
 file = "mods/jei.pw.toml"
 hash = "ce98a60cbe3a9ff735fa97de935c3a9949b5b8a2a35ae6a82192251ef795d0b1"
+metafile = true
+
+[[files]]
+file = "mods/just-hammers.pw.toml"
+hash = "2906e9ebf6e5c11d41c26de159bfa5f280b873dc46217c15292381bfd5b61f01"
 metafile = true
 
 [[files]]
