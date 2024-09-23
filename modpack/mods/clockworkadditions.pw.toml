@@ -1,0 +1,8 @@
+name = "ClockworkAdditions"
+filename = "ClockworkAdditions-1.20.1-0.0.6-forge-and-fabric.jar"
+side = "both"
+
+[download]
+url = "https://github.com/GuyApooye/ClockworkAdditions/releases/download/v0.0.6/ClockworkAdditions-1.20.1-0.0.6-forge-and-fabric.jar"
+hash-format = "sha256"
+hash = "87ce83e32119213f10a3c7d72104c7543606357bfa60c1c7550a8e4f9b995151"
