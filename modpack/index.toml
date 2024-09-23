@@ -247,7 +247,7 @@ metafile = true
 
 [[files]]
 file = "mods/lucky-block.pw.toml"
-hash = "ecbf67162e047b2b2138ec85129abc5321abcd61f5fa4a96322bdfe151f50dfb"
+hash = "f191b4d935d4c20460ba4bd97171b4ee834cde6dbce85d445b7f30e2a7367426"
 metafile = true
 
 [[files]]
