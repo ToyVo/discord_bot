@@ -115,6 +115,16 @@ hash = "c1bdeff356cd2ac164e2c0e6d0ceeda234db9774c2df44fb9f0e71d3960cc3f1"
 metafile = true
 
 [[files]]
+file = "mods/connector.pw.toml"
+hash = "2bda116744ab10a64e92dc6f97549850e5d74b58b985f406818a8f76abcba7f7"
+metafile = true
+
+[[files]]
+file = "mods/construction-wand.pw.toml"
+hash = "119a7506c39a296fc3cd7d6f874c08b2664082811ba95daf2b98f27f398fb980"
+metafile = true
+
+[[files]]
 file = "mods/copycats.pw.toml"
 hash = "3b6dc6e75bb8832b02aec2d6368f6f4da1be234800ba8702eaabf7989d61b2c4"
 metafile = true
@@ -280,6 +290,11 @@ hash = "58bb88014ad25293958956e0b2ad80bcb32a94766e143616534f9519e6df3e62"
 metafile = true
 
 [[files]]
+file = "mods/forgified-fabric-api.pw.toml"
+hash = "83e5ef8ddf5f41c33cde52de9b4991067e8701ecb89353c3a5219a55f6ff04d5"
+metafile = true
+
+[[files]]
 file = "mods/framework.pw.toml"
 hash = "ce081a84c6f6ac4a79753761fbe5c48bfcd29077af2c849ea6e3d7824b8f3e20"
 metafile = true
@@ -327,6 +342,11 @@ metafile = true
 [[files]]
 file = "mods/jei.pw.toml"
 hash = "ce98a60cbe3a9ff735fa97de935c3a9949b5b8a2a35ae6a82192251ef795d0b1"
+metafile = true
+
+[[files]]
+file = "mods/just-enough-resources-jer.pw.toml"
+hash = "83219231c7af4677a2507e01ca0faf39acca69f05506148d1d6a3e47b4c94562"
 metafile = true
 
 [[files]]
@@ -480,8 +500,18 @@ hash = "33c1012df4c3267ee9e70509001739908b2f2c72ae0b2728a750b3516644aa2c"
 metafile = true
 
 [[files]]
+file = "mods/respawnablepets.pw.toml"
+hash = "f6238100a1fd9bd3dfacde950052f3a90cd2749fdcb4bfcbee58b3fc31665284"
+metafile = true
+
+[[files]]
 file = "mods/ribbits.pw.toml"
 hash = "997ffdba6e6eb8f73bb0ccc415116df76760dd052f4adc0b71269ae1864f24e9"
+metafile = true
+
+[[files]]
+file = "mods/rpgdifficulty.pw.toml"
+hash = "3f92abf3979c117d6886380d9586951d7a452ba91f24b06cf182976b374b5983"
 metafile = true
 
 [[files]]
