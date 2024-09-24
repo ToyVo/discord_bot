@@ -585,6 +585,11 @@ hash = "e01b9e055dcffe40554cd7bb5ffc5d16f81f3dc71b89d448f851b2729143be41"
 metafile = true
 
 [[files]]
+file = "mods/trinkets.pw.toml"
+hash = "f8cfa09b21d806a3e41d7833e984bf5bd613c82e34f160de44c247da99f4e457"
+metafile = true
+
+[[files]]
 file = "mods/valkyrien-skies.pw.toml"
 hash = "d0b9e330714c613ba207842facd66054188ad4cb60538f455487a8ca04d1b82a"
 metafile = true
