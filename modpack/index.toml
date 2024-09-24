@@ -20,11 +20,6 @@ hash = "723eb1e1a42eb2fe8461d2b0ef73d8f5a37b723924a534fc054879e959aa28c7"
 metafile = true
 
 [[files]]
-file = "mods/amarite.pw.toml"
-hash = "b7e10696cbd12ed68a16238fd72d8af097db667ad0cf978a75509baeebb90ab1"
-metafile = true
-
-[[files]]
 file = "mods/apotheosis.pw.toml"
 hash = "55e921a275e97a1e6288f46d84f840ec7002626e8790171876c877b8b2d517be"
 metafile = true
@@ -267,6 +262,11 @@ metafile = true
 [[files]]
 file = "mods/edf-remastered.pw.toml"
 hash = "c6d6e0e569ee03b705fe01ee5fc98505362d3a90a1a2cd919c2eb26dfa3cf5bd"
+metafile = true
+
+[[files]]
+file = "mods/enchancement.pw.toml"
+hash = "2a08c1c8c0c07f55d0c315a38e338f6458ca7abb50e3692e11482213cabfefe4"
 metafile = true
 
 [[files]]
@@ -582,11 +582,6 @@ metafile = true
 [[files]]
 file = "mods/travelers-titles.pw.toml"
 hash = "e01b9e055dcffe40554cd7bb5ffc5d16f81f3dc71b89d448f851b2729143be41"
-metafile = true
-
-[[files]]
-file = "mods/trinkets.pw.toml"
-hash = "f8cfa09b21d806a3e41d7833e984bf5bd613c82e34f160de44c247da99f4e457"
 metafile = true
 
 [[files]]
