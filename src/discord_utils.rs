@@ -6,8 +6,8 @@ use serenity::all::{User, UserId};
 use serenity::builder::CreateCommand;
 use serenity::interactions_endpoint::Verifier;
 
-use crate::routes::AppState;
 use crate::error::AppError;
+use crate::routes::AppState;
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct DiscordTokens<S: AsRef<str>> {
@@ -56,20 +56,20 @@ pub async fn discord_request<S: AsRef<str>, T: Serialize + ?Sized>(
 pub async fn install_global_commands(
     commands: &[CreateCommand],
     state: &AppState,
-) -> Result<(), AppError> {
+) -> Result<Value, AppError> {
     let endpoint = format!("applications/{}/commands", state.client_id);
-    discord_request(endpoint, Method::PUT, Some(&commands), state).await?;
-    Ok(())
+    let response = discord_request(endpoint, Method::PUT, Some(&commands), state).await?;
+    Ok(response.json::<Value>().await?)
 }
 
 pub async fn create_message<S: AsRef<str>>(
     payload: Value,
     channel_id: S,
     state: &AppState,
-) -> Result<(), AppError> {
+) -> Result<Value, AppError> {
     let endpoint = format!("channels/{}/messages", channel_id.as_ref());
-    discord_request(endpoint, Method::POST, Some(&payload), state).await?;
-    Ok(())
+    let response = discord_request(endpoint, Method::POST, Some(&payload), state).await?;
+    Ok(response.json::<Value>().await?)
 }
 
 pub async fn verify_request<S: AsRef<str>>(
@@ -145,4 +145,18 @@ pub async fn get_user_data(tokens: &DiscordTokens<String>) -> Result<User, AppEr
         .error_for_status()?
         .json::<User>()
         .await?)
+}
+
+pub async fn delete_message<S: AsRef<str>>(
+    message_id: S,
+    channel_id: S,
+    state: &AppState,
+) -> Result<(), AppError> {
+    let endpoint = format!(
+        "channels/{}/messages/{}",
+        channel_id.as_ref(),
+        message_id.as_ref()
+    );
+    discord_request(endpoint, Method::DELETE, None::<&str>, state).await?;
+    Ok(())
 }

@@ -31,7 +31,7 @@ pub async fn track_players(state: &AppState) -> Result<(), AppError> {
         let last_player_names = state.minecraft_players.read().await;
         if let Some(message) = get_player_changes(&last_player_names, &players) {
             tracing::info!("{}", message);
-            discord_utils::create_message(
+            let message = discord_utils::create_message(
                 json!({
                     "content": message
                 }),
@@ -39,6 +39,21 @@ pub async fn track_players(state: &AppState) -> Result<(), AppError> {
                 state,
             )
             .await?;
+
+            let last_message_id = state.discord_minecraft_last_message_id.read().await;
+            if let Some(id) = last_message_id.as_ref() {
+                discord_utils::delete_message(id, &state.discord_minecraft_channel_id, state)
+                    .await?;
+            }
+
+            let mut discord_minecraft_last_message_id =
+                state.discord_minecraft_last_message_id.write().await;
+            *discord_minecraft_last_message_id = Some(
+                message
+                    .get("id")
+                    .context("Could not find id in response")?
+                    .to_string(),
+            );
         }
     }
 

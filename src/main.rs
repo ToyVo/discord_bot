@@ -33,7 +33,9 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
         client_id: var("DISCORD_CLIENT_ID").unwrap_or_default(),
         client_secret: var("DISCORD_CLIENT_SECRET").unwrap_or_default(),
         discord_minecraft_channel_id: var("DISCORD_MINECRAFT_CHANNEL_ID").unwrap_or_default(),
+        discord_minecraft_last_message_id: RwLock::new(None),
         discord_terraria_channel_id: var("DISCORD_TERRARIA_CHANNEL_ID").unwrap_or_default(),
+        discord_terraria_last_message_id: RwLock::new(None),
         key: Key::generate(),
         minecraft_players: RwLock::new(vec![]),
         minecraft_rcon_address: var("MINECRAFT_RCON_ADDRESS")

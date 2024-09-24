@@ -1,6 +1,7 @@
 use crate::discord_utils;
 use crate::error::AppError;
 use crate::routes::AppState;
+use anyhow::Context;
 use oxford_join::OxfordJoin;
 use serde_json::{json, Value};
 
@@ -136,7 +137,7 @@ pub async fn track_players(state: &AppState) -> Result<(), AppError> {
         let last_player_nicknames = state.terraria_players.read().await;
         if let Some(message) = get_player_changes(&last_player_nicknames, &player_nicknames) {
             tracing::info!("{}", message);
-            discord_utils::create_message(
+            let message = discord_utils::create_message(
                 json!({
                     "content": message,
                 }),
@@ -144,6 +145,21 @@ pub async fn track_players(state: &AppState) -> Result<(), AppError> {
                 state,
             )
             .await?;
+
+            let last_message_id = state.discord_terraria_last_message_id.read().await;
+            if let Some(id) = last_message_id.as_ref() {
+                discord_utils::delete_message(id, &state.discord_terraria_channel_id, state)
+                    .await?;
+            }
+
+            let mut discord_terraria_last_message_id =
+                state.discord_terraria_last_message_id.write().await;
+            *discord_terraria_last_message_id = Some(
+                message
+                    .get("id")
+                    .context("Could not find id in response")?
+                    .to_string(),
+            );
         }
     }
 
