@@ -20,6 +20,11 @@ hash = "723eb1e1a42eb2fe8461d2b0ef73d8f5a37b723924a534fc054879e959aa28c7"
 metafile = true
 
 [[files]]
+file = "mods/amarite.pw.toml"
+hash = "b7e10696cbd12ed68a16238fd72d8af097db667ad0cf978a75509baeebb90ab1"
+metafile = true
+
+[[files]]
 file = "mods/apotheosis.pw.toml"
 hash = "55e921a275e97a1e6288f46d84f840ec7002626e8790171876c877b8b2d517be"
 metafile = true
