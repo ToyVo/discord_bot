@@ -265,11 +265,6 @@ hash = "c6d6e0e569ee03b705fe01ee5fc98505362d3a90a1a2cd919c2eb26dfa3cf5bd"
 metafile = true
 
 [[files]]
-file = "mods/enchancement.pw.toml"
-hash = "2a08c1c8c0c07f55d0c315a38e338f6458ca7abb50e3692e11482213cabfefe4"
-metafile = true
-
-[[files]]
 file = "mods/enderio.pw.toml"
 hash = "29a707cbf84e8664b243d07979bc0ae12e255374b06b2185d7e3bf1868851fb8"
 metafile = true
@@ -332,6 +327,11 @@ metafile = true
 [[files]]
 file = "mods/getdrunk.pw.toml"
 hash = "23d8d2fe2c48c7183d7eea21a92dc32aa283fa026fcb0b68362ee81cb6932189"
+metafile = true
+
+[[files]]
+file = "mods/immersiveportals.pw.toml"
+hash = "84b91bcb5d9118638a62e95616d319824837e6cb928ea774862748c70a7333eb"
 metafile = true
 
 [[files]]
@@ -567,6 +567,11 @@ metafile = true
 [[files]]
 file = "mods/toms-storage.pw.toml"
 hash = "ad3b53a03146fac5e46803a06836c38ae13bc36eb4fb86b848202152fb76d171"
+metafile = true
+
+[[files]]
+file = "mods/tooltipfix.pw.toml"
+hash = "5266f479ada8def6f0913d79b57f1dbf52058df1690e3702a3a3608e6a80c796"
 metafile = true
 
 [[files]]
