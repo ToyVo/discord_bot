@@ -40,10 +40,12 @@ pub async fn track_players(state: &AppState) -> Result<(), AppError> {
             )
             .await?;
 
-            let last_message_id = state.discord_minecraft_last_message_id.read().await;
-            if let Some(id) = last_message_id.as_ref() {
-                discord_utils::delete_message(id, &state.discord_minecraft_channel_id, state)
-                    .await?;
+            {
+                let last_message_id = state.discord_minecraft_last_message_id.read().await;
+                if let Some(id) = last_message_id.as_ref() {
+                    discord_utils::delete_message(id, &state.discord_minecraft_channel_id, state)
+                        .await?;
+                }
             }
 
             let mut discord_minecraft_last_message_id =
