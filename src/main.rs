@@ -1,10 +1,17 @@
+use axum::{
+    body::Bytes,
+    http::{header, HeaderValue},
+};
 use axum_extra::extract::cookie::Key;
 use serenity::all::{CommandOptionType, CommandType, CreateCommand, CreateCommandOption};
-use std::sync::Arc;
-use std::{env::var, net::SocketAddr, time::Duration};
-use tokio::sync::RwLock;
-use tokio::{net::TcpListener, signal};
-use tower_http::{timeout::TimeoutLayer, trace::TraceLayer};
+use std::{env::var, net::SocketAddr, sync::Arc, time::Duration};
+use tokio::{net::TcpListener, signal, sync::RwLock};
+use tower::ServiceBuilder;
+use tower_http::{
+    timeout::TimeoutLayer,
+    trace::{DefaultMakeSpan, DefaultOnResponse, TraceLayer},
+    LatencyUnit, ServiceBuilderExt,
+};
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
 
 use crate::discord_utils::install_global_commands;
@@ -107,13 +114,34 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
     match TcpListener::bind(format!("{host}:{port}")).await {
         Ok(listener) => {
             tracing::info!("Listening on http://{addr}");
+            let sensitive_headers: Arc<[_]> = vec![header::AUTHORIZATION, header::COOKIE].into();
+            // Build our middleware stack
+            let middleware = ServiceBuilder::new()
+                // Mark the `Authorization` and `Cookie` headers as sensitive so it doesn't show in logs
+                .sensitive_request_headers(sensitive_headers.clone())
+                // Add high level tracing/logging to all requests
+                .layer(
+                    TraceLayer::new_for_http()
+                        .on_body_chunk(|chunk: &Bytes, latency: Duration, _: &tracing::Span| {
+                            tracing::trace!(size_bytes = chunk.len(), latency = ?latency, "sending body chunk")
+                        })
+                        .make_span_with(DefaultMakeSpan::new().include_headers(true))
+                        .on_response(DefaultOnResponse::new().include_headers(true).latency_unit(LatencyUnit::Micros)),
+                )
+                .sensitive_response_headers(sensitive_headers)
+                // Set a timeout
+                .layer(TimeoutLayer::new(Duration::from_secs(10)))
+                // Compress responses
+                .compression()
+                // Set a `Content-Type` if there isn't one already.
+                .insert_response_header_if_not_present(
+                    header::CONTENT_TYPE,
+                    HeaderValue::from_static("application/octet-stream"),
+                );
             if let Err(e) = axum::serve(
                 listener,
                 app()
-                    .layer((
-                        TraceLayer::new_for_http(),
-                        TimeoutLayer::new(Duration::from_secs(10)),
-                    ))
+                    .layer(middleware)
                     .with_state(state)
                     .into_make_service_with_connect_info::<SocketAddr>(),
             )

@@ -7,8 +7,8 @@ use serenity::builder::{
 use serenity::json;
 use tokio::process::Command;
 
-use crate::error::AppError;
 use crate::discord_utils::discord_request;
+use crate::error::AppError;
 use crate::routes::AppState;
 use crate::terraria;
 
