@@ -39,6 +39,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
         bot_token: var("DISCORD_BOT_TOKEN").unwrap_or_default(),
         client_id: var("DISCORD_CLIENT_ID").unwrap_or_default(),
         client_secret: var("DISCORD_CLIENT_SECRET").unwrap_or_default(),
+        discord_bot_spam_channel_id: var("DISCORD_BOT_SPAM_CHANNEL_ID").unwrap_or_default(),
         discord_minecraft_channel_id: var("DISCORD_MINECRAFT_CHANNEL_ID").unwrap_or_default(),
         discord_minecraft_last_message_id: RwLock::new(None),
         discord_terraria_channel_id: var("DISCORD_TERRARIA_CHANNEL_ID").unwrap_or_default(),

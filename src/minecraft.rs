@@ -35,7 +35,7 @@ pub async fn track_players(state: &AppState) -> Result<(), AppError> {
                 json!({
                     "content": message
                 }),
-                &state.discord_minecraft_channel_id,
+                &state.discord_bot_spam_channel_id,
                 state,
             )
             .await?;
@@ -43,7 +43,7 @@ pub async fn track_players(state: &AppState) -> Result<(), AppError> {
             {
                 let last_message_id = state.discord_minecraft_last_message_id.read().await;
                 if let Some(id) = last_message_id.as_ref() {
-                    discord_utils::delete_message(id, &state.discord_minecraft_channel_id, state)
+                    discord_utils::delete_message(id, &state.discord_bot_spam_channel_id, state)
                         .await?;
                 }
             }
