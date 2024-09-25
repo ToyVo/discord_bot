@@ -50,7 +50,11 @@ pub async fn discord_request<S: AsRef<str>, T: Serialize + ?Sized>(
             .json(b);
     }
 
-    Ok(builder.send().await?.error_for_status()?)
+    let response = builder.send().await?;
+
+    tracing::debug!("response from {method} {url}: {response:#?}");
+
+    Ok(response.error_for_status()?)
 }
 
 pub async fn install_global_commands(
