@@ -34,7 +34,7 @@ pub async fn discord_request<S: AsRef<str>, T: Serialize + ?Sized>(
     let url = format!("https://discord.com/api/v10/{}", endpoint.as_ref());
 
     let mut builder = reqwest::Client::new()
-        .request(method, url)
+        .request(method.clone(), url.as_str())
         .header(
             header::AUTHORIZATION.as_str(),
             format!("Bot {}", { state.bot_token.as_str() }),
