@@ -83,7 +83,15 @@ pub async fn create_message<S: AsRef<str>>(
 ) -> Result<Value, AppError> {
     let endpoint = format!("channels/{}/messages", channel_id.as_ref());
     let response = discord_request(endpoint, Method::POST, Some(&payload), state).await?;
-    Ok(response.context("json not found")?)
+    let json = response.context("json not found")?;
+    tracing::info!(
+        "Message created {}",
+        json.get("id")
+            .context("id not found")?
+            .as_str()
+            .context("failed to parse as str")?
+    );
+    Ok(json)
 }
 
 pub async fn verify_request<S: AsRef<str>>(
