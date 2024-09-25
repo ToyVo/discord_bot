@@ -1,3 +1,4 @@
+use anyhow::Context;
 use axum::http::{header, HeaderMap};
 use reqwest::{Method, Response};
 use serde::{Deserialize, Serialize};
@@ -30,7 +31,7 @@ pub async fn discord_request<S: AsRef<str>, T: Serialize + ?Sized>(
     method: Method,
     body: Option<&T>,
     state: &AppState,
-) -> Result<Response, AppError> {
+) -> Result<Option<Value>, AppError> {
     let url = format!("https://discord.com/api/v10/{}", endpoint.as_ref());
 
     let mut builder = reqwest::Client::new()
@@ -54,7 +55,13 @@ pub async fn discord_request<S: AsRef<str>, T: Serialize + ?Sized>(
 
     tracing::debug!("response from {method} {url}: {response:#?}");
 
-    Ok(response.error_for_status()?)
+    if response.headers().get(header::CONTENT_TYPE.as_str()) {
+        let body = response.json::<Value>().await?;
+        tracing::debug!("response body from {method} {url}: {body}");
+        return Ok(Some(body));
+    }
+
+    Ok(None)
 }
 
 pub async fn install_global_commands(
@@ -63,7 +70,7 @@ pub async fn install_global_commands(
 ) -> Result<Value, AppError> {
     let endpoint = format!("applications/{}/commands", state.client_id);
     let response = discord_request(endpoint, Method::PUT, Some(&commands), state).await?;
-    Ok(response.json::<Value>().await?)
+    Ok(response.context("json not found")?)
 }
 
 pub async fn create_message<S: AsRef<str>>(
@@ -73,7 +80,7 @@ pub async fn create_message<S: AsRef<str>>(
 ) -> Result<Value, AppError> {
     let endpoint = format!("channels/{}/messages", channel_id.as_ref());
     let response = discord_request(endpoint, Method::POST, Some(&payload), state).await?;
-    Ok(response.json::<Value>().await?)
+    Ok(response.context("json not found")?)
 }
 
 pub async fn verify_request<S: AsRef<str>>(
