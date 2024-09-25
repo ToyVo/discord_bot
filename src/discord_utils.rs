@@ -1,6 +1,6 @@
 use anyhow::Context;
 use axum::http::{header, HeaderMap};
-use reqwest::{Method, Response};
+use reqwest::Method;
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
 use serenity::all::{User, UserId};
@@ -55,7 +55,10 @@ pub async fn discord_request<S: AsRef<str>, T: Serialize + ?Sized>(
 
     tracing::debug!("response from {method} {url}: {response:#?}");
 
-    if response.headers().get(header::CONTENT_TYPE.as_str()) {
+    let content_type = response.headers().get(header::CONTENT_TYPE.as_str());
+    if content_type.is_some()
+        && content_type.unwrap().to_str().unwrap() == mime::APPLICATION_JSON.as_ref()
+    {
         let body = response.json::<Value>().await?;
         tracing::debug!("response body from {method} {url}: {body}");
         return Ok(Some(body));
