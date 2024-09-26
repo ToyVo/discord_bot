@@ -54,6 +54,8 @@ pub async fn track_players(state: &AppState) -> Result<(), AppError> {
                 message
                     .get("id")
                     .context("Could not find id in response")?
+                    .as_str()
+                    .context("could not parse as str")?
                     .to_string(),
             );
         }
