@@ -56,7 +56,7 @@ metafile = true
 
 [[files]]
 file = "mods/balm.pw.toml"
-hash = "7fbee422bf0c8308757b7159767572b3fe920c82c137cc2408f8555fbfc9ef9b"
+hash = "be8e217053e3e0bc0179a62beaa1f8e29e22b1cdc2cb0d56bd9836ce5e6dea3b"
 metafile = true
 
 [[files]]
@@ -340,8 +340,8 @@ hash = "024a28f4eacc3b75f1e268511894639548a4debbbaf61ddba4431633290c8237"
 metafile = true
 
 [[files]]
-file = "mods/inventory-tweaks-refoxed.pw.toml"
-hash = "4169e1d6d71899561d740ee1f511d8d31cd9efea56c26e347a4760ac38a39eb5"
+file = "mods/inventory-essentials.pw.toml"
+hash = "908b489fa3e2d7a52b36a3ba693dcf3f5471d37f4b7ee6919995c2ce109575ae"
 metafile = true
 
 [[files]]
