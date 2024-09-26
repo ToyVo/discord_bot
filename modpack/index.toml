@@ -455,6 +455,11 @@ hash = "8d93d1db086d63d10edb0a3ad6926aeb6e6aab8985ff3a7eac1ec313ebce4420"
 metafile = true
 
 [[files]]
+file = "mods/paint-gun.pw.toml"
+hash = "77dc7b84e1822850ff9f3d9b0b68effa5c035d866dfd5a8272d99bdac765a619"
+metafile = true
+
+[[files]]
 file = "mods/patchouli.pw.toml"
 hash = "3a7eaa64434e7449e5fe6bd089bc784499432dae7d6ca07174b55b10a3b32ec8"
 metafile = true
