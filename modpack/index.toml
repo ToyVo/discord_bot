@@ -360,6 +360,11 @@ hash = "2906e9ebf6e5c11d41c26de159bfa5f280b873dc46217c15292381bfd5b61f01"
 metafile = true
 
 [[files]]
+file = "mods/keep-some-inventory.pw.toml"
+hash = "e80bdeeb3623608e95f20f3c15095f97238c3663443a3642d6614518e680594a"
+metafile = true
+
+[[files]]
 file = "mods/kotlin-for-forge.pw.toml"
 hash = "82ffc26ad624cdd846cbbeb99ed40ef44229ec7006a7ae7e8caa8df6409c20db"
 metafile = true
