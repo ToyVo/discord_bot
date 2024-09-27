@@ -1,13 +1,13 @@
 name = "Doggy Talents Next's Palette Of Paws"
-filename = "DTNPaletteOfPaws-1.20.1-1.2.1.jar"
+filename = "DTNPaletteOfPaws-1.20.1-1.2.3.jar"
 side = "both"
 
 [download]
 hash-format = "sha1"
-hash = "2b93f92cca1a7000aed311d2e22c99a543f1c9a3"
+hash = "0e7cd67ec21e4c4a0f22f548252f2b97b8b84dac"
 mode = "metadata:curseforge"
 
 [update]
 [update.curseforge]
-file-id = 5634031
+file-id = 5750208
 project-id = 1051461
