@@ -77,11 +77,17 @@ pub fn app() -> Router<AppState> {
             ServeFile::new("assets/privacy-policy.html"),
         )
         .nest_service("/assets", ServeDir::new("assets"))
+        .nest_service("/modpackinfo", get(modpack_info_endpoint))
         .nest_service("/modpack", ServeDir::new("modpack"))
         .fallback_service(ServeDir::new("public").not_found_service(get(app_endpoint)))
 }
 
 async fn app_endpoint() -> Html<String> {
+    // render the rsx! macro to HTML
+    Html(dioxus_ssr::render_element(rsx! { div { "hello world!" } }))
+}
+
+async fn modpack_info_endpoint() -> Html<String> {
     // render the rsx! macro to HTML
     Html(dioxus_ssr::render_element(rsx! { div { "hello world!" } }))
 }

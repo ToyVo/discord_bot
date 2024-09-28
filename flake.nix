@@ -147,7 +147,7 @@
                     "${toString cfg.minecraft.RCONPort}:25575"
                     "${toString cfg.minecraft.voicePort}:24454"
                   ];
-                  environmentFiles = [cfg.env_file];
+                  environmentFiles = [ cfg.env_file ];
                   environment = {
                     EULA = "TRUE";
                     TYPE = "FORGE";
@@ -165,7 +165,7 @@
                     CREATE_CONSOLE_IN_PIPE = "true";
                     JVM_DD_OPTS = "fml.queryResult=confirm";
                     ALLOW_FLIGHT = "TRUE";
-                    DIFFICULTY="hard";
+                    DIFFICULTY = "hard";
                   };
                   volumes = [
                     "${cfg.minecraft.datadir}:/data"
@@ -201,6 +201,8 @@
           ...
         }:
         let
+          cargoToml = builtins.fromTOML (builtins.readFile ./Cargo.toml);
+          rev = self.shortRev or self.dirtyShortRev or "dirty";
           generatedCargoNix = crate2nix.tools.${system}.generatedCargoNix {
             name = "discord_bot";
             src = ./.;
@@ -211,6 +213,7 @@
               pkgs.buildRustCrate.override {
                 defaultCrateOverrides = pkgs.defaultCrateOverrides // {
                   discord_bot = attrs: {
+                    version = "${cargoToml.package.version}-${rev}";
                     buildInputs =
                       with pkgs.darwin.apple_sdk.frameworks;
                       lib.optionals pkgs.stdenv.isDarwin [
@@ -284,10 +287,20 @@
               }
             ];
 
-            commands = with pkgs; [
+            packages =
+              with pkgs;
+              [
+                rust-toolchain
+              ]
+              ++ lib.optionals stdenv.isDarwin [ darwin.apple_sdk.frameworks.SystemConfiguration ];
+
+            commands = [
               {
-                package = rust-toolchain;
-                category = "rust";
+                name = "start_dev";
+                help = "Start axum server with listener to restart on code changes.";
+                command = ''
+                  systemfd --no-pid -s http::8080 -- cargo watch -x run
+                '';
               }
             ];
 
