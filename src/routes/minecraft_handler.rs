@@ -294,44 +294,55 @@ fn zip_display() -> Result<Element, AppError> {
 
 fn modlist_display(mods: &[ModpackInfo]) -> Result<Element, AppError> {
     Ok(rsx! {
-        table {
+        div {
+            display: "grid",
+            width: "100%",
+            grid_template_columns: "1fr 1fr auto auto",
+            div {
+                "Mod Name"
+            }
+            div {
+                "Side"
+            }
+            div {
+                "Minecraft Versions"
+            }
+            div {
+                "Loader"
+            }
             for item in mods {
-                tr {
-                    td {
-                        a {
-                            href: "{item.url}",
-                            "{item.name}"
-                        }
+                a {
+                    href: "{item.url}",
+                    "{item.name}"
+                }
+                div {
+                    "{item.side}"
+                }
+                div {
+                    display: "flex",
+                    flex_flow: "row wrap",
+                    align_content: "start",
+                    for version in &item.game_versions {
+                       div {
+                            background: "grey",
+                            border_radius: "100px",
+                            padding: "4px",
+                            text_wrap: "nowrap",
+                            "{version}"
+                       }
                     }
-                    td {
-                        "{item.side}"
-                    }
-                    td {
-                        div {
-                            display: "flex",
-                            for version in &item.game_versions {
-                               div {
-                                    background: "grey",
-                                    border_radius: "100px",
-                                    padding: "4px",
-                                    text_wrap: "nowrap",
-                                    "{version}"
-                               }
-                            }
-                        }
-                    }
-                    td {
-                        div {
-                            display: "flex",
-                            for loader in &item.loaders {
-                               div {
-                                    background: "grey",
-                                    border_radius: "100px",
-                                    padding: "4px",
-                                    text_wrap: "nowrap",
-                                    "{loader}"
-                                }
-                            }
+                }
+                div {
+                    display: "flex",
+                    flex_flow: "row wrap",
+                    align_content: "start",
+                    for loader in &item.loaders {
+                       div {
+                            background: "grey",
+                            border_radius: "100px",
+                            padding: "4px",
+                            text_wrap: "nowrap",
+                            "{loader}"
                         }
                     }
                 }
@@ -347,20 +358,34 @@ pub async fn modpack_info_endpoint(
 
     Ok(html_app(
         rsx! {
-            div { "Modpack info" }
-            "Import the appropriate zip file into prism and packwiz will take care of the rest"
-            div { "Files Hosted: " {zip_display()?} }
             div {
-                min_height: "512px",
-                flex: "1 1 auto",
-                overflow: "hidden",
+                margin: "20px",
+                div { "Modpack info" }
+                div { "Import the appropriate zip file into prism and packwiz will take care of the rest" }
+                div { "Files Hosted: " {zip_display()?} }
                 img {
-                    height: "100%",
+                    height: "512px",
                     src: "/modpack/prism.png",
                     alt: "import prism instance"
                 }
+                div {
+                    "To do this your self, download the packwiz bootstrap jar from "
+                    a {
+                        href: "https://github.com/packwiz/packwiz-installer-bootstrap/releases",
+                        "Github Releases"
+                    }
+                    " and place it within the (.)minecraft directory of a newly created prism instance."
+                }
+                div {"Go to Edit Instance -> Settings -> Custom commands, then check the Custom Commands box and paste the following command into the pre-launch command field:"}
+                div {
+                    font_family: "monospace",
+                    font_size: "14px",
+                    background:"#666",
+                    padding:"10px",
+                    "\"$INST_JAVA\" -jar packwiz-installer-bootstrap.jar https://mc.toyvo.dev/modpack/pack.toml"
+                }
+                div { "Mods included: " {modlist_display(&mods)?} }
             }
-            div { "Mods included: " {modlist_display(&mods)?} }
         },
         "Modpack Info",
     ))
