@@ -298,6 +298,7 @@ fn modlist_display(mods: &[ModpackInfo]) -> Result<Element, AppError> {
             display: "grid",
             width: "100%",
             grid_template_columns: "1fr 1fr auto auto",
+            gap: "4px",
             div {
                 "Mod Name"
             }
@@ -322,6 +323,7 @@ fn modlist_display(mods: &[ModpackInfo]) -> Result<Element, AppError> {
                     display: "flex",
                     flex_flow: "row wrap",
                     align_content: "start",
+                    gap: "4px",
                     for version in &item.game_versions {
                        div {
                             background: "grey",
@@ -336,6 +338,7 @@ fn modlist_display(mods: &[ModpackInfo]) -> Result<Element, AppError> {
                     display: "flex",
                     flex_flow: "row wrap",
                     align_content: "start",
+                    gap: "4px",
                     for loader in &item.loaders {
                        div {
                             background: "grey",
