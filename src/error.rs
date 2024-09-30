@@ -12,6 +12,7 @@ pub enum AppError {
     Parse(url::ParseError),
     Other(String),
     Rcon(rcon::Error),
+    Toml(toml::de::Error),
 }
 
 impl IntoResponse for AppError {
@@ -26,6 +27,7 @@ impl IntoResponse for AppError {
             AppError::Parse(e) => tracing::error!("Parse error: {:#}", e),
             AppError::Other(e) => tracing::error!("Other error: {:#}", e),
             AppError::Rcon(e) => tracing::error!("RCON error: {:#}", e),
+            AppError::Toml(e) => tracing::error!("TOML error: {:#}", e),
         }
 
         (StatusCode::INTERNAL_SERVER_ERROR, "Something went wrong").into_response()
@@ -44,6 +46,7 @@ impl std::fmt::Display for AppError {
             AppError::Parse(e) => write!(f, "Parse error: {}", e),
             AppError::Other(e) => write!(f, "Other error: {}", e),
             AppError::Rcon(e) => write!(f, "RCON error: {}", e),
+            AppError::Toml(e) => write!(f, "TOML error: {}", e),
         }
     }
 }
@@ -95,5 +98,11 @@ impl From<url::ParseError> for AppError {
 impl From<rcon::Error> for AppError {
     fn from(err: rcon::Error) -> Self {
         AppError::Rcon(err)
+    }
+}
+
+impl From<toml::de::Error> for AppError {
+    fn from(err: toml::de::Error) -> Self {
+        AppError::Toml(err)
     }
 }

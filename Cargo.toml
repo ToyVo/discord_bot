@@ -20,12 +20,14 @@ mime = "0"
 oxford_join = "0.2.10"
 rand = "0"
 rcon = { version = "0", features = ["rt-tokio"] }
+regex = "1"
 reqwest = { version = "0", features = ["json"] }
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 serenity = { version = "0", features = ["interactions_endpoint"] }
 time = { version = "0", features = ["macros", "serde"] }
 tokio = { version = "1", features = ["full"] }
+toml = "0"
 tower = { version = "0", features = ["full"] }
 tower-http = { version = "0", features = ["full"] }
 tracing = "0"

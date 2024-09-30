@@ -7,7 +7,6 @@
       url = "github:hercules-ci/flake-parts";
       inputs.nixpkgs-lib.follows = "nixpkgs";
     };
-    rust-overlay.url = "github:oxalica/rust-overlay";
     crate2nix.url = "github:nix-community/crate2nix";
 
     # Development
@@ -29,7 +28,6 @@
       self,
       nixpkgs,
       flake-parts,
-      rust-overlay,
       crate2nix,
       devshell,
       ...
@@ -43,7 +41,7 @@
       ];
 
       imports = [
-        devshell.flakeModule
+        #        devshell.flakeModule
         flake-parts.flakeModules.easyOverlay
       ];
 
@@ -194,6 +192,7 @@
 
       perSystem =
         {
+          self',
           system,
           pkgs,
           lib,
@@ -233,81 +232,73 @@
               };
           };
         in
-        rec {
-          _module.args.pkgs = import nixpkgs {
-            inherit system;
-            overlays = [
-              (import rust-overlay)
-              (
-                final: prev:
-                assert !(prev ? rust-toolchain);
-                rec {
-                  rust-toolchain = (prev.rust-bin.fromRustupToolchainFile ./rust-toolchain.toml).override {
-                    extensions = [
-                      "rust-src"
-                      "rust-std"
-                      "rust-analyzer"
-                      "rustfmt"
-                      "clippy"
-                    ];
-                  };
-
-                  rustc = rust-toolchain;
-                  cargo = rust-toolchain;
-                  rustfmt = rust-toolchain;
-                  clippy = rust-toolchain;
-                  rust-analyzer = rust-toolchain;
-                }
-              )
-            ];
-            config = { };
-          };
-
+        {
           packages = {
             discord_bot = cargoNix.rootCrate.build;
-            default = packages.discord_bot;
+            default = self'.packages.discord_bot;
           };
           overlayAttrs = {
-            inherit (packages) discord_bot;
+            inherit (self'.packages) discord_bot;
           };
-          devshells.default = {
-            imports = [
-              "${devshell}/extra/language/c.nix"
-              # "${devshell}/extra/language/rust.nix"
-            ];
-
-            env = [
-              {
-                name = "RUST_LOG";
-                value = "discord_bot=trace";
-              }
-              {
-                name = "RUST_SRC_PATH";
-                value = "${pkgs.rust-toolchain}/lib/rustlib/src/rust/library";
-              }
-            ];
-
-            packages =
-              with pkgs;
-              [
-                rust-toolchain
-              ]
-              ++ lib.optionals stdenv.isDarwin [ darwin.apple_sdk.frameworks.SystemConfiguration ];
-
-            commands = [
-              {
-                name = "start_dev";
-                help = "Start axum server with listener to restart on code changes.";
-                command = ''
-                  systemfd --no-pid -s http::8080 -- cargo watch -x run
-                '';
-              }
-            ];
-
-            language.c = {
-              libraries = lib.optional pkgs.stdenv.isDarwin pkgs.libiconv;
-            };
+          devShells.default = let
+            dev_start = pkgs.writeShellScriptBin "dev_start" ''
+              systemfd --no-pid -s http::8080 -- cargo watch -x run
+            '';
+          in pkgs.mkShell {
+            shellHook = ''
+              export RUST_LOG="discord_bot=trace"
+              export RUST_SRC_PATH=${pkgs.rustPlatform.rustLibSrc}
+              printf "\n\nUse dev_start to start the sever with auto reload\n\n"
+            '';
+            buildInputs = with pkgs.darwin.apple_sdk.frameworks; [ SystemConfiguration ];
+            nativeBuildInputs = with pkgs; [ rustc pkg-config rustPlatform.bindgenHook libiconv cargo-watch systemfd dev_start ];
           };
+          # devshells.default = {
+          #   imports = [
+          #     "${devshell}/extra/language/c.nix"
+          #     # "${devshell}/extra/language/rust.nix"
+          #   ];
+          #
+          #   env = [
+          #     {
+          #       name = "RUST_LOG";
+          #       value = "discord_bot=trace";
+          #     }
+          #     {
+          #       name = "RUST_SRC_PATH";
+          #       value = "${pkgs.rustPlatform.rustLibSrc}";
+          #     }
+          #   ];
+          #
+          #   packages =
+          #     with pkgs;
+          #     [
+          #       cargo
+          #       cargo-watch
+          #       clippy
+          #       pkg-config
+          #       rust-analyzer-unwrapped
+          #       rustPlatform.bindgenHook
+          #       rustc
+          #       rustfmt
+          #       systemfd
+          #     ]
+          #     ++ lib.optionals stdenv.isDarwin [ darwin.apple_sdk.frameworks.SystemConfiguration ];
+          #
+          #   commands = [
+          #     {
+          #       name = "start_dev";
+          #       help = "Start axum server with listener to restart on code changes.";
+          #       command = ''
+          #         systemfd --no-pid -s http::8080 -- cargo watch -x run
+          #       '';
+          #     }
+          #   ];
+          #
+          #   language.c = {
+          #     libraries = lib.optional pkgs.stdenv.isDarwin pkgs.libiconv;
+          #   };
+          # };
         };
     };
 }

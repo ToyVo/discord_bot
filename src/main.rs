@@ -44,6 +44,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
         discord_minecraft_last_message_id: RwLock::new(None),
         discord_terraria_channel_id: var("DISCORD_TERRARIA_CHANNEL_ID").unwrap_or_default(),
         discord_terraria_last_message_id: RwLock::new(None),
+        forge_api_key: var("FORGE_API_KEY").unwrap_or_default(),
         key: Key::generate(),
         minecraft_players: RwLock::new(vec![]),
         minecraft_rcon_address: var("MINECRAFT_RCON_ADDRESS")

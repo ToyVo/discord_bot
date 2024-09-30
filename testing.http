@@ -7,3 +7,5 @@ content-type: application/json
 }
 
 ###
+
+GET http://localhost:8080/404 HTTP/1.1

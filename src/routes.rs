@@ -1,26 +1,20 @@
-use anyhow::Context;
-use axum::extract::{FromRef, Query, State};
-use axum::http::{HeaderMap, StatusCode};
-use axum::response::{Html, IntoResponse, Redirect};
+mod discord_handlers;
+mod minecraft_handler;
+
+use axum::extract::FromRef;
+use axum::http::StatusCode;
+use axum::response::{Html, IntoResponse};
 use axum::routing::{get, post};
-use axum::{Json, Router};
-use axum_extra::extract::cookie::{Cookie, Key};
-use axum_extra::extract::SignedCookieJar;
+use axum::Router;
+use axum_extra::extract::cookie::Key;
 use dioxus::prelude::*;
-use serde_json::{json, Value};
-use serenity::all::InteractionType;
-use serenity::builder::CreateInteractionResponse;
-use serenity::json;
-use std::collections::HashMap;
 use std::ops::Deref;
 use std::sync::Arc;
 use tokio::sync::RwLock;
-use tower_http::services::{ServeDir, ServeFile};
+use tower_http::services::ServeDir;
 
-use crate::discord_utils;
-use crate::discord_utils::DiscordTokens;
-use crate::error::AppError;
-use crate::handlers::handle_slash_command;
+use crate::routes::discord_handlers::{discord_oauth_callback, interactions, verify_user};
+use crate::routes::minecraft_handler::modpack_info_endpoint;
 
 #[derive(Clone)]
 pub struct AppState(pub Arc<InnerState>);
@@ -50,6 +44,7 @@ pub struct InnerState {
     pub discord_minecraft_last_message_id: RwLock<Option<String>>,
     pub discord_terraria_channel_id: String,
     pub discord_terraria_last_message_id: RwLock<Option<String>>,
+    pub forge_api_key: String,
     pub key: Key,
     pub minecraft_players: RwLock<Vec<String>>,
     pub minecraft_rcon_address: String,
@@ -68,115 +63,92 @@ pub fn app() -> Router<AppState> {
         .route("/api/interactions", post(interactions))
         .route("/verify-user", get(verify_user))
         .route("/discord-oauth-callback", get(discord_oauth_callback))
-        .route_service(
-            "/terms-of-service",
-            ServeFile::new("assets/terms-of-service.html"),
+        .route("/terms-of-service", get(terms_of_service_endpoint))
+        .route("/privacy-policy", get(privacy_policy_endpoint))
+        .route("/minecraft", get(modpack_info_endpoint))
+        .route("/", get(app_endpoint))
+        .nest_service(
+            "/modpack",
+            ServeDir::new("modpack").not_found_service(get(not_found_endpoint)),
         )
-        .route_service(
-            "/privacy-policy",
-            ServeFile::new("assets/privacy-policy.html"),
+        .nest_service(
+            "/public",
+            ServeDir::new("public").not_found_service(get(not_found_endpoint)),
         )
-        .nest_service("/assets", ServeDir::new("assets"))
-        .nest_service("/modpackinfo", get(modpack_info_endpoint))
-        .nest_service("/modpack", ServeDir::new("modpack"))
-        .fallback_service(ServeDir::new("public").not_found_service(get(app_endpoint)))
+        .fallback_service(get(not_found_endpoint))
 }
 
-async fn app_endpoint() -> Html<String> {
+fn html_app<S: AsRef<str>>(content: Element, title: S) -> Html<String> {
     // render the rsx! macro to HTML
-    Html(dioxus_ssr::render_element(rsx! { div { "hello world!" } }))
-}
-
-async fn modpack_info_endpoint() -> Html<String> {
-    // render the rsx! macro to HTML
-    Html(dioxus_ssr::render_element(rsx! { div { "hello world!" } }))
-}
-
-pub async fn interactions(
-    headers: HeaderMap,
-    State(state): State<AppState>,
-    body: String,
-) -> Result<impl IntoResponse, AppError> {
-    tracing::info!("Request received: {headers:#?} {body}");
-
-    // Parse request body and verifies incoming requests
-    if discord_utils::verify_request(&headers, &body, &state)
-        .await
-        .is_err()
-    {
-        return Ok((StatusCode::UNAUTHORIZED, Json(json!({}))));
-    }
-
-    let payload = match Json::<Value>::from_bytes(body.as_bytes()) {
-        Ok(payload) => payload,
-        Err(e) => {
-            tracing::error!("Could not parse body\n{e:#?}");
-            return Ok((StatusCode::BAD_REQUEST, Json(json!({}))));
-        }
-    };
-
-    let request_type = payload
-        .get("type")
-        .and_then(|s| s.as_u64())
-        .map(|n| InteractionType::from(n as u8));
-
-    match request_type {
-        Some(InteractionType::Ping) => {
-            tracing::info!("Received discord ping request, Replying pong");
-            Ok((
-                StatusCode::OK,
-                Json(json::to_value(CreateInteractionResponse::Pong)?),
-            ))
-        }
-        Some(InteractionType::Command) => match handle_slash_command(payload, state).await {
-            Ok(value) => Ok((StatusCode::OK, Json(value))),
-            Err(e) => {
-                tracing::error!("Slash command error {e}");
-                Ok((StatusCode::OK, Json(json!({}))))
+    Html(format!(
+        r#"<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="/public/favicon.ico">
+    <link rel="apple-touch-icon" sizes="180x180" href="/public/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/public/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/public/favicon-16x16.png">
+    <link rel="manifest" href="/public/site.webmanifest">
+    <title>{}</title>
+    <script>0</script>
+</head>
+{}
+</html>"#,
+        title.as_ref(),
+        dioxus_ssr::render_element(rsx! {
+            body {
+                width: "100vw",
+                height: "100vh",
+                margin: "0",
+                display: "flex",
+                flex_direction: "column",
+                font_family: "'Noto Sans', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
+                {content}
             }
-        },
-        _ => Ok((StatusCode::OK, Json(json!({})))),
-    }
-}
-
-pub async fn verify_user(
-    jar: SignedCookieJar,
-    State(state): State<AppState>,
-) -> Result<impl IntoResponse, AppError> {
-    let (url, state) = discord_utils::get_oauth_url(&state).await?;
-    Ok((
-        StatusCode::FOUND,
-        jar.add(Cookie::new("clientState", state)),
-        Redirect::to(url.as_str()),
+        })
     ))
 }
 
-pub async fn discord_oauth_callback(
-    Query(query): Query<HashMap<String, String>>,
-    jar: SignedCookieJar,
-    State(state): State<AppState>,
-) -> Result<impl IntoResponse, AppError> {
-    let code = query.get("code").context("Code not on query")?;
-    let discord_state = query.get("state").context("state not on query")?;
-    let client_state = jar.get("clientState").context("Cookie not set")?;
-
-    if client_state.value() != discord_state {
-        return Ok(StatusCode::UNAUTHORIZED);
-    }
-
-    let tokens = &discord_utils::get_oauth_tokens(code, &state).await?;
-    let me_data = discord_utils::get_user_data(tokens).await?;
-    let user_id = me_data.id;
-    let now = time::OffsetDateTime::now_utc().unix_timestamp() * 1000;
-    discord_utils::store_discord_tokens(
-        &user_id,
-        &DiscordTokens {
-            access_token: tokens.access_token.clone(),
-            refresh_token: tokens.refresh_token.clone(),
-            expires_at: now + tokens.expires_in * 1000,
-            expires_in: tokens.expires_in,
+async fn app_endpoint() -> Html<String> {
+    html_app(
+        rsx! {
+            a {
+                href: "/minecraft",
+                "Minecraft Modpack"
+            }
         },
+        "ToyVo's Servers",
     )
-    .await?;
-    Ok(StatusCode::OK)
+}
+
+async fn privacy_policy_endpoint() -> Html<String> {
+    html_app(
+        rsx! {
+            div { "Privacy Policy" }
+        },
+        "Privacy Policy",
+    )
+}
+
+async fn terms_of_service_endpoint() -> Html<String> {
+    html_app(
+        rsx! {
+            div { "Terms of Service" }
+        },
+        "Terms of Service",
+    )
+}
+
+async fn not_found_endpoint() -> impl IntoResponse {
+    (
+        StatusCode::NOT_FOUND,
+        html_app(
+            rsx! {
+                div { "404" }
+            },
+            "404",
+        ),
+    )
 }
