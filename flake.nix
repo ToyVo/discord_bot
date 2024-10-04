@@ -149,7 +149,6 @@
                 allowedTCPPorts =
                   lib.optionals cfg.minecraft.openFirewall [
                     cfg.minecraft.MCport
-                    cfg.minecraft.voicePort
                   ]
                   ++ lib.optionals cfg.minecraft_geyser.openFirewall [
                     cfg.minecraft_geyser.MCport
@@ -160,6 +159,9 @@
                 allowedUDPPorts =
                   lib.optionals cfg.terraria.openFirewall [
                     cfg.terraria.port
+                  ]
+                  ++ lib.optionals cfg.minecraft.openFirewall [
+                    cfg.minecraft.voicePort
                   ]
                   ++ lib.optionals cfg.minecraft_geyser.openFirewall [
                     cfg.minecraft_geyser.BedrockPort
@@ -172,7 +174,7 @@
                   ports = [
                     "${toString cfg.minecraft.MCport}:25565"
                     "${toString cfg.minecraft.RCONPort}:25575"
-                    "${toString cfg.minecraft.voicePort}:24454"
+                    "${toString cfg.minecraft.voicePort}:24454/udp"
                   ];
                   environmentFiles = [ cfg.env_file ];
                   environment = {
@@ -206,7 +208,7 @@
                   ports = [
                     "${toString cfg.minecraft_geyser.MCport}:25565"
                     "${toString cfg.minecraft_geyser.RCONPort}:25575"
-                    "${toString cfg.minecraft_geyser.BedrockPort}:19132"
+                    "${toString cfg.minecraft_geyser.BedrockPort}:19132/udp"
                   ];
                   environmentFiles = [ cfg.env_file ];
                   environment = {
