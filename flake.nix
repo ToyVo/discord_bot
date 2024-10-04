@@ -91,6 +91,23 @@
                 };
                 openFirewall = lib.mkEnableOption "Open firewall for minecraft";
               };
+              minecraft2 = {
+                MCport = lib.mkOption {
+                  type = lib.types.int;
+                  default = 25566;
+                  description = "Port to expose minecraft server on";
+                };
+                RCONPort = lib.mkOption {
+                  type = lib.types.int;
+                  default = 25576;
+                  description = "Port to expose minecraft rcon on";
+                };
+                datadir = lib.mkOption {
+                  type = lib.types.path;
+                  description = "Path to store minecraft data";
+                };
+                openFirewall = lib.mkEnableOption "Open firewall for minecraft";
+              };
               terraria = {
                 port = lib.mkOption {
                   type = lib.types.int;
@@ -151,7 +168,7 @@
                     TYPE = "FORGE";
                     FORGE_VERSION = "47.3.10";
                     VERSION = "1.20.1";
-                    MEMORY = "20g";
+                    MEMORY = "16g";
                     OPS = "4cb4aff4-a0ed-4eaf-b912-47825b2ed30d";
                     EXISTING_OPS_FILE = "MERGE";
                     EXISTING_WHITELIST_FILE = "MERGE";
@@ -167,6 +184,36 @@
                   };
                   volumes = [
                     "${cfg.minecraft.datadir}:/data"
+                  ];
+                  extraOptions = [
+                    "-it"
+                  ];
+                };
+                minecraft2 = {
+                  image = "docker.io/itzg/minecraft-server:java17";
+                  ports = [
+                    "${toString cfg.minecraft2.MCport}:25565"
+                    "${toString cfg.minecraft2.RCONPort}:25575"
+                  ];
+                  environmentFiles = [ cfg.env_file ];
+                  environment = {
+                    EULA = "TRUE";
+                    TYPE = "PAPER";
+                    VERSION = "1.20.1";
+                    MEMORY = "4g";
+                    OPS = "4cb4aff4-a0ed-4eaf-b912-47825b2ed30d";
+                    EXISTING_OPS_FILE = "MERGE";
+                    EXISTING_WHITELIST_FILE = "MERGE";
+                    MOTD = "ToyVo Geyser Server";
+                    MAX_TICK_TIME = "-1";
+                    SPAWN_PROTECTION = "0";
+                    MAX_PLAYERS = "10";
+                    CREATE_CONSOLE_IN_PIPE = "true";
+                    ALLOW_FLIGHT = "TRUE";
+                    DIFFICULTY = "hard";
+                  };
+                  volumes = [
+                    "${cfg.minecraft2.datadir}:/data"
                   ];
                   extraOptions = [
                     "-it"
