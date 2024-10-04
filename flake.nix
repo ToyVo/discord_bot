@@ -203,6 +203,7 @@
                   ports = [
                     "${toString cfg.minecraft_geyser.MCport}:25565"
                     "${toString cfg.minecraft_geyser.RCONPort}:25575"
+                    "${toString cfg.minecraft_geyser.BedrockPort}:19132"
                   ];
                   environmentFiles = [ cfg.env_file ];
                   environment = {
