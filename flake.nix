@@ -153,14 +153,17 @@
                   ]
                   ++ lib.optionals cfg.minecraft_geyser.openFirewall [
                     cfg.minecraft_geyser.MCport
-                    cfg.minecraft_geyser.BedrockPort
                   ]
                   ++ lib.optionals cfg.terraria.openFirewall [
                     cfg.terraria.port
                   ];
-                allowedUDPPorts = lib.optionals cfg.terraria.openFirewall [
-                  cfg.terraria.port
-                ];
+                allowedUDPPorts =
+                  lib.optionals cfg.terraria.openFirewall [
+                    cfg.terraria.port
+                  ]
+                  ++ lib.optionals cfg.minecraft_geyser.openFirewall [
+                    cfg.minecraft_geyser.BedrockPort
+                  ];
               };
               virtualisation.oci-containers.containers = {
                 minecraft = {
@@ -297,19 +300,29 @@
           overlayAttrs = {
             inherit (self'.packages) discord_bot;
           };
-          devShells.default = let
-            dev_start = pkgs.writeShellScriptBin "dev_start" ''
-              systemfd --no-pid -s http::8080 -- cargo watch -x run
-            '';
-          in pkgs.mkShell {
-            shellHook = ''
-              export RUST_LOG="discord_bot=trace"
-              export RUST_SRC_PATH=${pkgs.rustPlatform.rustLibSrc}
-              printf "\n\nUse dev_start to start the sever with auto reload\n\n"
-            '';
-            buildInputs = with pkgs.darwin.apple_sdk.frameworks; [ SystemConfiguration ];
-            nativeBuildInputs = with pkgs; [ rustc pkg-config rustPlatform.bindgenHook libiconv cargo-watch systemfd dev_start ];
-          };
+          devShells.default =
+            let
+              dev_start = pkgs.writeShellScriptBin "dev_start" ''
+                systemfd --no-pid -s http::8080 -- cargo watch -x run
+              '';
+            in
+            pkgs.mkShell {
+              shellHook = ''
+                export RUST_LOG="discord_bot=trace"
+                export RUST_SRC_PATH=${pkgs.rustPlatform.rustLibSrc}
+                printf "\n\nUse dev_start to start the sever with auto reload\n\n"
+              '';
+              buildInputs = with pkgs.darwin.apple_sdk.frameworks; [ SystemConfiguration ];
+              nativeBuildInputs = with pkgs; [
+                rustc
+                pkg-config
+                rustPlatform.bindgenHook
+                libiconv
+                cargo-watch
+                systemfd
+                dev_start
+              ];
+            };
           # devshells.default = {
           #   imports = [
           #     "${devshell}/extra/language/c.nix"
