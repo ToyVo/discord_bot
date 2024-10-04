@@ -91,10 +91,15 @@
                 };
                 openFirewall = lib.mkEnableOption "Open firewall for minecraft";
               };
-              minecraft2 = {
+              minecraft_geyser = {
                 MCport = lib.mkOption {
                   type = lib.types.int;
                   default = 25566;
+                  description = "Port to expose minecraft server on";
+                };
+                BedrockPort = lib.mkOption {
+                  type = lib.types.int;
+                  default = 19132;
                   description = "Port to expose minecraft server on";
                 };
                 RCONPort = lib.mkOption {
@@ -146,6 +151,10 @@
                     cfg.minecraft.MCport
                     cfg.minecraft.voicePort
                   ]
+                  ++ lib.optionals cfg.minecraft_geyser.openFirewall [
+                    cfg.minecraft_geyser.MCport
+                    cfg.minecraft_geyser.BedrockPort
+                  ]
                   ++ lib.optionals cfg.terraria.openFirewall [
                     cfg.terraria.port
                   ];
@@ -189,11 +198,11 @@
                     "-it"
                   ];
                 };
-                minecraft2 = {
+                minecraft_geyser = {
                   image = "docker.io/itzg/minecraft-server:java17";
                   ports = [
-                    "${toString cfg.minecraft2.MCport}:25565"
-                    "${toString cfg.minecraft2.RCONPort}:25575"
+                    "${toString cfg.minecraft_geyser.MCport}:25565"
+                    "${toString cfg.minecraft_geyser.RCONPort}:25575"
                   ];
                   environmentFiles = [ cfg.env_file ];
                   environment = {
@@ -213,7 +222,7 @@
                     DIFFICULTY = "hard";
                   };
                   volumes = [
-                    "${cfg.minecraft2.datadir}:/data"
+                    "${cfg.minecraft_geyser.datadir}:/data"
                   ];
                   extraOptions = [
                     "-it"

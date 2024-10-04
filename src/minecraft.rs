@@ -15,7 +15,6 @@ pub async fn track_players(state: &AppState) -> Result<(), AppError> {
         .await?;
 
     // list response "There are n of a max of m players online: <player1>"
-    // TODO: determine how many players are delimited in the response, assuming comma for now
     let res = server.cmd("list").await?;
 
     // Parse response to get list of player names in a vector
