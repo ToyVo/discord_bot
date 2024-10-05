@@ -4,13 +4,21 @@ use crate::routes::AppState;
 use crate::terraria::get_player_changes;
 use anyhow::Context;
 use serde_json::json;
+use tokio::sync::RwLock;
 
-pub async fn track_players(state: &AppState) -> Result<(), AppError> {
+async fn track_generic<S: AsRef<str>>(
+    minecraft_rcon_address: S,
+    minecraft_rcon_password: S,
+    minecraft_players: &RwLock<Vec<String>>,
+    discord_minecraft_channel_id: S,
+    discord_minecraft_last_message_id: &RwLock<Option<String>>,
+    state: &AppState,
+) -> Result<(), AppError> {
     let mut server = <rcon::Connection<tokio::net::TcpStream>>::builder()
         .enable_minecraft_quirks(true)
         .connect(
-            state.minecraft_rcon_address.as_str(),
-            state.minecraft_rcon_password.as_str(),
+            minecraft_rcon_address.as_ref(),
+            minecraft_rcon_password.as_ref(),
         )
         .await?;
 
@@ -27,28 +35,32 @@ pub async fn track_players(state: &AppState) -> Result<(), AppError> {
         .collect::<Vec<String>>();
 
     {
-        let last_player_names = state.minecraft_players.read().await;
+        let last_player_names = minecraft_players.read().await;
         if let Some(message) = get_player_changes(&last_player_names, &players) {
             tracing::info!("{}", message);
             let message = discord_utils::create_message(
                 json!({
                     "content": message
                 }),
-                &state.discord_minecraft_channel_id,
+                &discord_minecraft_channel_id,
                 state,
             )
             .await?;
 
             {
-                let last_message_id = state.discord_minecraft_last_message_id.read().await;
+                let last_message_id = discord_minecraft_last_message_id.read().await;
                 if let Some(id) = last_message_id.as_ref() {
-                    discord_utils::delete_message(id, &state.discord_minecraft_channel_id, state)
-                        .await?;
+                    discord_utils::delete_message(
+                        id.as_str(),
+                        discord_minecraft_channel_id.as_ref(),
+                        state,
+                    )
+                    .await?;
                 }
             }
 
             let mut discord_minecraft_last_message_id =
-                state.discord_minecraft_last_message_id.write().await;
+                discord_minecraft_last_message_id.write().await;
             *discord_minecraft_last_message_id = Some(
                 message
                     .get("id")
@@ -60,7 +72,29 @@ pub async fn track_players(state: &AppState) -> Result<(), AppError> {
         }
     }
 
-    let mut minecraft_players = state.minecraft_players.write().await;
+    let mut minecraft_players = minecraft_players.write().await;
     *minecraft_players = players;
+    Ok(())
+}
+
+pub async fn track_players(state: &AppState) -> Result<(), AppError> {
+    track_generic(
+        &state.minecraft_rcon_address,
+        &state.minecraft_rcon_password,
+        &state.minecraft_players,
+        &state.discord_minecraft_channel_id,
+        &state.discord_minecraft_last_message_id,
+        state,
+    )
+    .await?;
+    track_generic(
+        &state.minecraft_geyser_rcon_address,
+        &state.minecraft_geyser_rcon_password,
+        &state.minecraft_geyser_players,
+        &state.discord_minecraft_geyser_channel_id,
+        &state.discord_minecraft_geyser_last_message_id,
+        state,
+    )
+    .await?;
     Ok(())
 }

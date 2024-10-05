@@ -41,11 +41,18 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
         client_secret: var("DISCORD_CLIENT_SECRET").unwrap_or_default(),
         discord_bot_spam_channel_id: var("DISCORD_BOT_SPAM_CHANNEL_ID").unwrap_or_default(),
         discord_minecraft_channel_id: var("DISCORD_MINECRAFT_CHANNEL_ID").unwrap_or_default(),
+        discord_minecraft_geyser_channel_id: var("DISCORD_MINECRAFT_GEYSER_CHANNEL_ID")
+            .unwrap_or_default(),
+        discord_minecraft_geyser_last_message_id: RwLock::new(None),
         discord_minecraft_last_message_id: RwLock::new(None),
         discord_terraria_channel_id: var("DISCORD_TERRARIA_CHANNEL_ID").unwrap_or_default(),
         discord_terraria_last_message_id: RwLock::new(None),
         forge_api_key: var("FORGE_API_KEY").unwrap_or_default(),
         key: Key::generate(),
+        minecraft_geyser_players: RwLock::new(vec![]),
+        minecraft_geyser_rcon_address: var("MINECRAFT_RCON_ADDRESS")
+            .unwrap_or(String::from("localhost:25576")),
+        minecraft_geyser_rcon_password: var("RCON_PASSWORD").unwrap_or_default(),
         minecraft_players: RwLock::new(vec![]),
         minecraft_rcon_address: var("MINECRAFT_RCON_ADDRESS")
             .unwrap_or(String::from("localhost:25575")),
