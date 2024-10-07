@@ -15,6 +15,11 @@
       url = "github:numtide/devshell";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    arion = {
+      url = "https://github.com/hercules-ci/arion";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   nixConfig = {
@@ -167,8 +172,8 @@
                     cfg.minecraft_geyser.BedrockPort
                   ];
               };
-              virtualisation.oci-containers.containers = {
-                minecraft = {
+              virtualisation.arion.projects.discord_servers.settings.services = {
+                minecraft-modded.service = {
                   image = "docker.io/itzg/minecraft-server:java17";
                   # I plan to make a web interface that I want to be able to use RCON to get information but keep it internal
                   ports = [
@@ -203,7 +208,18 @@
                     "-it"
                   ];
                 };
-                minecraft_geyser = {
+                minecraft-modded-backup.service = {
+                  image = "docker.io/itzg/mc-backup";
+                  environment = {
+                    BACKUP_INTERVAL = "2h";
+                    RCON_HOST = "minecraft-modded";
+                  };
+                  volumes = [
+                    "${cfg.minecraft.datadir}:/data:ro"
+                    "${cfg.minecraft.datadir}/backups:/backups"
+                  ];
+                };
+                minecraft-geyser.service = {
                   image = "docker.io/itzg/minecraft-server:java17";
                   ports = [
                     "${toString cfg.minecraft_geyser.MCport}:25565"
@@ -234,7 +250,18 @@
                     "-it"
                   ];
                 };
-                terraria = {
+                minecraft-geyser-backup.service = {
+                  image = "docker.io/itzg/mc-backup";
+                  environment = {
+                    BACKUP_INTERVAL = "2h";
+                    RCON_HOST = "minecraft-geyser";
+                  };
+                  volumes = [
+                    "${cfg.minecraft_geyser.datadir}:/data:ro"
+                    "${cfg.minecraft_geyser.datadir}/backups:/backups"
+                  ];
+                };
+                terraria.service = {
                   image = "docker.io/ryshe/terraria:tshock-1.4.4.9-5.2.0-3";
                   ports = [
                     "${toString cfg.terraria.port}:7777"
