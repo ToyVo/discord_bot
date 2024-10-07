@@ -217,6 +217,7 @@
                       "${cfg.minecraft.datadir}:/data:ro"
                       "${cfg.minecraft.datadir}/backups:/backups"
                     ];
+                    depends_on.mc.condition = "service_healthy";
                   };
                 };
                 minecraft-geyser.settings.services = {
@@ -259,6 +260,7 @@
                       "${cfg.minecraft_geyser.datadir}:/data:ro"
                       "${cfg.minecraft_geyser.datadir}/backups:/backups"
                     ];
+                    depends_on.mc.condition = "service_healthy";
                   };
                 };
                 terraria.settings.services = {
