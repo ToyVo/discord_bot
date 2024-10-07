@@ -220,6 +220,8 @@
                     environment = {
                       BACKUP_INTERVAL = "2h";
                       RCON_HOST = "mc";
+                      INITIAL_DELAY = "0";
+                      PAUSE_IF_NO_PLAYERS = true;
                     };
                     volumes = [
                       "${cfg.minecraft.datadir}:/data:ro"
@@ -263,6 +265,8 @@
                     environment = {
                       BACKUP_INTERVAL = "2h";
                       RCON_HOST = "mc";
+                      INITIAL_DELAY = "0";
+                      PAUSE_IF_NO_PLAYERS = true;
                     };
                     volumes = [
                       "${cfg.minecraft_geyser.datadir}:/data:ro"
