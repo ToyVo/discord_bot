@@ -80,6 +80,11 @@ hash = "15f70ccb7c7b0ff27ec791788d24de00fc6f6715311644b0fe374f006c9f230e"
 metafile = true
 
 [[files]]
+file = "mods/brandons-core.pw.toml"
+hash = "e98d30710f9b0765afbd96b5e39566c66486af2d14cc96cd19058274e3cab299"
+metafile = true
+
+[[files]]
 file = "mods/building-gadgets.pw.toml"
 hash = "8461b7344559646b5051a6d812e2cd4d43e62c8c817d17f0b2552f65306f43d4"
 metafile = true
@@ -112,6 +117,11 @@ metafile = true
 [[files]]
 file = "mods/clumps.pw.toml"
 hash = "fb8e035187556a9406507176782dd251769d8cdf14e9712b508bcc47ff6904d9"
+metafile = true
+
+[[files]]
+file = "mods/codechicken-lib.pw.toml"
+hash = "74a525a623611769f07d844ea6d6817979ff88c92327785f34ebb3847f22cc39"
 metafile = true
 
 [[files]]
@@ -257,6 +267,11 @@ metafile = true
 [[files]]
 file = "mods/domum-ornamentum.pw.toml"
 hash = "f48ad6d8335d4ed2367bf3152d8f3aeebbd423c52b42e72079f2fe39c02704fa"
+metafile = true
+
+[[files]]
+file = "mods/draconic-evolution.pw.toml"
+hash = "79e0d97c02d3502a465480f33f5653aaeb65c7fe643cfed1bb9baeeda72051ec"
 metafile = true
 
 [[files]]
