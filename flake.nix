@@ -172,100 +172,108 @@
                     cfg.minecraft_geyser.BedrockPort
                   ];
               };
-              virtualisation.arion.projects.discord_servers.settings.services = {
-                minecraft-modded.service = {
-                  image = "docker.io/itzg/minecraft-server:java17";
-                  # I plan to make a web interface that I want to be able to use RCON to get information but keep it internal
-                  ports = [
-                    "${toString cfg.minecraft.MCport}:25565"
-                    "${toString cfg.minecraft.RCONPort}:25575"
-                    "${toString cfg.minecraft.voicePort}:24454/udp"
-                  ];
-                  env_file = [ cfg.env_file ];
-                  environment = {
-                    EULA = "TRUE";
-                    TYPE = "FORGE";
-                    FORGE_VERSION = "47.3.10";
-                    VERSION = "1.20.1";
-                    MEMORY = "16g";
-                    OPS = "4cb4aff4-a0ed-4eaf-b912-47825b2ed30d";
-                    EXISTING_OPS_FILE = "MERGE";
-                    EXISTING_WHITELIST_FILE = "MERGE";
-                    MOTD = "ToyVo Modded Server";
-                    MAX_TICK_TIME = "-1";
-                    PACKWIZ_URL = "https://mc.toyvo.dev/modpack/pack.toml";
-                    SPAWN_PROTECTION = "0";
-                    MAX_PLAYERS = "10";
-                    CREATE_CONSOLE_IN_PIPE = "true";
-                    JVM_DD_OPTS = "fml.queryResult=confirm";
-                    ALLOW_FLIGHT = "TRUE";
-                    DIFFICULTY = "hard";
+              virtualisation.arion.projects = {
+                minecraft-modded.settings.services = {
+                  mc.service = {
+                    image = "docker.io/itzg/minecraft-server:java17";
+                    # I plan to make a web interface that I want to be able to use RCON to get information but keep it internal
+                    ports = [
+                      "${toString cfg.minecraft.MCport}:25565"
+                      "${toString cfg.minecraft.RCONPort}:25575"
+                      "${toString cfg.minecraft.voicePort}:24454/udp"
+                    ];
+                    env_file = [ cfg.env_file ];
+                    environment = {
+                      EULA = "TRUE";
+                      TYPE = "FORGE";
+                      FORGE_VERSION = "47.3.10";
+                      VERSION = "1.20.1";
+                      MEMORY = "16g";
+                      OPS = "4cb4aff4-a0ed-4eaf-b912-47825b2ed30d";
+                      EXISTING_OPS_FILE = "MERGE";
+                      EXISTING_WHITELIST_FILE = "MERGE";
+                      MOTD = "ToyVo Modded Server";
+                      MAX_TICK_TIME = "-1";
+                      PACKWIZ_URL = "https://mc.toyvo.dev/modpack/pack.toml";
+                      SPAWN_PROTECTION = "0";
+                      MAX_PLAYERS = "10";
+                      CREATE_CONSOLE_IN_PIPE = "true";
+                      JVM_DD_OPTS = "fml.queryResult=confirm";
+                      ALLOW_FLIGHT = "TRUE";
+                      DIFFICULTY = "hard";
+                    };
+                    volumes = [
+                      "${cfg.minecraft.datadir}:/data"
+                    ];
                   };
-                  volumes = [
-                    "${cfg.minecraft.datadir}:/data"
-                  ];
-                };
-                minecraft-modded-backup.service = {
-                  image = "docker.io/itzg/mc-backup";
-                  environment = {
-                    BACKUP_INTERVAL = "2h";
-                    RCON_HOST = "minecraft-modded";
+                  backups.service = {
+                    image = "docker.io/itzg/mc-backup";
+                    env_file = [ cfg.env_file ];
+                    environment = {
+                      BACKUP_INTERVAL = "2h";
+                      RCON_HOST = "mc";
+                    };
+                    volumes = [
+                      "${cfg.minecraft.datadir}:/data:ro"
+                      "${cfg.minecraft.datadir}/backups:/backups"
+                    ];
                   };
-                  volumes = [
-                    "${cfg.minecraft.datadir}:/data:ro"
-                    "${cfg.minecraft.datadir}/backups:/backups"
-                  ];
                 };
-                minecraft-geyser.service = {
-                  image = "docker.io/itzg/minecraft-server:java17";
-                  ports = [
-                    "${toString cfg.minecraft_geyser.MCport}:25565"
-                    "${toString cfg.minecraft_geyser.RCONPort}:25575"
-                    "${toString cfg.minecraft_geyser.BedrockPort}:19132/udp"
-                  ];
-                  env_file = [ cfg.env_file ];
-                  environment = {
-                    EULA = "TRUE";
-                    TYPE = "PAPER";
-                    VERSION = "1.20.1";
-                    MEMORY = "4g";
-                    OPS = "4cb4aff4-a0ed-4eaf-b912-47825b2ed30d";
-                    EXISTING_OPS_FILE = "MERGE";
-                    EXISTING_WHITELIST_FILE = "MERGE";
-                    MOTD = "ToyVo Geyser Server";
-                    MAX_TICK_TIME = "-1";
-                    SPAWN_PROTECTION = "0";
-                    MAX_PLAYERS = "10";
-                    CREATE_CONSOLE_IN_PIPE = "true";
-                    ALLOW_FLIGHT = "TRUE";
-                    DIFFICULTY = "hard";
+                minecraft-geyser.settings.services = {
+                  mc.service = {
+                    image = "docker.io/itzg/minecraft-server:java17";
+                    ports = [
+                      "${toString cfg.minecraft_geyser.MCport}:25565"
+                      "${toString cfg.minecraft_geyser.RCONPort}:25575"
+                      "${toString cfg.minecraft_geyser.BedrockPort}:19132/udp"
+                    ];
+                    env_file = [ cfg.env_file ];
+                    environment = {
+                      EULA = "TRUE";
+                      TYPE = "PAPER";
+                      VERSION = "1.20.1";
+                      MEMORY = "4g";
+                      OPS = "4cb4aff4-a0ed-4eaf-b912-47825b2ed30d";
+                      EXISTING_OPS_FILE = "MERGE";
+                      EXISTING_WHITELIST_FILE = "MERGE";
+                      MOTD = "ToyVo Geyser Server";
+                      MAX_TICK_TIME = "-1";
+                      SPAWN_PROTECTION = "0";
+                      MAX_PLAYERS = "10";
+                      CREATE_CONSOLE_IN_PIPE = "true";
+                      ALLOW_FLIGHT = "TRUE";
+                      DIFFICULTY = "hard";
+                    };
+                    volumes = [
+                      "${cfg.minecraft_geyser.datadir}:/data"
+                    ];
                   };
-                  volumes = [
-                    "${cfg.minecraft_geyser.datadir}:/data"
-                  ];
-                };
-                minecraft-geyser-backup.service = {
-                  image = "docker.io/itzg/mc-backup";
-                  environment = {
-                    BACKUP_INTERVAL = "2h";
-                    RCON_HOST = "minecraft-geyser";
+                  backups.service = {
+                    image = "docker.io/itzg/mc-backup";
+                    env_file = [ cfg.env_file ];
+                    environment = {
+                      BACKUP_INTERVAL = "2h";
+                      RCON_HOST = "mc";
+                    };
+                    volumes = [
+                      "${cfg.minecraft_geyser.datadir}:/data:ro"
+                      "${cfg.minecraft_geyser.datadir}/backups:/backups"
+                    ];
                   };
-                  volumes = [
-                    "${cfg.minecraft_geyser.datadir}:/data:ro"
-                    "${cfg.minecraft_geyser.datadir}/backups:/backups"
-                  ];
                 };
-                terraria.service = {
-                  image = "docker.io/ryshe/terraria:tshock-1.4.4.9-5.2.0-3";
-                  ports = [
-                    "${toString cfg.terraria.port}:7777"
-                    "${toString cfg.terraria.RestPort}:7878"
-                  ];
-                  volumes = [
-                    "${cfg.terraria.datadir}:/root/.local/share/Terraria/Worlds"
-                  ];
-                  environment = {
-                    WORLD_FILENAME = "large_master_crimson.wld";
+                terraria.settings.services = {
+                  terraria.service = {
+                    image = "docker.io/ryshe/terraria:tshock-1.4.4.9-5.2.0-3";
+                    ports = [
+                      "${toString cfg.terraria.port}:7777"
+                      "${toString cfg.terraria.RestPort}:7878"
+                    ];
+                    volumes = [
+                      "${cfg.terraria.datadir}:/root/.local/share/Terraria/Worlds"
+                    ];
+                    environment = {
+                      WORLD_FILENAME = "large_master_crimson.wld";
+                    };
                   };
                 };
               };
