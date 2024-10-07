@@ -325,6 +325,11 @@ hash = "08ed517d07b3c29bcfea2498ae0e7016f3f62e1faddbc272cf8c3f7f2b160e45"
 metafile = true
 
 [[files]]
+file = "mods/estrogen.pw.toml"
+hash = "10a50f135714044601b13d1d00ef979320e2b5672964eaf300f555ea9259a787"
+metafile = true
+
+[[files]]
 file = "mods/flat-bedrock.pw.toml"
 hash = "a9b2b88f1a7b966731ba8e102361324cc43df6b1254d0eb6bf2d945f7a8776a2"
 metafile = true
@@ -502,6 +507,11 @@ metafile = true
 [[files]]
 file = "mods/nullscape.pw.toml"
 hash = "13a6776b6e17d32a8dcc74932ce4af8b13290b1c90fe4c91b41abbd2b2c0d569"
+metafile = true
+
+[[files]]
+file = "mods/numismatics.pw.toml"
+hash = "450a3ad1e5e953d9d6c1f5ad6278ead01cfe32ea17fe43df70d3cf2a3120ff55"
 metafile = true
 
 [[files]]
