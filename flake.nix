@@ -204,9 +204,6 @@
                   volumes = [
                     "${cfg.minecraft.datadir}:/data"
                   ];
-                  extraOptions = [
-                    "-it"
-                  ];
                 };
                 minecraft-modded-backup.service = {
                   image = "docker.io/itzg/mc-backup";
@@ -245,9 +242,6 @@
                   };
                   volumes = [
                     "${cfg.minecraft_geyser.datadir}:/data"
-                  ];
-                  extraOptions = [
-                    "-it"
                   ];
                 };
                 minecraft-geyser-backup.service = {
