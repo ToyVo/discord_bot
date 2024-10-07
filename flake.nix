@@ -181,7 +181,7 @@
                     "${toString cfg.minecraft.RCONPort}:25575"
                     "${toString cfg.minecraft.voicePort}:24454/udp"
                   ];
-                  environmentFiles = [ cfg.env_file ];
+                  env_file = [ cfg.env_file ];
                   environment = {
                     EULA = "TRUE";
                     TYPE = "FORGE";
@@ -226,7 +226,7 @@
                     "${toString cfg.minecraft_geyser.RCONPort}:25575"
                     "${toString cfg.minecraft_geyser.BedrockPort}:19132/udp"
                   ];
-                  environmentFiles = [ cfg.env_file ];
+                  env_file = [ cfg.env_file ];
                   environment = {
                     EULA = "TRUE";
                     TYPE = "PAPER";
