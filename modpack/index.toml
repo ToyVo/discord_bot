@@ -295,6 +295,16 @@ hash = "c6d6e0e569ee03b705fe01ee5fc98505362d3a90a1a2cd919c2eb26dfa3cf5bd"
 metafile = true
 
 [[files]]
+file = "mods/embeddium.pw.toml"
+hash = "2a4e32365b962f7857d6003af7abee398a92919a5b3ddcd2a51ab9359b80865a"
+metafile = true
+
+[[files]]
+file = "mods/embeddiumplus.pw.toml"
+hash = "b3646d2ca37ec2b5c5d1a21cf09a589db0791558c7c670c6c92338af0db5ff6c"
+metafile = true
+
+[[files]]
 file = "mods/enderio.pw.toml"
 hash = "8089d0f2439db5f08898c0f598174af0cd0f580bc17fd2ce18da74fe0042c5a1"
 metafile = true

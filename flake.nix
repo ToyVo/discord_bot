@@ -275,19 +275,17 @@
                     depends_on.mc.condition = "service_healthy";
                   };
                 };
-                terraria.settings.services = {
-                  terraria.service = {
-                    image = "docker.io/ryshe/terraria:tshock-1.4.4.9-5.2.0-3";
-                    ports = [
-                      "${toString cfg.terraria.port}:7777"
-                      "${toString cfg.terraria.RestPort}:7878"
-                    ];
-                    volumes = [
-                      "${cfg.terraria.datadir}:/root/.local/share/Terraria/Worlds"
-                    ];
-                    environment = {
-                      WORLD_FILENAME = "large_master_crimson.wld";
-                    };
+                terraria.settings.services.terraria.service = {
+                  image = "docker.io/ryshe/terraria:tshock-1.4.4.9-5.2.0-3";
+                  ports = [
+                    "${toString cfg.terraria.port}:7777"
+                    "${toString cfg.terraria.RestPort}:7878"
+                  ];
+                  volumes = [
+                    "${cfg.terraria.datadir}:/root/.local/share/Terraria/Worlds"
+                  ];
+                  environment = {
+                    WORLD_FILENAME = "large_master_crimson.wld";
                   };
                 };
               };
