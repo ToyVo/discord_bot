@@ -40,11 +40,12 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
         client_id: var("DISCORD_CLIENT_ID").unwrap_or_default(),
         client_secret: var("DISCORD_CLIENT_SECRET").unwrap_or_default(),
         discord_bot_spam_channel_id: var("DISCORD_BOT_SPAM_CHANNEL_ID").unwrap_or_default(),
-        discord_minecraft_channel_id: var("DISCORD_MINECRAFT_CHANNEL_ID").unwrap_or_default(),
         discord_minecraft_geyser_channel_id: var("DISCORD_MINECRAFT_GEYSER_CHANNEL_ID")
             .unwrap_or_default(),
         discord_minecraft_geyser_last_message_id: RwLock::new(None),
-        discord_minecraft_last_message_id: RwLock::new(None),
+        discord_minecraft_modded_channel_id: var("DISCORD_MINECRAFT_CHANNEL_ID")
+            .unwrap_or_default(),
+        discord_minecraft_modded_last_message_id: RwLock::new(None),
         discord_terraria_channel_id: var("DISCORD_TERRARIA_CHANNEL_ID").unwrap_or_default(),
         discord_terraria_last_message_id: RwLock::new(None),
         forge_api_key: var("FORGE_API_KEY").unwrap_or_default(),
@@ -53,16 +54,12 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
         minecraft_geyser_rcon_address: var("MINECRAFT_RCON_ADDRESS")
             .unwrap_or(String::from("localhost:25576")),
         minecraft_geyser_rcon_password: var("RCON_PASSWORD").unwrap_or_default(),
-        minecraft_players: RwLock::new(vec![]),
-        minecraft_rcon_address: var("MINECRAFT_RCON_ADDRESS")
+        minecraft_modded_players: RwLock::new(vec![]),
+        minecraft_modded_rcon_address: var("MINECRAFT_RCON_ADDRESS")
             .unwrap_or(String::from("localhost:25575")),
-        minecraft_rcon_password: var("RCON_PASSWORD").unwrap_or_default(),
-        minecraft_service_name: var("MINECRAFT_SERVICE_NAME")
-            .unwrap_or(String::from("podman-minecraft.service")),
+        minecraft_modded_rcon_password: var("RCON_PASSWORD").unwrap_or_default(),
         public_key: var("DISCORD_PUBLIC_KEY").unwrap_or_default(),
         terraria_players: RwLock::new(vec![]),
-        terraria_service_name: var("TERRARIA_SERVICE_NAME")
-            .unwrap_or(String::from("podman-terraria.service")),
         tshock_base_url: var("TSHOCK_REST_BASE_URL")
             .unwrap_or(String::from("http://localhost:7878")),
         tshock_token: var("TSHOCK_APPLICATION_TOKEN").unwrap_or_default(),
@@ -76,13 +73,23 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
     let interval_state = state.clone();
 
     let commands = [
-        CreateCommand::new("minecraft")
+        CreateCommand::new("minecraft-geyser")
             .kind(CommandType::ChatInput)
             .description("Minecraft slash commands")
             .add_option(
                 CreateCommandOption::new(CommandOptionType::String, "action", "available actions")
                     .required(true)
-                    .add_string_choice("Reboot", "reboot"),
+                    .add_string_choice("Stop", "stop")
+                    .add_string_choice("Restart", "restart"),
+            ),
+        CreateCommand::new("minecraft-modded")
+            .kind(CommandType::ChatInput)
+            .description("Minecraft slash commands")
+            .add_option(
+                CreateCommandOption::new(CommandOptionType::String, "action", "available actions")
+                    .required(true)
+                    .add_string_choice("Stop", "stop")
+                    .add_string_choice("Restart", "restart"),
             ),
         CreateCommand::new("terraria")
             .kind(CommandType::ChatInput)
@@ -90,6 +97,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
             .add_option(
                 CreateCommandOption::new(CommandOptionType::String, "action", "available actions")
                     .required(true)
+                    .add_string_choice("Stop", "stop")
+                    .add_string_choice("Restart", "restart")
                     .add_string_choice("Broadcast", "broadcast")
                     .add_sub_option(
                         CreateCommandOption::new(CommandOptionType::String, "message", "message")

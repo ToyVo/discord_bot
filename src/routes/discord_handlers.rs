@@ -5,8 +5,8 @@ use axum::response::{IntoResponse, Redirect};
 use axum::Json;
 use axum_extra::extract::cookie::Cookie;
 use axum_extra::extract::SignedCookieJar;
-use serde_json::{json, Value};
-use serenity::all::InteractionType;
+use serde_json::json;
+use serenity::all::Interaction;
 use serenity::builder::CreateInteractionResponse;
 use serenity::json;
 use std::collections::HashMap;
@@ -32,35 +32,35 @@ pub async fn interactions(
         return Ok((StatusCode::UNAUTHORIZED, Json(json!({}))));
     }
 
-    let payload = match Json::<Value>::from_bytes(body.as_bytes()) {
-        Ok(payload) => payload,
+    let payload = match Json::<Interaction>::from_bytes(body.as_bytes()) {
+        Ok(payload) => payload.0,
         Err(e) => {
             tracing::error!("Could not parse body\n{e:#?}");
             return Ok((StatusCode::BAD_REQUEST, Json(json!({}))));
         }
     };
 
-    let request_type = payload
-        .get("type")
-        .and_then(|s| s.as_u64())
-        .map(|n| InteractionType::from(n as u8));
-
-    match request_type {
-        Some(InteractionType::Ping) => {
+    match payload {
+        Interaction::Ping(_) => {
             tracing::info!("Received discord ping request, Replying pong");
             Ok((
                 StatusCode::OK,
                 Json(json::to_value(CreateInteractionResponse::Pong)?),
             ))
         }
-        Some(InteractionType::Command) => match handle_slash_command(payload, state).await {
-            Ok(value) => Ok((StatusCode::OK, Json(value))),
-            Err(e) => {
-                tracing::error!("Slash command error {e}");
-                Ok((StatusCode::OK, Json(json!({}))))
+        Interaction::Command(command_payload) => {
+            match handle_slash_command(command_payload, state).await {
+                Ok(value) => Ok((StatusCode::OK, Json(value))),
+                Err(e) => {
+                    tracing::error!("Slash command error {e}");
+                    Ok((StatusCode::OK, Json(json!({}))))
+                }
             }
-        },
-        _ => Ok((StatusCode::OK, Json(json!({})))),
+        }
+        Interaction::Autocomplete(_) => Ok((StatusCode::NOT_IMPLEMENTED, Json(json!({})))),
+        Interaction::Component(_) => Ok((StatusCode::NOT_IMPLEMENTED, Json(json!({})))),
+        Interaction::Modal(_) => Ok((StatusCode::NOT_IMPLEMENTED, Json(json!({})))),
+        _ => Ok((StatusCode::BAD_REQUEST, Json(json!({})))),
     }
 }
 

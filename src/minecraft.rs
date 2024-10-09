@@ -79,11 +79,11 @@ async fn track_generic<S: AsRef<str>>(
 
 pub async fn track_players(state: &AppState) -> Result<(), AppError> {
     track_generic(
-        &state.minecraft_rcon_address,
-        &state.minecraft_rcon_password,
-        &state.minecraft_players,
-        &state.discord_minecraft_channel_id,
-        &state.discord_minecraft_last_message_id,
+        &state.minecraft_modded_rcon_address,
+        &state.minecraft_modded_rcon_password,
+        &state.minecraft_modded_players,
+        &state.discord_minecraft_modded_channel_id,
+        &state.discord_minecraft_modded_last_message_id,
         state,
     )
     .await?;
