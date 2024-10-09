@@ -3,7 +3,7 @@ use axum::http::{header, HeaderMap};
 use reqwest::Method;
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
-use serenity::all::{User, UserId};
+use serenity::all::{CreateInteractionResponseFollowup, User, UserId};
 use serenity::builder::CreateCommand;
 use serenity::interactions_endpoint::Verifier;
 
@@ -180,5 +180,18 @@ pub async fn delete_message<S: AsRef<str>>(
         message_id.as_ref()
     );
     discord_request(endpoint, Method::DELETE, None::<&str>, state).await?;
+    Ok(())
+}
+
+pub async fn replace_initial_interaction_response<S: AsRef<str>>(content: impl Into<String>, token: S, state: &AppState) -> Result<(), AppError> {
+    discord_request(
+        format!(
+            "webhooks/{}/{}/messages/@original",
+            state.client_id, token.as_ref()
+        ),
+        Method::PATCH,
+        Some(&CreateInteractionResponseFollowup::new().content(content)),
+        state,
+    ).await?;
     Ok(())
 }

@@ -1,13 +1,12 @@
-use reqwest::Method;
 use serde_json::{json, Value};
 use serenity::all::{CommandDataOptionValue, CommandInteraction};
 use serenity::builder::{
-    CreateInteractionResponse, CreateInteractionResponseFollowup, CreateInteractionResponseMessage,
+    CreateInteractionResponse, CreateInteractionResponseMessage,
 };
 use serenity::json;
 use tokio::process::Command;
 
-use crate::discord_utils::discord_request;
+use crate::discord_utils::replace_initial_interaction_response;
 use crate::error::AppError;
 use crate::routes::AppState;
 use crate::terraria;
@@ -48,13 +47,8 @@ pub async fn handle_slash_command(
                             format!("There was an issue {action}ing {server} server")
                         }
                     };
-                    if let Err(e) = discord_request(
-                        format!("webhooks/{}/{}", state.client_id, payload.token),
-                        Method::POST,
-                        Some(&CreateInteractionResponseFollowup::new().content(content)),
-                        &state,
-                    )
-                    .await
+                    if let Err(e) =
+                        replace_initial_interaction_response(content, payload.token, &state).await
                     {
                         tracing::error!("Error submitting followup {e:#?}")
                     }
@@ -74,13 +68,8 @@ pub async fn handle_slash_command(
                             String::from("There was an issue sending message to terraria server")
                         }
                     };
-                    if let Err(e) = discord_request(
-                        format!("webhooks/{}/{}", state.client_id, payload.token),
-                        Method::POST,
-                        Some(&CreateInteractionResponseFollowup::new().content(content)),
-                        &state,
-                    )
-                    .await
+                    if let Err(e) =
+                        replace_initial_interaction_response(content, payload.token, &state).await
                     {
                         tracing::error!("Error submitting followup {e:#?}")
                     }
