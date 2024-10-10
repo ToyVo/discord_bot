@@ -157,6 +157,8 @@
                     ${pkgs.discord_bot}/bin/discord_bot
                   '';
                 };
+                arion-terraria.wantedBy = lib.mkForce [];
+                arion-minecraft-geyser.wantedBy = lib.mkForce [];
               };
               networking.firewall = {
                 allowedTCPPorts =
