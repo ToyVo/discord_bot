@@ -5,6 +5,10 @@ file = "config/bcc-common.toml"
 hash = "c6c22ff741f6c3f925a53ea0dba54678518b97bdcac914b02b3a7dbee23355d2"
 
 [[files]]
+file = "config/configured-developer.toml"
+hash = "587a71091cc075e64a15191e9f3a492e300e6ca89427b6aafb1012044ef6da0e"
+
+[[files]]
 file = "mods/aaa-particles.pw.toml"
 hash = "1a848eaa322f47fcbf2681204d692614a4871b29cfb7d06307184be86607eeb5"
 metafile = true
@@ -52,6 +56,11 @@ metafile = true
 [[files]]
 file = "mods/artifacts.pw.toml"
 hash = "886dd3904a80422c030c1bd40aa30b4f62b25d73037c57626fab1696d4ccf7ad"
+metafile = true
+
+[[files]]
+file = "mods/athena-ctm.pw.toml"
+hash = "0700d17f36cd6b256bc65d30c79068d2627faacc7d6a601140445740c8960743"
 metafile = true
 
 [[files]]
@@ -300,11 +309,6 @@ hash = "b8c4528cc3185001451be70517d012541d300f9b2ad584a9f18a3070207079f6"
 metafile = true
 
 [[files]]
-file = "mods/distanthorizons.pw.toml"
-hash = "a505c59953646e0434a878cff105b9e6c416b3c0660fb60917a2bd4ed2b150f1"
-metafile = true
-
-[[files]]
 file = "mods/domum-ornamentum.pw.toml"
 hash = "f48ad6d8335d4ed2367bf3152d8f3aeebbd423c52b42e72079f2fe39c02704fa"
 metafile = true
@@ -417,6 +421,11 @@ metafile = true
 [[files]]
 file = "mods/ftb-teams-forge.pw.toml"
 hash = "76c3828b4e7288b79d6b0ca1418410539082a749650f9c85c6b03cf53ed1221e"
+metafile = true
+
+[[files]]
+file = "mods/fusion-connected-textures.pw.toml"
+hash = "1d49ff9d4f8f52975e51893b36fdddd4ec7a09e17d46664272ed27f62940980c"
 metafile = true
 
 [[files]]
@@ -702,6 +711,16 @@ metafile = true
 [[files]]
 file = "mods/structurize.pw.toml"
 hash = "4f67d10a4365119f8e5c83c1fccf3de8af77dff98d9c4b5f4d04c560a031b5a5"
+metafile = true
+
+[[files]]
+file = "mods/supermartijn642s-config-lib.pw.toml"
+hash = "fb0ec93bfbee412229b63a9154abc992ee7e274a84fe569e077f250e6c77abbd"
+metafile = true
+
+[[files]]
+file = "mods/supermartijn642s-core-lib.pw.toml"
+hash = "f3c45080e81efae68d313fd410ee80be56fb926b8580a8b509020fd611e3ffee"
 metafile = true
 
 [[files]]
