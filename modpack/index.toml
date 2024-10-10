@@ -60,11 +60,6 @@ hash = "be8e217053e3e0bc0179a62beaa1f8e29e22b1cdc2cb0d56bd9836ce5e6dea3b"
 metafile = true
 
 [[files]]
-file = "mods/beer-craft-mod.pw.toml"
-hash = "c7961c5e9a433ce255a0e9f67c8ec66e2ef7504950bf5046caf1c135bc87e0b3"
-metafile = true
-
-[[files]]
 file = "mods/better-compatibility-checker.pw.toml"
 hash = "deece4e278b0ef6d2b96dc69561ab11e34106ea8d3c29289e6060404f7614a87"
 metafile = true
@@ -72,6 +67,11 @@ metafile = true
 [[files]]
 file = "mods/blockui.pw.toml"
 hash = "5be62cf52a3584f39286d261f9325a1ddfb0efb6f1838b9f368df6a28cab3d15"
+metafile = true
+
+[[files]]
+file = "mods/bookshelf-lib.pw.toml"
+hash = "40bab89c8030327eba75a6fe4350d6ac883d4b168a8171d4c0ca3a416efbd318"
 metafile = true
 
 [[files]]
@@ -107,6 +107,11 @@ metafile = true
 [[files]]
 file = "mods/cccbridge.pw.toml"
 hash = "86934e48e50a5e92cf82103f60893c7028436c1112a4e1ef92a68b59ca68814a"
+metafile = true
+
+[[files]]
+file = "mods/chipped.pw.toml"
+hash = "0c6310af6351d8dff9b9f698ec477e5fdba8702626948101b032d54a666e82bc"
 metafile = true
 
 [[files]]
@@ -150,8 +155,18 @@ hash = "119a7506c39a296fc3cd7d6f874c08b2664082811ba95daf2b98f27f398fb980"
 metafile = true
 
 [[files]]
+file = "mods/controlling.pw.toml"
+hash = "2a50d21837bba88e3c9490c6bb8e0a9b44b052645d5c1481b48a060439c20a3c"
+metafile = true
+
+[[files]]
 file = "mods/copycats.pw.toml"
 hash = "3b6dc6e75bb8832b02aec2d6368f6f4da1be234800ba8702eaabf7989d61b2c4"
+metafile = true
+
+[[files]]
+file = "mods/cosmetic-armor-reworked.pw.toml"
+hash = "cfa8aa9c0437721dab2057c932c9cf8ec3d3a11f672040601305238d13df85e8"
 metafile = true
 
 [[files]]
@@ -220,6 +235,11 @@ hash = "85c58f1343f94ffbf510922ada6b2d3ff9ca323eb98eaeeff2237a5d5e342d87"
 metafile = true
 
 [[files]]
+file = "mods/create-northstar.pw.toml"
+hash = "0d4d56776c882bc249e88e4e688f1a647d5de344d5c11bf12e0aa3a901dcc805"
+metafile = true
+
+[[files]]
 file = "mods/create-railways-navigator.pw.toml"
 hash = "7641de036f97e5ffa27fb065ed439f5b0b6df11d3091db9b54628c185dc86927"
 metafile = true
@@ -262,6 +282,11 @@ metafile = true
 [[files]]
 file = "mods/curios.pw.toml"
 hash = "ef744ef9850c42a100e7ba88527b7bc486079f43c0e5234162df25391a2197a3"
+metafile = true
+
+[[files]]
+file = "mods/dark-utilities.pw.toml"
+hash = "0448ff51462480e146c264fcbbbc1e39867ab5c4ffeaded0f79962d145409a77"
 metafile = true
 
 [[files]]
@@ -397,11 +422,6 @@ metafile = true
 [[files]]
 file = "mods/geckolib.pw.toml"
 hash = "315418827149c57947f77defb618c60eb776209bb5ae966d1a4b5af1bca96539"
-metafile = true
-
-[[files]]
-file = "mods/getdrunk.pw.toml"
-hash = "23d8d2fe2c48c7183d7eea21a92dc32aa283fa026fcb0b68362ee81cb6932189"
 metafile = true
 
 [[files]]
@@ -565,6 +585,11 @@ hash = "e63b436dba4a80db68e4c79e5d9f030096fad75fe264490403d75dee3dab72de"
 metafile = true
 
 [[files]]
+file = "mods/pig-pen-cipher.pw.toml"
+hash = "86d1f26a7ae6210d216a1af25759b07986f71bf6deeed02b4ce651204502773c"
+metafile = true
+
+[[files]]
 file = "mods/ping-wheel.pw.toml"
 hash = "dcf9f39e61450656765c300f03df2151ebde872ac004428b5f2532c2fbe7c1c1"
 metafile = true
@@ -580,6 +605,11 @@ hash = "00322f0c2a1ed0b9e28f823b3c7f5b40d3ede06db32f3d4aa4d1391a994c306a"
 metafile = true
 
 [[files]]
+file = "mods/project-expansion.pw.toml"
+hash = "78439be1599007b76a2b0d51cd689272fe5474776b22ad4fd9cc98121dce32cc"
+metafile = true
+
+[[files]]
 file = "mods/projecte.pw.toml"
 hash = "26b6891625bf09317245200e3adb871cea00dbd41859d68cf57062544c0e6041"
 metafile = true
@@ -587,6 +617,16 @@ metafile = true
 [[files]]
 file = "mods/prometheus.pw.toml"
 hash = "8da73006c589cc42fa26c0b1cfd7714a423112119b238738300d8d889b1abba6"
+metafile = true
+
+[[files]]
+file = "mods/rechiseled-chipped.pw.toml"
+hash = "4e717e20893bb5edb032bd85130347169de1b50c0666e921f7dd4ddc5d9a8469"
+metafile = true
+
+[[files]]
+file = "mods/rechiseled.pw.toml"
+hash = "95cb627d4f6ac64e0482ad359f0fb9cfa0c1abe248370d61bc2a520d2b8c665c"
 metafile = true
 
 [[files]]
@@ -615,8 +655,18 @@ hash = "3f92abf3979c117d6886380d9586951d7a452ba91f24b06cf182976b374b5983"
 metafile = true
 
 [[files]]
+file = "mods/runelic.pw.toml"
+hash = "61ce4ba81f3903ab9d2c27f7fa073f800f9480d910d3022e1701bfcdbb0ad6dd"
+metafile = true
+
+[[files]]
 file = "mods/scorched-guns-2.pw.toml"
 hash = "2b2ce5728a863af40f874ed0c6c8553f2a7a96741bb8cc51c4787ed4f27ab138"
+metafile = true
+
+[[files]]
+file = "mods/searchables.pw.toml"
+hash = "35905f57cdb21a2aaa26345f2fabe3137ee2db6ee3bb2149cea206611b11ef69"
 metafile = true
 
 [[files]]
