@@ -209,6 +209,10 @@
                       JVM_DD_OPTS = "fml.queryResult=confirm";
                       ALLOW_FLIGHT = "TRUE";
                       DIFFICULTY = "hard";
+                      VIEW_DISTANCE = "8";
+                      MAX_CHAINED_NEIGHBOR_UPDATES="10000";
+                      MAX_WORLD_SIZE="10000";
+                      RATE_LIMIT="100";
                     };
                     volumes = [
                       "${cfg.minecraft.datadir}:/data"
