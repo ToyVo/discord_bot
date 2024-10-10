@@ -590,11 +590,6 @@ hash = "8da73006c589cc42fa26c0b1cfd7714a423112119b238738300d8d889b1abba6"
 metafile = true
 
 [[files]]
-file = "mods/psychadelic-experience.pw.toml"
-hash = "44029a582f23df85ddcc7282fb77e372b4ca97aaabb07cca5b7091460e1c958b"
-metafile = true
-
-[[files]]
 file = "mods/remorphed.pw.toml"
 hash = "980dc4c0ed3c6a13bb2172bf3d667d05bffe6f46bdc88953a04b6c20f6b05403"
 metafile = true
