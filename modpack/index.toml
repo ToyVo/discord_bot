@@ -569,6 +569,11 @@ hash = "680583e1e6c2b4aa4251b25f4887d7e865dfa889268052c498ef152dedee812a"
 metafile = true
 
 [[files]]
+file = "mods/mutant-monsters.pw.toml"
+hash = "6529f55293851714d814fa53a71b8af9182fbaae0f77313efe241f89ca5c485d"
+metafile = true
+
+[[files]]
 file = "mods/nullscape.pw.toml"
 hash = "13a6776b6e17d32a8dcc74932ce4af8b13290b1c90fe4c91b41abbd2b2c0d569"
 metafile = true
@@ -626,6 +631,11 @@ metafile = true
 [[files]]
 file = "mods/prometheus.pw.toml"
 hash = "8da73006c589cc42fa26c0b1cfd7714a423112119b238738300d8d889b1abba6"
+metafile = true
+
+[[files]]
+file = "mods/puzzles-lib.pw.toml"
+hash = "09deeddd9aafe7378ef20894b86145cb86f93c1f114ec72f4456ec5f0310f598"
 metafile = true
 
 [[files]]
@@ -780,7 +790,7 @@ metafile = true
 
 [[files]]
 file = "mods/woodwalkers.pw.toml"
-hash = "1909d70b92ed22b50901931533305de562be2487312fe3d14e9c0b6ef4257133"
+hash = "d4f4c08189748eeac94188d8bbc1b0ab0399a543c56300570d2640704afdf10b"
 metafile = true
 
 [[files]]
