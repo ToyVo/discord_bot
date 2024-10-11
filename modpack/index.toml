@@ -584,6 +584,11 @@ hash = "450a3ad1e5e953d9d6c1f5ad6278ead01cfe32ea17fe43df70d3cf2a3120ff55"
 metafile = true
 
 [[files]]
+file = "mods/oculus.pw.toml"
+hash = "f6883dbacae2ced2bd6218b2ab1d7a438edbfe772cab9396c7fe2fecc43234d2"
+metafile = true
+
+[[files]]
 file = "mods/paint-gun.pw.toml"
 hash = "77dc7b84e1822850ff9f3d9b0b68effa5c035d866dfd5a8272d99bdac765a619"
 metafile = true
