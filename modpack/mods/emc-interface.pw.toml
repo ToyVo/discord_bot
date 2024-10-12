@@ -1,0 +1,13 @@
+name = "EMC Interface"
+filename = "emc-interface-1.20.1.1.jar"
+side = "both"
+
+[download]
+url = "https://cdn.modrinth.com/data/eYuhwVwN/versions/er7F4tPZ/emc-interface-1.20.1.1.jar"
+hash-format = "sha1"
+hash = "666d6222bcfe28ea8652d78cd6314bb2589facf6"
+
+[update]
+[update.modrinth]
+mod-id = "eYuhwVwN"
+version = "er7F4tPZ"
