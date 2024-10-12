@@ -399,6 +399,11 @@ hash = "10a50f135714044601b13d1d00ef979320e2b5672964eaf300f555ea9259a787"
 metafile = true
 
 [[files]]
+file = "mods/extreme-reactors.pw.toml"
+hash = "40568e27bafdcd30606f25192bf1450dfb292b77cb7a3d9b47cf05b59bd8aa51"
+metafile = true
+
+[[files]]
 file = "mods/fastload.pw.toml"
 hash = "76fb1070a6a4578dafcdce08b7f4c65be43401120e6f356b7b3d8507b596d8b7"
 metafile = true
@@ -784,6 +789,41 @@ hash = "8b61be8290331fdd738f338692c4aeaa234ffc0bb287451200e87eac39142e2b"
 metafile = true
 
 [[files]]
+file = "mods/thermal-cultivation.pw.toml"
+hash = "0ca6f7c7a736b318e4165e4954e8bd39b183c45965bd596c8f1a2f948f7222e9"
+metafile = true
+
+[[files]]
+file = "mods/thermal-dynamics.pw.toml"
+hash = "5077218f5a137152465214a9a35544a617902a50145055fd4bcee4121462c57b"
+metafile = true
+
+[[files]]
+file = "mods/thermal-expansion.pw.toml"
+hash = "ea3ab41c8e1346c6b78afef0ba8a00b3409705b2eecae716883882f12956d90d"
+metafile = true
+
+[[files]]
+file = "mods/thermal-foundation.pw.toml"
+hash = "1fcb1bf91f4979cce47e56392cf9e3d30806bc0ff8aedc92b461272ecac8f8ca"
+metafile = true
+
+[[files]]
+file = "mods/thermal-innovation.pw.toml"
+hash = "46a13c3a5f47b1f55bb6d474d9986c75c0e25e60737f325d3699c63eca241c3b"
+metafile = true
+
+[[files]]
+file = "mods/thermal-integration.pw.toml"
+hash = "5bc578f409819105cd718ac6d13916d7984a2e4a110fe3a6585befa25d792077"
+metafile = true
+
+[[files]]
+file = "mods/thermal-locomotion.pw.toml"
+hash = "f585401f2abc481550e0cb27d4abf85e78fe99237ff4864126f171b17a884d9f"
+metafile = true
+
+[[files]]
 file = "mods/toms-storage.pw.toml"
 hash = "ad3b53a03146fac5e46803a06836c38ae13bc36eb4fb86b848202152fb76d171"
 metafile = true
@@ -896,6 +936,11 @@ metafile = true
 [[files]]
 file = "mods/yungs-menu-tweaks.pw.toml"
 hash = "5b5fdfaf8e757e4f54e621aca1c52f5d8c90c7be3bc78c2978173326f5c02bf5"
+metafile = true
+
+[[files]]
+file = "mods/zerocore.pw.toml"
+hash = "46eaae7e5edd7fc4169a3ecaee4f4b6f54edbf620232193531b1dbc7b34051dd"
 metafile = true
 
 [[files]]
