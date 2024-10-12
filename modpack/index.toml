@@ -154,6 +154,11 @@ hash = "74a525a623611769f07d844ea6d6817979ff88c92327785f34ebb3847f22cc39"
 metafile = true
 
 [[files]]
+file = "mods/cofh-core.pw.toml"
+hash = "1ba38e1558b064ee70588d7b61f7fe208b233af999b13c0cf03a11b628d05cb0"
+metafile = true
+
+[[files]]
 file = "mods/configured.pw.toml"
 hash = "c1bdeff356cd2ac164e2c0e6d0ceeda234db9774c2df44fb9f0e71d3960cc3f1"
 metafile = true
