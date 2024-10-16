@@ -304,6 +304,11 @@ hash = "84a74f965c0d0ae77b2a67d988d0778a52ec783456a8cf9602c675123ac78fe0"
 metafile = true
 
 [[files]]
+file = "mods/cucumber.pw.toml"
+hash = "23945da330dc5f459d404ec593fc1c8d8a38d01d86a4f39d969230fc84c30f66"
+metafile = true
+
+[[files]]
 file = "mods/curios.pw.toml"
 hash = "ef744ef9850c42a100e7ba88527b7bc486079f43c0e5234162df25391a2197a3"
 metafile = true
@@ -311,6 +316,11 @@ metafile = true
 [[files]]
 file = "mods/dark-utilities.pw.toml"
 hash = "0448ff51462480e146c264fcbbbc1e39867ab5c4ffeaded0f79962d145409a77"
+metafile = true
+
+[[files]]
+file = "mods/deeperdarker.pw.toml"
+hash = "bc4d10d9ec79b464c27a65a4432af741bceb774287dbb24f8d607afbd70e0d9c"
 metafile = true
 
 [[files]]
@@ -396,6 +406,11 @@ metafile = true
 [[files]]
 file = "mods/entitytexturefeatures.pw.toml"
 hash = "08ed517d07b3c29bcfea2498ae0e7016f3f62e1faddbc272cf8c3f7f2b160e45"
+metafile = true
+
+[[files]]
+file = "mods/essential.pw.toml"
+hash = "7a2fd5e5d3512422ccfa80718c66854de1ed5d8c89b2dfb3dac1f5b68b371461"
 metafile = true
 
 [[files]]
@@ -614,6 +629,11 @@ hash = "6529f55293851714d814fa53a71b8af9182fbaae0f77313efe241f89ca5c485d"
 metafile = true
 
 [[files]]
+file = "mods/mystical-agriculture.pw.toml"
+hash = "aaf4f39631e2f684ec1189f5372d959c90c2778626d8349fa15d5feabb480238"
+metafile = true
+
+[[files]]
 file = "mods/nullscape.pw.toml"
 hash = "13a6776b6e17d32a8dcc74932ce4af8b13290b1c90fe4c91b41abbd2b2c0d569"
 metafile = true
@@ -686,6 +706,11 @@ metafile = true
 [[files]]
 file = "mods/puzzles-lib.pw.toml"
 hash = "09deeddd9aafe7378ef20894b86145cb86f93c1f114ec72f4456ec5f0310f598"
+metafile = true
+
+[[files]]
+file = "mods/re-avaritia.pw.toml"
+hash = "d089342615a9a78cec6e08ac01a474fc4938da9c7feab9d16444d558c1dfa21e"
 metafile = true
 
 [[files]]
