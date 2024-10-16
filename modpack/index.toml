@@ -379,11 +379,6 @@ hash = "b3646d2ca37ec2b5c5d1a21cf09a589db0791558c7c670c6c92338af0db5ff6c"
 metafile = true
 
 [[files]]
-file = "mods/emc-interface.pw.toml"
-hash = "fff1800a436922af3c69e49eddad465673bee61bb52162228b7a077aaa676598"
-metafile = true
-
-[[files]]
 file = "mods/enderio.pw.toml"
 hash = "8089d0f2439db5f08898c0f598174af0cd0f580bc17fd2ce18da74fe0042c5a1"
 metafile = true
@@ -686,16 +681,6 @@ metafile = true
 [[files]]
 file = "mods/powah.pw.toml"
 hash = "24660c4b368b47a6f6ad3aee54b044b0036ec5c1c63bba2031124a78949d13ca"
-metafile = true
-
-[[files]]
-file = "mods/project-expansion.pw.toml"
-hash = "78439be1599007b76a2b0d51cd689272fe5474776b22ad4fd9cc98121dce32cc"
-metafile = true
-
-[[files]]
-file = "mods/projecte.pw.toml"
-hash = "26b6891625bf09317245200e3adb871cea00dbd41859d68cf57062544c0e6041"
 metafile = true
 
 [[files]]

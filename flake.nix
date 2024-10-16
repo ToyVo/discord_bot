@@ -361,7 +361,7 @@
                 export RUST_SRC_PATH=${pkgs.rustPlatform.rustLibSrc}
                 printf "\n\nUse dev_start to start the sever with auto reload\n\n"
               '';
-              buildInputs = with pkgs.darwin.apple_sdk.frameworks; [ SystemConfiguration ];
+              buildInputs = with pkgs.darwin.apple_sdk.frameworks; lib.optionals pkgs.stdenv.isDarwin [ SystemConfiguration ];
               nativeBuildInputs = with pkgs; [
                 rustc
                 pkg-config
