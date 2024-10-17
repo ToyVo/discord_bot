@@ -324,11 +324,6 @@ hash = "b8c4528cc3185001451be70517d012541d300f9b2ad584a9f18a3070207079f6"
 metafile = true
 
 [[files]]
-file = "mods/dimensionaldoors.pw.toml"
-hash = "b355da3d29cd2c8b22950a56a82a28e12e8503fe0a5557930cfaa39d2e5b6941"
-metafile = true
-
-[[files]]
 file = "mods/domum-ornamentum.pw.toml"
 hash = "f48ad6d8335d4ed2367bf3152d8f3aeebbd423c52b42e72079f2fe39c02704fa"
 metafile = true
@@ -511,6 +506,11 @@ metafile = true
 [[files]]
 file = "mods/lodestonelib.pw.toml"
 hash = "2b0f2b84667e292579f16838a3b3cf8dd34ee90dd0d9973186a786eafc884f12"
+metafile = true
+
+[[files]]
+file = "mods/lootr.pw.toml"
+hash = "da63657599461e9c8141f45042bf1423aa96f80e9dca9260992bcc5871e6daaf"
 metafile = true
 
 [[files]]
