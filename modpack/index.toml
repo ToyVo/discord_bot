@@ -74,11 +74,6 @@ hash = "be8e217053e3e0bc0179a62beaa1f8e29e22b1cdc2cb0d56bd9836ce5e6dea3b"
 metafile = true
 
 [[files]]
-file = "mods/better-compatibility-checker.pw.toml"
-hash = "deece4e278b0ef6d2b96dc69561ab11e34106ea8d3c29289e6060404f7614a87"
-metafile = true
-
-[[files]]
 file = "mods/blockui.pw.toml"
 hash = "5be62cf52a3584f39286d261f9325a1ddfb0efb6f1838b9f368df6a28cab3d15"
 metafile = true
@@ -504,11 +499,6 @@ hash = "2906e9ebf6e5c11d41c26de159bfa5f280b873dc46217c15292381bfd5b61f01"
 metafile = true
 
 [[files]]
-file = "mods/keep-some-inventory.pw.toml"
-hash = "e80bdeeb3623608e95f20f3c15095f97238c3663443a3642d6614518e680594a"
-metafile = true
-
-[[files]]
 file = "mods/kotlin-for-forge.pw.toml"
 hash = "82ffc26ad624cdd846cbbeb99ed40ef44229ec7006a7ae7e8caa8df6409c20db"
 metafile = true
@@ -521,11 +511,6 @@ metafile = true
 [[files]]
 file = "mods/lodestonelib.pw.toml"
 hash = "2b0f2b84667e292579f16838a3b3cf8dd34ee90dd0d9973186a786eafc884f12"
-metafile = true
-
-[[files]]
-file = "mods/lootr.pw.toml"
-hash = "da63657599461e9c8141f45042bf1423aa96f80e9dca9260992bcc5871e6daaf"
 metafile = true
 
 [[files]]
@@ -599,11 +584,6 @@ hash = "eab12c7fddf20f293b8726f7553d2c0c0b6c578a2ba03ddf59ae40f6e684e2ce"
 metafile = true
 
 [[files]]
-file = "mods/minecolonies.pw.toml"
-hash = "31608dc1adde267df1279d0fc88c3b3ad4b7da468a440fe971b821b6b22e21b0"
-metafile = true
-
-[[files]]
 file = "mods/multi-piston.pw.toml"
 hash = "680583e1e6c2b4aa4251b25f4887d7e865dfa889268052c498ef152dedee812a"
 metafile = true
@@ -631,11 +611,6 @@ metafile = true
 [[files]]
 file = "mods/oculus.pw.toml"
 hash = "d9816aa8a041f12fc6bd94f39ae78d87b1acbb4a2f328546b11df423af6b6510"
-metafile = true
-
-[[files]]
-file = "mods/paint-gun.pw.toml"
-hash = "77dc7b84e1822850ff9f3d9b0b68effa5c035d866dfd5a8272d99bdac765a619"
 metafile = true
 
 [[files]]
@@ -821,11 +796,6 @@ metafile = true
 [[files]]
 file = "mods/toms-storage.pw.toml"
 hash = "ad3b53a03146fac5e46803a06836c38ae13bc36eb4fb86b848202152fb76d171"
-metafile = true
-
-[[files]]
-file = "mods/towntalk.pw.toml"
-hash = "32e0f6bce7adc5b09ba3350110ac4be7ee04e556db35ba1db97bacfabd31e4dc"
 metafile = true
 
 [[files]]
