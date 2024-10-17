@@ -24,6 +24,11 @@ hash = "723eb1e1a42eb2fe8461d2b0ef73d8f5a37b723924a534fc054879e959aa28c7"
 metafile = true
 
 [[files]]
+file = "mods/aeinfinitybooster.pw.toml"
+hash = "7ec07fbf8bd444722601e8acedc7ea199a40edc9a37c4c5df1e449712d0e3dc4"
+metafile = true
+
+[[files]]
 file = "mods/apotheosis.pw.toml"
 hash = "aeb6c7309052bb9bfb096ed6aef11cfab3c4bf3b0a44746b4e249bc0cca8120c"
 metafile = true
