@@ -524,11 +524,6 @@ hash = "da63657599461e9c8141f45042bf1423aa96f80e9dca9260992bcc5871e6daaf"
 metafile = true
 
 [[files]]
-file = "mods/lucky-block.pw.toml"
-hash = "f191b4d935d4c20460ba4bd97171b4ee834cde6dbce85d445b7f30e2a7367426"
-metafile = true
-
-[[files]]
 file = "mods/macaws-bridges.pw.toml"
 hash = "eda00658aae72ce58c839caade7a081cb57c7194ffea8d8bc73a57303b2e94ef"
 metafile = true
