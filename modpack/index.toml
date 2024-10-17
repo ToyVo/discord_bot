@@ -699,11 +699,6 @@ hash = "95cb627d4f6ac64e0482ad359f0fb9cfa0c1abe248370d61bc2a520d2b8c665c"
 metafile = true
 
 [[files]]
-file = "mods/remorphed.pw.toml"
-hash = "980dc4c0ed3c6a13bb2172bf3d667d05bffe6f46bdc88953a04b6c20f6b05403"
-metafile = true
-
-[[files]]
 file = "mods/resourceful-lib.pw.toml"
 hash = "33c1012df4c3267ee9e70509001739908b2f2c72ae0b2728a750b3516644aa2c"
 metafile = true
@@ -746,11 +741,6 @@ metafile = true
 [[files]]
 file = "mods/simple-voice-chat.pw.toml"
 hash = "024b2c7a43677e7ea379d5e6b20bee870a08547ebfbf7179fca3797f0962f6b9"
-metafile = true
-
-[[files]]
-file = "mods/skinshifter.pw.toml"
-hash = "15801d90a41171aa62e394fc25fc716a878c0f9e19b2f67aedbbaa9a3fa4ba2a"
 metafile = true
 
 [[files]]
@@ -871,11 +861,6 @@ metafile = true
 [[files]]
 file = "mods/waystones.pw.toml"
 hash = "b408c5f1be6f3a0af123a351f4334e72d2ace21973096d7862243e109f28fbec"
-metafile = true
-
-[[files]]
-file = "mods/woodwalkers.pw.toml"
-hash = "d4f4c08189748eeac94188d8bbc1b0ab0399a543c56300570d2640704afdf10b"
 metafile = true
 
 [[files]]
