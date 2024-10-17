@@ -44,11 +44,6 @@ hash = "13a3593cd47946c34d07c2a379f0ec70a7dcdb11b6260a676b04ff95c47f8195"
 metafile = true
 
 [[files]]
-file = "mods/appliede.pw.toml"
-hash = "3f0569b85a015a816a6f928966ccb8299c07cd4c187c23c30e2df1b7ab9f5a5c"
-metafile = true
-
-[[files]]
 file = "mods/architectury-api.pw.toml"
 hash = "fa34a3117af7f8ed553ec563a7c90c1d6462184c7df5b837c831cb482c6ae582"
 metafile = true
@@ -321,11 +316,6 @@ metafile = true
 [[files]]
 file = "mods/deeperdarker.pw.toml"
 hash = "bc4d10d9ec79b464c27a65a4432af741bceb774287dbb24f8d607afbd70e0d9c"
-metafile = true
-
-[[files]]
-file = "mods/desert-behemoths-sandworms!.pw.toml"
-hash = "93c1e1afca2f3409187b1ef3555609302d1876178452cba7053be86fc842bbce"
 metafile = true
 
 [[files]]
