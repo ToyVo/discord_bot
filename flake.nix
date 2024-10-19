@@ -215,7 +215,7 @@
                       MAX_CHAINED_NEIGHBOR_UPDATES="10000";
                       MAX_WORLD_SIZE="12500";
                       RATE_LIMIT="100";
-                      RCON_CMDS_STARTUP = "gamerule playersSleepingPercentage 0\ngamerule mobGriefing false\ngamerule doFireTick false";
+                      RCON_CMDS_STARTUP = "gamerule playersSleepingPercentage 0\ngamerule mobGriefing false\ngamerule doFireTick false\ndoInsomnia false";
                     };
                     volumes = [
                       "${cfg.minecraft.datadir}:/data"
