@@ -15,32 +15,32 @@ metafile = true
 
 [[files]]
 file = "mods/adaptive-performance-tweaks-core.pw.toml"
-hash = "716891d443678fef4c3129f2404cd8d42dc30c839f60c08e60d89888d4ce7123"
+hash = "f9ff57a727f3c962318a9043ff4556332fe39fb09f0e133465bf4eb62a97a77d"
 metafile = true
 
 [[files]]
 file = "mods/adaptive-performance-tweaks-gamerules.pw.toml"
-hash = "709880c28ea64a8d812677ef1d1ae7266a95d3176ee9e3d36baa28d3b8ff41e2"
+hash = "756c7575a60d228756a0e58334431d3c4727aa0d249f0f5a5907de7d68b21f13"
 metafile = true
 
 [[files]]
 file = "mods/adaptive-performance-tweaks-items.pw.toml"
-hash = "56d5af7763da3dc3d1c1427c37e87f357e41d3bef2ac2d135d36f819ab385dd2"
+hash = "003f8728f59491e127c79a1f530a28ea2ad6c8035dbb943b20b553184c884057"
 metafile = true
 
 [[files]]
 file = "mods/adaptive-performance-tweaks-player.pw.toml"
-hash = "c849e78a9f047518a1087ebd663386a9b42bb7873d92bf8037fbb1c28ced190d"
+hash = "63fe8e2e0a1325c813666dabf1614a5a51e45fd99f6271e927a70759fb092fb5"
 metafile = true
 
 [[files]]
 file = "mods/adaptive-performance-tweaks-spawn.pw.toml"
-hash = "7e82c52e13d528bebbdafe1045bd328ab9a71633ed5b673b6a7bc20831752633"
+hash = "53754100e7cff41fa02e8730a7db81796fba0ca2a27da0727432d05eb37829b7"
 metafile = true
 
 [[files]]
 file = "mods/adaptive-performance-tweaks.pw.toml"
-hash = "cdf6f2070172d87d89f4fc3db53dc00479817872600cb536eb7819ab7ea26506"
+hash = "034457a4d01c549b20270d92785c0ed72d6c911e81c29e03e639fbe58428eb56"
 metafile = true
 
 [[files]]
@@ -360,7 +360,7 @@ metafile = true
 
 [[files]]
 file = "mods/dimensional-threads.pw.toml"
-hash = "b8c4528cc3185001451be70517d012541d300f9b2ad584a9f18a3070207079f6"
+hash = "957c639e64a3a82fb2e3484b8dfdfaedd2247b458675d48a54a335d9d25dc44a"
 metafile = true
 
 [[files]]
@@ -645,12 +645,12 @@ metafile = true
 
 [[files]]
 file = "mods/no-see-no-tick.pw.toml"
-hash = "2dc9ad4864942040b1f595615570363d328d02501189c2f9b3656663ba99d848"
+hash = "24efea24d515bccbd9abfd60dee4fa26451f4fbc5edcf4a39e51a2e9daa4ecde"
 metafile = true
 
 [[files]]
 file = "mods/noisium.pw.toml"
-hash = "967412dd78791d3c8ed00470ac9dd9473d0d03fdf78d04a9a004ea79bfcbde70"
+hash = "c60be719d5ede034bcc81d79fdec100b8d07c09a270ac01f571cf516840a263b"
 metafile = true
 
 [[files]]
