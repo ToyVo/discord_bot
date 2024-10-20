@@ -1,0 +1,13 @@
+name = "No See, No Tick"
+filename = "NoSeeNoTick-2.0.0-1.20.1.jar"
+side = "both"
+
+[download]
+url = "https://cdn.modrinth.com/data/G3Ib70DM/versions/yjD66l2n/NoSeeNoTick-2.0.0-1.20.1.jar"
+hash-format = "sha1"
+hash = "39be3bb98c52c54b85de4f8a8ca74b6ad4486071"
+
+[update]
+[update.modrinth]
+mod-id = "G3Ib70DM"
+version = "yjD66l2n"

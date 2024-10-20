@@ -1,0 +1,13 @@
+name = "Adaptive Performance Tweaks: Player"
+filename = "adaptive_performance_tweaks_player_1.20.1-11.3.0.jar"
+side = "both"
+
+[download]
+url = "https://cdn.modrinth.com/data/jr5nzfKv/versions/P4zCdvOB/adaptive_performance_tweaks_player_1.20.1-11.3.0.jar"
+hash-format = "sha1"
+hash = "75f447183ec60d33d9c8b87dcc5c687d24424c58"
+
+[update]
+[update.modrinth]
+mod-id = "jr5nzfKv"
+version = "P4zCdvOB"

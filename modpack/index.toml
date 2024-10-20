@@ -14,6 +14,36 @@ hash = "1a848eaa322f47fcbf2681204d692614a4871b29cfb7d06307184be86607eeb5"
 metafile = true
 
 [[files]]
+file = "mods/adaptive-performance-tweaks-core.pw.toml"
+hash = "716891d443678fef4c3129f2404cd8d42dc30c839f60c08e60d89888d4ce7123"
+metafile = true
+
+[[files]]
+file = "mods/adaptive-performance-tweaks-gamerules.pw.toml"
+hash = "709880c28ea64a8d812677ef1d1ae7266a95d3176ee9e3d36baa28d3b8ff41e2"
+metafile = true
+
+[[files]]
+file = "mods/adaptive-performance-tweaks-items.pw.toml"
+hash = "56d5af7763da3dc3d1c1427c37e87f357e41d3bef2ac2d135d36f819ab385dd2"
+metafile = true
+
+[[files]]
+file = "mods/adaptive-performance-tweaks-player.pw.toml"
+hash = "c849e78a9f047518a1087ebd663386a9b42bb7873d92bf8037fbb1c28ced190d"
+metafile = true
+
+[[files]]
+file = "mods/adaptive-performance-tweaks-spawn.pw.toml"
+hash = "7e82c52e13d528bebbdafe1045bd328ab9a71633ed5b673b6a7bc20831752633"
+metafile = true
+
+[[files]]
+file = "mods/adaptive-performance-tweaks.pw.toml"
+hash = "cdf6f2070172d87d89f4fc3db53dc00479817872600cb536eb7819ab7ea26506"
+metafile = true
+
+[[files]]
 file = "mods/ae2-things-forge.pw.toml"
 hash = "8f7696617249a4be35a9d1a2caecce4e17bbffe823f904d10c6fc8b72c4352ca"
 metafile = true
@@ -26,6 +56,11 @@ metafile = true
 [[files]]
 file = "mods/aeinfinitybooster.pw.toml"
 hash = "7ec07fbf8bd444722601e8acedc7ea199a40edc9a37c4c5df1e449712d0e3dc4"
+metafile = true
+
+[[files]]
+file = "mods/ai-improvements.pw.toml"
+hash = "d45d8ba9633fe8d819e6a8822b5f25807a52a5f29a82e87d31ce8920fd080500"
 metafile = true
 
 [[files]]
@@ -101,6 +136,11 @@ metafile = true
 [[files]]
 file = "mods/caelus.pw.toml"
 hash = "eaa144428b42dedd12beea31db366ca686a621c9945d45a35494dca25846fc63"
+metafile = true
+
+[[files]]
+file = "mods/canary.pw.toml"
+hash = "a388f4afe890e268a739cf598b68859ca3d86506a3fa3e46c17e4aa63debd309"
 metafile = true
 
 [[files]]
@@ -584,6 +624,11 @@ hash = "eab12c7fddf20f293b8726f7553d2c0c0b6c578a2ba03ddf59ae40f6e684e2ce"
 metafile = true
 
 [[files]]
+file = "mods/modernfix.pw.toml"
+hash = "ed8710015d6f9b29b47b1434262d9d216b058c390773085484413f8ccf6c85cb"
+metafile = true
+
+[[files]]
 file = "mods/multi-piston.pw.toml"
 hash = "680583e1e6c2b4aa4251b25f4887d7e865dfa889268052c498ef152dedee812a"
 metafile = true
@@ -596,6 +641,16 @@ metafile = true
 [[files]]
 file = "mods/mystical-agriculture.pw.toml"
 hash = "aaf4f39631e2f684ec1189f5372d959c90c2778626d8349fa15d5feabb480238"
+metafile = true
+
+[[files]]
+file = "mods/no-see-no-tick.pw.toml"
+hash = "2dc9ad4864942040b1f595615570363d328d02501189c2f9b3656663ba99d848"
+metafile = true
+
+[[files]]
+file = "mods/noisium.pw.toml"
+hash = "967412dd78791d3c8ed00470ac9dd9473d0d03fdf78d04a9a004ea79bfcbde70"
 metafile = true
 
 [[files]]
@@ -696,6 +751,11 @@ metafile = true
 [[files]]
 file = "mods/runelic.pw.toml"
 hash = "61ce4ba81f3903ab9d2c27f7fa073f800f9480d910d3022e1701bfcdbb0ad6dd"
+metafile = true
+
+[[files]]
+file = "mods/saturn.pw.toml"
+hash = "45646ed86d783d82cc2b804466d4aaf06a67e14766928f17134d02558179f3f0"
 metafile = true
 
 [[files]]
