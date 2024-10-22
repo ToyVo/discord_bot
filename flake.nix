@@ -241,7 +241,8 @@
                     volumes = [
                       "${cfg.minecraft.datadir}:/data:ro"
                       "${cfg.minecraft.backupdir}:/backups"
-                      "${cfg.rclone_file}:/config/rclone/rclone.conf:ro"
+                      # TODO: might need to change to /tmp/.config/rclone
+                      "${cfg.rclone_dir}:/config/rclone"
                     ];
                     depends_on.mc.condition = "service_healthy";
                   };
@@ -290,7 +291,8 @@
                     volumes = [
                       "${cfg.minecraft_geyser.datadir}:/data:ro"
                       "${cfg.minecraft_geyser.backupdir}:/backups"
-                      "${cfg.rclone_file}:/config/rclone/rclone.conf:ro"
+                      # TODO: might need to change to /tmp/.config/rclone
+                      "${cfg.rclone_dir}:/config/rclone"
                     ];
                     depends_on.mc.condition = "service_healthy";
                   };
