@@ -98,10 +98,6 @@
                   type = lib.types.path;
                   description = "Path to store minecraft data";
                 };
-                backupdir = lib.mkOption {
-                  type = lib.types.path;
-                  description = "Path to store minecraft backups";
-                };
                 openFirewall = lib.mkEnableOption "Open firewall for minecraft";
               };
               minecraft_geyser = {
@@ -123,10 +119,6 @@
                 datadir = lib.mkOption {
                   type = lib.types.path;
                   description = "Path to store minecraft data";
-                };
-                backupdir = lib.mkOption {
-                  type = lib.types.path;
-                  description = "Path to store minecraft backups";
                 };
                 openFirewall = lib.mkEnableOption "Open firewall for minecraft";
               };
@@ -240,7 +232,6 @@
                     };
                     volumes = [
                       "${cfg.minecraft.datadir}:/data:ro"
-                      "${cfg.minecraft.backupdir}:/backups"
                       "${cfg.rclone_dir}:/tmp/.config/rclone"
                     ];
                     depends_on.mc.condition = "service_healthy";
@@ -289,7 +280,6 @@
                     };
                     volumes = [
                       "${cfg.minecraft_geyser.datadir}:/data:ro"
-                      "${cfg.minecraft_geyser.backupdir}:/backups"
                       "${cfg.rclone_dir}:/tmp/.config/rclone"
                     ];
                     depends_on.mc.condition = "service_healthy";
