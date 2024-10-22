@@ -734,6 +734,11 @@ hash = "95cb627d4f6ac64e0482ad359f0fb9cfa0c1abe248370d61bc2a520d2b8c665c"
 metafile = true
 
 [[files]]
+file = "mods/resourceful-config.pw.toml"
+hash = "92b0bc142a7cbc4af73ec922b72e9ab6f7b41cedc35a7dbbd49bbc3d66f88fcc"
+metafile = true
+
+[[files]]
 file = "mods/resourceful-lib.pw.toml"
 hash = "33c1012df4c3267ee9e70509001739908b2f2c72ae0b2728a750b3516644aa2c"
 metafile = true
@@ -811,6 +816,11 @@ metafile = true
 [[files]]
 file = "mods/supermartijn642s-core-lib.pw.toml"
 hash = "f3c45080e81efae68d313fd410ee80be56fb926b8580a8b509020fd611e3ffee"
+metafile = true
+
+[[files]]
+file = "mods/tempad.pw.toml"
+hash = "309da53d022d0b3732ef99814815a3348afcab87db1ce4795b8fec5f8c89cf7f"
 metafile = true
 
 [[files]]
