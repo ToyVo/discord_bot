@@ -74,7 +74,7 @@
                   DISCORD_BOT_TOKEN
                 '';
               };
-              rclone_file = lib.mkOption {
+              rclone_dir = lib.mkOption {
                 type = lib.types.path;
                 description = "Path to the rclone config file";
               };
