@@ -367,7 +367,9 @@ pub async fn modpack_info_endpoint(
                 div { "Import the appropriate zip file into prism and packwiz will take care of the rest" }
                 div { "Files Hosted: " {zip_display()?} }
                 img {
-                    height: "512px",
+                    max_height: "512px",
+                    max_width: "100%",
+                    height: "auto",
                     src: "/modpack/prism.png",
                     alt: "import prism instance"
                 }

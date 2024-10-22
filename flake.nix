@@ -74,6 +74,10 @@
                   DISCORD_BOT_TOKEN
                 '';
               };
+              rclone_file = lib.mkOption {
+                type = lib.types.path;
+                description = "Path to the rclone config file";
+              };
               minecraft = {
                 MCport = lib.mkOption {
                   type = lib.types.int;
@@ -225,14 +229,19 @@
                     image = "docker.io/itzg/mc-backup";
                     env_file = [ cfg.env_file ];
                     environment = {
+                      BACKUP_METHOD = "rclone";
                       BACKUP_INTERVAL = "2h";
                       RCON_HOST = "mc";
                       INITIAL_DELAY = 0;
                       PAUSE_IF_NO_PLAYERS = "true";
+                      RLONE_REMOTE = "proton";
+                      RLONE_COMPRESS_METHOD = "zstd";
+                      RLONE_DEST_DIR = "minecraft-modded-backup";
                     };
                     volumes = [
                       "${cfg.minecraft.datadir}:/data:ro"
                       "${cfg.minecraft.backupdir}:/backups"
+                      "${cfg.rclone_file}:/config/rclone/rclone.conf:ro"
                     ];
                     depends_on.mc.condition = "service_healthy";
                   };
@@ -274,10 +283,14 @@
                       RCON_HOST = "mc";
                       INITIAL_DELAY = 0;
                       PAUSE_IF_NO_PLAYERS = "true";
+                      RLONE_REMOTE = "proton";
+                      RLONE_COMPRESS_METHOD = "zstd";
+                      RLONE_DEST_DIR = "minecraft-geyser-backup";
                     };
                     volumes = [
                       "${cfg.minecraft_geyser.datadir}:/data:ro"
                       "${cfg.minecraft_geyser.backupdir}:/backups"
+                      "${cfg.rclone_file}:/config/rclone/rclone.conf:ro"
                     ];
                     depends_on.mc.condition = "service_healthy";
                   };
