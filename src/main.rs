@@ -5,7 +5,9 @@ use axum::{
 use axum_extra::extract::cookie::Key;
 use serenity::all::{CommandOptionType, CommandType, CreateCommand, CreateCommandOption};
 use std::{env::var, net::SocketAddr, sync::Arc, time::Duration};
-use tokio::{net::TcpListener, signal, sync::RwLock};
+use surrealdb::engine::local::RocksDb;
+use surrealdb::Surreal;
+use tokio::{net::TcpListener, signal};
 use tower::ServiceBuilder;
 use tower_http::{
     timeout::TimeoutLayer,
@@ -21,6 +23,7 @@ mod discord_utils;
 mod error;
 mod handlers;
 mod minecraft;
+mod models;
 mod routes;
 mod terraria;
 
@@ -34,6 +37,13 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
         .with(tracing_subscriber::fmt::layer().without_time())
         .init();
 
+    let db_file = var("SURREAL_FILE").unwrap_or(format!("/var/{}/surreal", env!("CARGO_PKG_NAME")));
+    let db = Surreal::new::<RocksDb>(db_file).await?;
+    // Select a specific namespace / database
+    db.use_ns(env!("CARGO_PKG_NAME"))
+        .use_db(env!("CARGO_PKG_NAME"))
+        .await?;
+
     let state = AppState(Arc::new(InnerState {
         base_url: var("BASE_URL").unwrap_or_default(),
         bot_token: var("DISCORD_BOT_TOKEN").unwrap_or_default(),
@@ -42,24 +52,18 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
         discord_bot_spam_channel_id: var("DISCORD_BOT_SPAM_CHANNEL_ID").unwrap_or_default(),
         discord_minecraft_geyser_channel_id: var("DISCORD_MINECRAFT_GEYSER_CHANNEL_ID")
             .unwrap_or_default(),
-        discord_minecraft_geyser_last_message_id: RwLock::new(None),
         discord_minecraft_modded_channel_id: var("DISCORD_MINECRAFT_CHANNEL_ID")
             .unwrap_or_default(),
-        discord_minecraft_modded_last_message_id: RwLock::new(None),
         discord_terraria_channel_id: var("DISCORD_TERRARIA_CHANNEL_ID").unwrap_or_default(),
-        discord_terraria_last_message_id: RwLock::new(None),
         forge_api_key: var("FORGE_API_KEY").unwrap_or_default(),
         key: Key::generate(),
-        minecraft_geyser_players: RwLock::new(vec![]),
         minecraft_geyser_rcon_address: var("MINECRAFT_RCON_ADDRESS")
             .unwrap_or(String::from("localhost:25576")),
         minecraft_geyser_rcon_password: var("RCON_PASSWORD").unwrap_or_default(),
-        minecraft_modded_players: RwLock::new(vec![]),
         minecraft_modded_rcon_address: var("MINECRAFT_RCON_ADDRESS")
             .unwrap_or(String::from("localhost:25575")),
         minecraft_modded_rcon_password: var("RCON_PASSWORD").unwrap_or_default(),
         public_key: var("DISCORD_PUBLIC_KEY").unwrap_or_default(),
-        terraria_players: RwLock::new(vec![]),
         tshock_base_url: var("TSHOCK_REST_BASE_URL")
             .unwrap_or(String::from("http://localhost:7878")),
         tshock_token: var("TSHOCK_APPLICATION_TOKEN").unwrap_or_default(),
@@ -68,6 +72,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
             env!("CARGO_PKG_REPOSITORY"),
             env!("CARGO_PKG_VERSION")
         ),
+        db,
     }));
 
     let interval_state = state.clone();

@@ -1,17 +1,16 @@
 use crate::discord_utils;
 use crate::error::AppError;
+use crate::models::{GamePlayers, GameStatus};
 use crate::routes::AppState;
 use crate::terraria::get_player_changes;
 use anyhow::Context;
 use serde_json::json;
-use tokio::sync::RwLock;
 
 async fn track_generic<S: AsRef<str>>(
     minecraft_rcon_address: S,
     minecraft_rcon_password: S,
-    minecraft_players: &RwLock<Vec<String>>,
     discord_minecraft_channel_id: S,
-    discord_minecraft_last_message_id: &RwLock<Option<String>>,
+    surreal_id: &str,
     state: &AppState,
 ) -> Result<(), AppError> {
     let mut server = <rcon::Connection<tokio::net::TcpStream>>::builder()
@@ -34,46 +33,57 @@ async fn track_generic<S: AsRef<str>>(
         .filter(|s| !s.is_empty())
         .collect::<Vec<String>>();
 
-    {
-        let last_player_names = minecraft_players.read().await;
-        if let Some(message) = get_player_changes(&last_player_names, &players) {
-            tracing::info!("{}", message);
-            let message = discord_utils::create_message(
-                json!({
-                    "content": message
-                }),
-                &discord_minecraft_channel_id,
+    let last_player_names: Option<GamePlayers> = state.db.select(("players", surreal_id)).await?;
+    let last_player_names = if let Some(data) = last_player_names {
+        data.players
+    } else {
+        vec![]
+    };
+
+    if let Some(message) = get_player_changes(&last_player_names, &players) {
+        tracing::info!("{}", message);
+        let message = discord_utils::create_message(
+            json!({
+                "content": message
+            }),
+            &discord_minecraft_channel_id,
+            state,
+        )
+        .await?;
+
+        let last_message_id: Option<GameStatus> = state.db.select(("status", surreal_id)).await?;
+        if let Some(data) = last_message_id {
+            discord_utils::delete_message(
+                data.game.as_str(),
+                discord_minecraft_channel_id.as_ref(),
                 state,
             )
             .await?;
+        }
 
-            {
-                let last_message_id = discord_minecraft_last_message_id.read().await;
-                if let Some(id) = last_message_id.as_ref() {
-                    discord_utils::delete_message(
-                        id.as_str(),
-                        discord_minecraft_channel_id.as_ref(),
-                        state,
-                    )
-                    .await?;
-                }
-            }
-
-            let mut discord_minecraft_last_message_id =
-                discord_minecraft_last_message_id.write().await;
-            *discord_minecraft_last_message_id = Some(
-                message
+        let _upserted: Option<GameStatus> = state
+            .db
+            .upsert(("status", surreal_id))
+            .content(GameStatus {
+                game: surreal_id.to_string(),
+                discord_message_id: message
                     .get("id")
                     .context("Could not find id in response")?
                     .as_str()
                     .context("could not parse as str")?
                     .to_string(),
-            );
-        }
+            })
+            .await?;
     }
 
-    let mut minecraft_players = minecraft_players.write().await;
-    *minecraft_players = players;
+    let _upserted: Option<GamePlayers> = state
+        .db
+        .upsert(("status", surreal_id))
+        .content(GamePlayers {
+            game: surreal_id.to_string(),
+            players,
+        })
+        .await?;
     Ok(())
 }
 
@@ -81,18 +91,16 @@ pub async fn track_players(state: &AppState) -> Result<(), AppError> {
     track_generic(
         &state.minecraft_modded_rcon_address,
         &state.minecraft_modded_rcon_password,
-        &state.minecraft_modded_players,
         &state.discord_minecraft_modded_channel_id,
-        &state.discord_minecraft_modded_last_message_id,
+        "minecraft_modded",
         state,
     )
     .await?;
     track_generic(
         &state.minecraft_geyser_rcon_address,
         &state.minecraft_geyser_rcon_password,
-        &state.minecraft_geyser_players,
         &state.discord_minecraft_geyser_channel_id,
-        &state.discord_minecraft_geyser_last_message_id,
+        "minecraft_geyser",
         state,
     )
     .await?;

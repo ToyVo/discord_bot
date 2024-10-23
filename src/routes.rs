@@ -10,7 +10,8 @@ use axum_extra::extract::cookie::Key;
 use dioxus::prelude::*;
 use std::ops::Deref;
 use std::sync::Arc;
-use tokio::sync::RwLock;
+use surrealdb::engine::local::Db;
+use surrealdb::Surreal;
 use tower_http::services::ServeDir;
 
 use crate::routes::discord_handlers::{discord_oauth_callback, interactions, verify_user};
@@ -41,24 +42,19 @@ pub struct InnerState {
     pub client_secret: String,
     pub discord_bot_spam_channel_id: String,
     pub discord_minecraft_geyser_channel_id: String,
-    pub discord_minecraft_geyser_last_message_id: RwLock<Option<String>>,
     pub discord_minecraft_modded_channel_id: String,
-    pub discord_minecraft_modded_last_message_id: RwLock<Option<String>>,
     pub discord_terraria_channel_id: String,
-    pub discord_terraria_last_message_id: RwLock<Option<String>>,
     pub forge_api_key: String,
     pub key: Key,
-    pub minecraft_geyser_players: RwLock<Vec<String>>,
     pub minecraft_geyser_rcon_address: String,
     pub minecraft_geyser_rcon_password: String,
-    pub minecraft_modded_players: RwLock<Vec<String>>,
     pub minecraft_modded_rcon_address: String,
     pub minecraft_modded_rcon_password: String,
     pub public_key: String,
-    pub terraria_players: RwLock<Vec<String>>,
     pub tshock_base_url: String,
     pub tshock_token: String,
     pub user_agent: String,
+    pub db: Surreal<Db>,
 }
 
 pub fn app() -> Router<AppState> {

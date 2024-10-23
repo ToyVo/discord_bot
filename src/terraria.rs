@@ -1,5 +1,6 @@
 use crate::discord_utils;
 use crate::error::AppError;
+use crate::models::{GamePlayers, GameStatus};
 use crate::routes::AppState;
 use anyhow::Context;
 use oxford_join::OxfordJoin;
@@ -132,42 +133,58 @@ pub async fn track_players(state: &AppState) -> Result<(), AppError> {
         })
         .collect();
 
-    // put read lock in a scope so we can acquire the write lock
-    {
-        let last_player_nicknames = state.terraria_players.read().await;
-        if let Some(message) = get_player_changes(&last_player_nicknames, &player_nicknames) {
-            tracing::info!("{}", message);
-            let message = discord_utils::create_message(
-                json!({
-                    "content": message,
-                }),
+    let last_player_nicknames: Option<GamePlayers> =
+        state.db.select(("players", "terraria")).await?;
+    let last_player_nicknames = if let Some(data) = last_player_nicknames {
+        data.players
+    } else {
+        vec![]
+    };
+
+    if let Some(message) = get_player_changes(&last_player_nicknames, &player_nicknames) {
+        tracing::info!("{}", message);
+        let message = discord_utils::create_message(
+            json!({
+                "content": message,
+            }),
+            &state.discord_terraria_channel_id,
+            state,
+        )
+        .await?;
+
+        let last_message_id: Option<GameStatus> = state.db.select(("status", "terraria")).await?;
+        if let Some(data) = last_message_id {
+            discord_utils::delete_message(
+                &data.discord_message_id,
                 &state.discord_terraria_channel_id,
                 state,
             )
             .await?;
+        }
 
-            {
-                let last_message_id = state.discord_terraria_last_message_id.read().await;
-                if let Some(id) = last_message_id.as_ref() {
-                    discord_utils::delete_message(id, &state.discord_terraria_channel_id, state)
-                        .await?;
-                }
-            }
-
-            let mut discord_terraria_last_message_id =
-                state.discord_terraria_last_message_id.write().await;
-            *discord_terraria_last_message_id = Some(
-                message
+        let _upserted: Option<GameStatus> = state
+            .db
+            .upsert(("status", "terraria"))
+            .content(GameStatus {
+                game: String::from("terraria"),
+                discord_message_id: message
                     .get("id")
                     .context("Could not find id in response")?
                     .as_str()
                     .context("could not parse as str")?
                     .to_string(),
-            );
-        }
+            })
+            .await?;
     }
 
-    let mut terraria_players = state.terraria_players.write().await;
-    *terraria_players = player_nicknames;
+    let _upserted: Option<GamePlayers> = state
+        .db
+        .upsert(("players", "terraria"))
+        .content(GamePlayers {
+            game: String::from("terraria"),
+            players: player_nicknames,
+        })
+        .await?;
+
     Ok(())
 }
