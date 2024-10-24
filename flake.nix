@@ -325,7 +325,9 @@
               pkgs.buildRustCrate.override {
                 defaultCrateOverrides = pkgs.defaultCrateOverrides // {
                   librocksdb-sys = attrs: {
-                    LIBCLANG_PATH = "${pkgs.llvmPackages.libclang.lib}/lib";
+                    nativeBuildInputs = with pkgs; [
+                      rustPlatform.bindgenHook
+                    ];
                   };
                   discord_bot = attrs: {
                     version = "${cargoToml.package.version}-${rev}";
