@@ -327,11 +327,10 @@
                   discord_bot = attrs: {
                     version = "${cargoToml.package.version}-${rev}";
                     buildInputs =
-                      with pkgs;
-                      [ libclang ] ++
+                      with pkgs.darwin.apple_sdk.frameworks;
                       lib.optionals pkgs.stdenv.isDarwin [
-                        darwin.apple_sdk.frameworks.SystemConfiguration
-                        darwin.apple_sdk.frameworks.CoreServices
+                        CoreServices
+                        SystemConfiguration
                       ];
                     nativeBuildInputs = with pkgs; [
                       libiconv
@@ -341,6 +340,7 @@
                     OPENSSL_NO_VENDOR = 1;
                     OPENSSL_LIB_DIR = "${lib.getLib pkgs.openssl}/lib";
                     OPENSSL_DIR = "${lib.getDev pkgs.openssl}";
+                    LIBCLANG_PATH = "${lib.getLib pkgs.libclang}/lib";
                   };
                 };
               };
