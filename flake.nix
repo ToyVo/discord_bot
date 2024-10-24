@@ -327,10 +327,11 @@
                   discord_bot = attrs: {
                     version = "${cargoToml.package.version}-${rev}";
                     buildInputs =
-                      with pkgs.darwin.apple_sdk.frameworks;
+                      with pkgs;
+                      [ libclang ] ++
                       lib.optionals pkgs.stdenv.isDarwin [
-                        SystemConfiguration
-                        CoreServices
+                        darwin.apple_sdk.frameworks.SystemConfiguration
+                        darwin.apple_sdk.frameworks.CoreServices
                       ];
                     nativeBuildInputs = with pkgs; [
                       libiconv
