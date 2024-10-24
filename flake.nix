@@ -333,9 +333,13 @@
                         SystemConfiguration
                       ];
                     nativeBuildInputs = with pkgs; [
+                      clang
+                      libclang.lib
                       libiconv
-                      pkg-config
+                      llvmPackages.libcxxClang
                       openssl
+                      pkg-config
+                      rustPlatform.bindgenHook
                     ];
                     OPENSSL_NO_VENDOR = 1;
                     OPENSSL_LIB_DIR = "${lib.getLib pkgs.openssl}/lib";
