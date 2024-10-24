@@ -344,8 +344,7 @@
                     OPENSSL_NO_VENDOR = 1;
                     OPENSSL_LIB_DIR = "${lib.getLib pkgs.openssl}/lib";
                     OPENSSL_DIR = "${lib.getDev pkgs.openssl}";
-                    LIBCLANG_PATH = "${pkgs.libclang.lib}/lib";
-                    BINDGEN_EXTRA_CLANG_ARGS = "-isystem ${pkgs.llvmPackages.libcxxClang.lib}/lib/clang/${lib.getVersion pkgs.clang}/include";
+                    LIBCLANG_PATH = "${lib.getLib pkgs.llvmPackages.libclang.lib}/lib";
                   };
                 };
               };
