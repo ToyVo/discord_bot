@@ -326,7 +326,11 @@
                 defaultCrateOverrides = pkgs.defaultCrateOverrides // {
                   librocksdb-sys = attrs: {
                     nativeBuildInputs = with pkgs; [
+                      bzip2
+                      lz4
                       rustPlatform.bindgenHook
+                      zlib
+                      zstd
                     ];
                   };
                   discord_bot = attrs: {
@@ -338,10 +342,7 @@
                         SystemConfiguration
                       ];
                     nativeBuildInputs = with pkgs; [
-                      clang
-                      libclang.lib
                       libiconv
-                      llvmPackages.libcxxClang
                       openssl
                       pkg-config
                       rustPlatform.bindgenHook
