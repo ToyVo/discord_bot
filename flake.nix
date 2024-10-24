@@ -324,11 +324,13 @@
               pkgs:
               pkgs.buildRustCrate.override {
                 defaultCrateOverrides = pkgs.defaultCrateOverrides // {
+                  librocksdb-sys = attrs: {
+                    LIBCLANG_PATH = "${pkgs.llvmPackages.libclang.lib}/lib";
+                  };
                   discord_bot = attrs: {
                     version = "${cargoToml.package.version}-${rev}";
                     buildInputs =
                       with pkgs.darwin.apple_sdk.frameworks;
-                      [pkgs.clang] ++
                       lib.optionals pkgs.stdenv.isDarwin [
                         CoreServices
                         SystemConfiguration
@@ -345,7 +347,6 @@
                     OPENSSL_NO_VENDOR = 1;
                     OPENSSL_LIB_DIR = "${lib.getLib pkgs.openssl}/lib";
                     OPENSSL_DIR = "${lib.getDev pkgs.openssl}";
-                    LIBCLANG_PATH = "${pkgs.llvmPackages.libclang.lib}/lib";
                   };
                 };
               };
