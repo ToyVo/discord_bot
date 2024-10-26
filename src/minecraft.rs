@@ -51,15 +51,19 @@ async fn track_generic<S: AsRef<str>>(
         )
         .await?;
 
-        let last_message_id: Option<GameStatus> = state.db.select(("status", surreal_id)).await?;
-        if let Some(data) = last_message_id {
-            discord_utils::delete_message(
-                data.game.as_str(),
-                discord_minecraft_channel_id.as_ref(),
-                state,
-            )
-            .await?;
-        }
+        match state.db.select(("status", surreal_id)).await {
+            Ok(Some(data)) => {
+                let data: GameStatus = data;
+                discord_utils::delete_message(
+                    data.discord_message_id.as_str(),
+                    discord_minecraft_channel_id.as_ref(),
+                    state,
+                )
+                .await
+            }
+            Err(e) => Ok(tracing::error!("Error getting GameStatus from DB: {}", e)),
+            _ => Ok(()),
+        }?;
 
         let _upserted: Option<GameStatus> = state
             .db

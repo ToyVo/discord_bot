@@ -152,15 +152,19 @@ pub async fn track_players(state: &AppState) -> Result<(), AppError> {
         )
         .await?;
 
-        let last_message_id: Option<GameStatus> = state.db.select(("status", "terraria")).await?;
-        if let Some(data) = last_message_id {
-            discord_utils::delete_message(
-                &data.discord_message_id,
-                &state.discord_terraria_channel_id,
-                state,
-            )
-            .await?;
-        }
+        match state.db.select(("status", "terraria")).await {
+            Ok(Some(data)) => {
+                let data: GameStatus = data;
+                discord_utils::delete_message(
+                    &data.discord_message_id,
+                    &state.discord_terraria_channel_id,
+                    state,
+                )
+                .await
+            }
+            Err(e) => Ok(tracing::error!("Error getting GameStatus from DB: {}", e)),
+            _ => Ok(()),
+        }?;
 
         let _upserted: Option<GameStatus> = state
             .db
