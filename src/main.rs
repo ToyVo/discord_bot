@@ -18,6 +18,7 @@ use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
 
 use discord_bot::discord_utils::install_global_commands;
 use discord_bot::routes::{app, AppState, InnerState};
+use discord_bot::{minecraft, terraria};
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
