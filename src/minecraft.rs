@@ -1,4 +1,4 @@
-use crate::discord_utils;
+use crate::{discord_utils, systemctl_running};
 use crate::error::AppError;
 use crate::models::{GamePlayers, GameStatus};
 use crate::routes::AppState;
@@ -11,8 +11,13 @@ async fn track_generic<S: AsRef<str>>(
     minecraft_rcon_password: S,
     discord_minecraft_channel_id: S,
     surreal_id: &str,
+    service_name: &str,
     state: &AppState,
 ) -> Result<(), AppError> {
+    if !systemctl_running(service_name).await? {
+        return Ok(())
+    }
+    
     let mut server = <rcon::Connection<tokio::net::TcpStream>>::builder()
         .enable_minecraft_quirks(true)
         .connect(
@@ -98,6 +103,7 @@ pub async fn track_players(state: &AppState) -> Result<(), AppError> {
         // &state.discord_minecraft_modded_channel_id,
         &state.discord_bot_spam_channel_id,
         "minecraft_modded",
+        "arion-minecraft-modded.service",
         state,
     )
     .await?;
@@ -107,6 +113,7 @@ pub async fn track_players(state: &AppState) -> Result<(), AppError> {
         // &state.discord_minecraft_geyser_channel_id,
         &state.discord_bot_spam_channel_id,
         "minecraft_geyser",
+        "arion-minecraft-geyser.service",
         state,
     )
     .await?;

@@ -1,4 +1,4 @@
-use crate::discord_utils;
+use crate::{discord_utils, systemctl_running};
 use crate::error::AppError;
 use crate::models::{GamePlayers, GameStatus};
 use crate::routes::AppState;
@@ -114,6 +114,10 @@ pub fn get_player_changes(before: &[String], after: &[String]) -> Option<String>
 }
 
 pub async fn track_players(state: &AppState) -> Result<(), AppError> {
+    if !systemctl_running("arion-terraria.service").await? {
+        return Ok(())
+    }
+    
     // get nicknames
     let status = get_status(state).await?;
     let players = status

@@ -16,16 +16,8 @@ use tower_http::{
 };
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
 
-use crate::discord_utils::install_global_commands;
-use crate::routes::{app, AppState, InnerState};
-
-mod discord_utils;
-mod error;
-mod handlers;
-mod minecraft;
-mod models;
-mod routes;
-mod terraria;
+use discord_bot::discord_utils::install_global_commands;
+use discord_bot::routes::{app, AppState, InnerState};
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {

@@ -544,6 +544,11 @@ hash = "f3b0e45a85c3aafbf05a3828a38cd2985f3678b41fa95cfbd5d828ce4fcd4eaa"
 metafile = true
 
 [[files]]
+file = "mods/lighty.pw.toml"
+hash = "02e0de45e61e53a62fd3ef85a2e1c5703567ba2d7df4fd4f310c85c5c02838d7"
+metafile = true
+
+[[files]]
 file = "mods/lodestonelib.pw.toml"
 hash = "2b0f2b84667e292579f16838a3b3cf8dd34ee90dd0d9973186a786eafc884f12"
 metafile = true
