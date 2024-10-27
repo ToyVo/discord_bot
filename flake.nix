@@ -71,7 +71,7 @@
                   DISCORD_CLIENT_ID
                   DISCORD_CLIENT_SECRET
                   DISCORD_PUBLIC_KEY
-                  DISCORD_BOT_TOKEN
+                  DISCORD_TOKEN
                 '';
               };
               rclone_dir = lib.mkOption {

@@ -37,13 +37,13 @@ impl FromRef<AppState> for Key {
 
 pub struct InnerState {
     pub base_url: String,
-    pub bot_token: String,
     pub client_id: String,
     pub client_secret: String,
     pub discord_bot_spam_channel_id: String,
     pub discord_minecraft_geyser_channel_id: String,
     pub discord_minecraft_modded_channel_id: String,
     pub discord_terraria_channel_id: String,
+    pub discord_token: String,
     pub forge_api_key: String,
     pub key: Key,
     pub minecraft_geyser_rcon_address: String,

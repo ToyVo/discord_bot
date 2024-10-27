@@ -48,7 +48,6 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
 
     let state = AppState(Arc::new(InnerState {
         base_url: var("BASE_URL").unwrap_or_default(),
-        bot_token: var("DISCORD_BOT_TOKEN").unwrap_or_default(),
         client_id: var("DISCORD_CLIENT_ID").unwrap_or_default(),
         client_secret: var("DISCORD_CLIENT_SECRET").unwrap_or_default(),
         discord_bot_spam_channel_id: var("DISCORD_BOT_SPAM_CHANNEL_ID").unwrap_or_default(),
@@ -57,6 +56,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
         discord_minecraft_modded_channel_id: var("DISCORD_MINECRAFT_CHANNEL_ID")
             .unwrap_or_default(),
         discord_terraria_channel_id: var("DISCORD_TERRARIA_CHANNEL_ID").unwrap_or_default(),
+        discord_token: var("DISCORD_TOKEN").unwrap_or_default(),
         forge_api_key: var("FORGE_API_KEY").unwrap_or_default(),
         key: Key::generate(),
         minecraft_geyser_rcon_address: var("MINECRAFT_RCON_ADDRESS")

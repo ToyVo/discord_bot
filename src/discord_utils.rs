@@ -38,7 +38,7 @@ pub async fn discord_request<S: AsRef<str>, T: Serialize + ?Sized>(
         .request(method.clone(), url.as_str())
         .header(
             header::AUTHORIZATION.as_str(),
-            format!("Bot {}", { state.bot_token.as_str() }),
+            format!("Bot {}", { state.discord_token.as_str() }),
         )
         .header(header::USER_AGENT.as_str(), state.user_agent.as_str());
 
