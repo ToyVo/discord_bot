@@ -87,7 +87,7 @@ async fn track_generic<S: AsRef<str>>(
 
     let _upserted: Option<GamePlayers> = state
         .db
-        .upsert(("status", surreal_id))
+        .upsert(("players", surreal_id))
         .content(GamePlayers {
             game: surreal_id.to_string(),
             players,
