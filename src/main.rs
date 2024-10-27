@@ -5,7 +5,8 @@ use axum::{
 use axum_extra::extract::cookie::Key;
 use serenity::all::{CommandOptionType, CommandType, CreateCommand, CreateCommandOption};
 use std::{env::var, net::SocketAddr, sync::Arc, time::Duration};
-use surrealdb::engine::local::RocksDb;
+use surrealdb::engine::remote::ws::Ws;
+use surrealdb::opt::auth::Root;
 use surrealdb::Surreal;
 use tokio::{net::TcpListener, signal};
 use tower::ServiceBuilder;
@@ -30,8 +31,16 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
         .with(tracing_subscriber::fmt::layer().without_time())
         .init();
 
-    let db_file = var("SURREAL_FILE").unwrap_or(format!("/var/{}/surreal", env!("CARGO_PKG_NAME")));
-    let db = Surreal::new::<RocksDb>(db_file).await?;
+    let surreal_bind = var("SURREAL_BIND").unwrap_or(String::from("127.0.0.1:8000"));
+    let surreal_pass = var("SURREAL_PASS").unwrap_or_default();
+    let db = Surreal::new::<Ws>(surreal_bind).await?;
+
+    db.signin(Root {
+        username: "root",
+        password: surreal_pass.as_str(),
+    })
+    .await?;
+
     // Select a specific namespace / database
     db.use_ns(env!("CARGO_PKG_NAME"))
         .use_db(env!("CARGO_PKG_NAME"))

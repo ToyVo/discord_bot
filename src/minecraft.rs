@@ -1,8 +1,8 @@
-use crate::{discord_utils, systemctl_running};
 use crate::error::AppError;
 use crate::models::{GamePlayers, GameStatus};
 use crate::routes::AppState;
 use crate::terraria::get_player_changes;
+use crate::{discord_utils, systemctl_running};
 use anyhow::Context;
 use serde_json::json;
 
@@ -15,9 +15,9 @@ async fn track_generic<S: AsRef<str>>(
     state: &AppState,
 ) -> Result<(), AppError> {
     if !systemctl_running(service_name).await? {
-        return Ok(())
+        return Ok(());
     }
-    
+
     let mut server = <rcon::Connection<tokio::net::TcpStream>>::builder()
         .enable_minecraft_quirks(true)
         .connect(

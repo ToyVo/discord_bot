@@ -10,7 +10,7 @@ use axum_extra::extract::cookie::Key;
 use dioxus::prelude::*;
 use std::ops::Deref;
 use std::sync::Arc;
-use surrealdb::engine::local::Db;
+use surrealdb::engine::remote::ws::Client;
 use surrealdb::Surreal;
 use tower_http::services::ServeDir;
 
@@ -54,7 +54,7 @@ pub struct InnerState {
     pub tshock_base_url: String,
     pub tshock_token: String,
     pub user_agent: String,
-    pub db: Surreal<Db>,
+    pub db: Surreal<Client>,
 }
 
 pub fn app() -> Router<AppState> {
