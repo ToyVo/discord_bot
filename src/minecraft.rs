@@ -100,8 +100,7 @@ pub async fn track_players(state: &AppState) -> Result<(), AppError> {
     track_generic(
         &state.minecraft_modded_rcon_address,
         &state.minecraft_modded_rcon_password,
-        // &state.discord_minecraft_modded_channel_id,
-        &state.discord_bot_spam_channel_id,
+        &state.discord_minecraft_modded_channel_id,
         "minecraft_modded",
         "arion-minecraft-modded.service",
         state,
@@ -110,8 +109,7 @@ pub async fn track_players(state: &AppState) -> Result<(), AppError> {
     track_generic(
         &state.minecraft_geyser_rcon_address,
         &state.minecraft_geyser_rcon_password,
-        // &state.discord_minecraft_geyser_channel_id,
-        &state.discord_bot_spam_channel_id,
+        &state.discord_minecraft_geyser_channel_id,
         "minecraft_geyser",
         "arion-minecraft-geyser.service",
         state,
