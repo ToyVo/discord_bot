@@ -324,15 +324,6 @@
               pkgs:
               pkgs.buildRustCrate.override {
                 defaultCrateOverrides = pkgs.defaultCrateOverrides // {
-                  librocksdb-sys = attrs: {
-                    nativeBuildInputs = with pkgs; [
-                      bzip2
-                      lz4
-                      rustPlatform.bindgenHook
-                      zlib
-                      zstd
-                    ];
-                  };
                   discord_bot = attrs: {
                     version = "${cargoToml.package.version}-${rev}";
                     buildInputs =
