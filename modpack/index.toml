@@ -1180,8 +1180,18 @@ hash = "0b65cd1a439326b6a81f453773722893e4eef1c065859e7a0f2935952f6e9cb3"
 metafile = true
 
 [[files]]
+file = "mods/toms-storage.pw.toml"
+hash = "ad3b53a03146fac5e46803a06836c38ae13bc36eb4fb86b848202152fb76d171"
+metafile = true
+
+[[files]]
 file = "mods/torchmaster.pw.toml"
 hash = "6a419b757ecb2d91cbe43f9c4a0a3e877989efc753d90cded16c2ab381781949"
+metafile = true
+
+[[files]]
+file = "mods/trackwork.pw.toml"
+hash = "7a5c696a422bb545fef6bfd7859c00629a4d2929c09cda7af30ce23348fa6565"
 metafile = true
 
 [[files]]
