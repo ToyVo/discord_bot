@@ -1086,7 +1086,7 @@ hash = "eef1cdaf5a745983422a1a1e2fc0633dc43296c24d47f35c3bf5b91330e90bb8"
 
 [[files]]
 file = "config/jei/ingredient-list-type-sort-order.ini"
-hash = "61bcd5e5b6ddae5489cd48c8a910a42ea17716563abd3d4a641e689d1662fd8e"
+hash = "b9377290099b85fb9f5a3b8004855ab4a6f3965a1d18e9e7816842b88b165877"
 
 [[files]]
 file = "config/jei/jei-client.ini"
@@ -1106,7 +1106,7 @@ hash = "8f2761840207e6e133df740cd06303e52c711f418942300073cf58827a06b989"
 
 [[files]]
 file = "config/jei/recipe-category-sort-order.ini"
-hash = "1bdd802bed02f679986a8c6d2ded37d23139b33814ac790b4dca67b1bafbc435"
+hash = "5dbdb90f25dbd5952b8552702e31feffcb19f3e07ab1ac0b9c115920267a167e"
 
 [[files]]
 file = "config/jei/world/local/my_vanilla_balls_hurt/bookmarks.ini"
@@ -1282,7 +1282,7 @@ hash = "a460e7aa50ab78ff36f6742b870ebc4e184911fc646b415c4fa49ded57ba8ea8"
 
 [[files]]
 file = "config/sanitydim/default.toml"
-hash = "657920289c887863624bdf6b62735216f189a0ca9aff32e1f54f40f0c7c3e5bc"
+hash = "8ee104a3192b138d47474f225dc44310892f157877e281e74414b673d9932654"
 
 [[files]]
 file = "config/sanitydim/dimension/example.toml"
@@ -5430,7 +5430,7 @@ hash = "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
 
 [[files]]
 file = "config/tacz/custom/tacz_default_gun/tacz/tags/attachments/pistol_muzzle.json"
-hash = "cbb46343dc5506ac9a4a9be0a7b4e65c6ba8d7d80d895ef0dbe970fb3e536433"
+hash = "21b8b7fa59be90f644f1745ebc7a3cfc38a6a267d5c23a3b41fa37d02d6a3a09"
 
 [[files]]
 file = "config/tacz/custom/tacz_default_gun/tacz/tags/attachments/pistol_sight.json"
@@ -7378,27 +7378,27 @@ hash = "9a9b9fd6e1c4252448ec9873752ad5d8f5bcb2245005030ba0fed38ee5c3ca57"
 
 [[files]]
 file = "config/valkyrienskies/vs_client.json"
-hash = "cf01bce7e3e7e4e2b132b2864a526ee301269c35eca44a690cf7f9f54760ead4"
+hash = "744609ee3e824e694dbc68125a2f6c1933f98d321755019e3a462a5de67fde44"
 
 [[files]]
 file = "config/valkyrienskies/vs_clockwork_client.json"
-hash = "758e008bd83ca2cfad311897ee0d4944170429112b097287dbbb7e95990b692d"
+hash = "11fd0b7431f5c5a1a37a1f7b5a2b91c470daca21a92daba06e368ecfabdf00e2"
 
 [[files]]
 file = "config/valkyrienskies/vs_clockwork_server.json"
-hash = "319eaec2a18e3e4b1cf170ccd93a59c6b3e8803109ba645833952deda2707bc6"
+hash = "96e318c600d9ca728ac0eaacb0d40ef5938caab5d4c8fb82130f53d52ca68a83"
 
 [[files]]
 file = "config/valkyrienskies/vs_common.json"
-hash = "80b0161bbd450eb2e8c64fcd3e643694c052bf43e9e79a985fb639b7a4782466"
+hash = "b79fd15ca7286dcfa731ca333f6cffe160a46225e41479cc968dd5d8e24df3a8"
 
 [[files]]
 file = "config/valkyrienskies/vs_core_server.json"
-hash = "55e2c132fe6b203e1f11cbf8b8da5841e9e26814e8cbfbf33457e8b6bd65a465"
+hash = "b5e925768d331bbd202a7f57f9d32719a730387798b30cba8593d4b6e6b5763a"
 
 [[files]]
 file = "config/valkyrienskies/vs_server.json"
-hash = "3001b184297897ae6048e4db7428b9758775c253be1156237266039a350e5d0b"
+hash = "0c17c70683f44cb8445d6a12a1af48b4d6af7615f356fa28cdbbdb2fbcf0132f"
 
 [[files]]
 file = "config/vmp.properties"
