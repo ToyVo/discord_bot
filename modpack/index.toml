@@ -502,39 +502,39 @@ hash = "9dd105eb404830a866f936672179caba237f174c21bdc31c7756442339241131"
 
 [[files]]
 file = "config/apotheosis/adventure.cfg"
-hash = "88f535a95a8dbb787543b87f5f0656d55056c1aa976107fd7b0e3db1d6902cf2"
+hash = "20ccee8432767cf56362b7a158f8a27a5d2ea2628c496ec528063bf709001256"
 
 [[files]]
 file = "config/apotheosis/apotheosis.cfg"
-hash = "9665f22f77597b42cf5adc02e351253525fd76dd45b885f258dafbb038a24e26"
+hash = "7b78aadde067ed6ac31b87a0a28702c8d782a0dbc45a55fd7ab678772de3d15e"
 
 [[files]]
 file = "config/apotheosis/ench.cfg"
-hash = "6fbf05e2719f095908f8196a694f6a8f36bc39c7d5e71644b0ea55e025c8b80f"
+hash = "557cc1b6ba1369f5d2459054cc2b9e9f91c58b9cdecb0a3023a911b435b1a9c8"
 
 [[files]]
 file = "config/apotheosis/enchantments.cfg"
-hash = "e49ecd2d3a2a182ff04d6fd32d5f94281fca1c09017ad539a493228659520a4e"
+hash = "8937e9c9cef68023cfb20b998d0f3723e3e63ccc973ea1e06eaf178e1cc6c2eb"
 
 [[files]]
 file = "config/apotheosis/garden.cfg"
-hash = "8dea2945143e4e9e5bb0c6460296ad42a45ad95518d75a9ae36e2645c1f1e2be"
+hash = "dea4d260e6eac868297c0f9cd80545fd6b54f7344c678b89edda980a3fc5e8cf"
 
 [[files]]
 file = "config/apotheosis/names.cfg"
-hash = "f8bf9705d3f92cf967e6c965e83ca33e2db2f43f6be74293b34caad8bc7e9be8"
+hash = "293923b7b575c9dcb3ba099bb6b0906543eb7c8d57891b6c9019fd661deb069a"
 
 [[files]]
 file = "config/apotheosis/potion.cfg"
-hash = "eb5ccfa9af9f8723d9012193f4fd623373038dc323b30262f6d9ab3e2286853c"
+hash = "41cbb8ec035cdefaf47ca7ca71187b41eb8ce67905f825cc05e3c8dd8ba2702e"
 
 [[files]]
 file = "config/apotheosis/spawner.cfg"
-hash = "9c18328b82e424ca37ab9f05f8b5fc7992e93d3cf2647363dc5b55dfd1615dc7"
+hash = "2754c23d924e54503f79735a93c024cadf2a1a2e1ab0fa4acc6c49d4012c5d44"
 
 [[files]]
 file = "config/apotheosis/village.cfg"
-hash = "e107b59d9f2fc528d7f0f705fc96db903ca897af2151e91a1eb5e8ab2c338996"
+hash = "9c06164bad9a22d779a4986dc231071e7a9d3bc8f1d7d67fa277999e510d2a78"
 
 [[files]]
 file = "config/appleskin-client.toml"
