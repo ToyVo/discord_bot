@@ -55,8 +55,13 @@ hash = "0a1d5aeaae3975eaa4bb3a98e91852f797a5095794af70df41d50841c57ca347"
 metafile = true
 
 [[files]]
+file = "mods/applied-energistics-2-wireless-terminals.pw.toml"
+hash = "13a3593cd47946c34d07c2a379f0ec70a7dcdb11b6260a676b04ff95c47f8195"
+metafile = true
+
+[[files]]
 file = "mods/applied-mekanistics.pw.toml"
-hash = "e86f6cb8be0b72ee9920dd3745fec63eb46300d06ae78e3beb5a08dedc8ed46b"
+hash = "bd9f67f0985aa97b0faabbee9fdfd2e36c93352b0067f26de880dc8c968b70ea"
 metafile = true
 
 [[files]]
@@ -470,8 +475,18 @@ hash = "7e5650077be558af414ad2248b9f1881fdd072ef822293846c1d2f0a85082eb3"
 metafile = true
 
 [[files]]
+file = "mods/entity-model-features.pw.toml"
+hash = "2f999d64f4814687238fc352a6d9c53ade4714d974b4a292e71ac6a401beca46"
+metafile = true
+
+[[files]]
 file = "mods/entityculling.pw.toml"
 hash = "2497b7f5fefc096dedf5bcb0fcecba182b40339fb8410f6699605fdc5d32b06b"
+metafile = true
+
+[[files]]
+file = "mods/entitytexturefeatures.pw.toml"
+hash = "e104aa7dc513a9d1f83c029dda46bd0f8b45773f4300a00b062f791f8b7b0c18"
 metafile = true
 
 [[files]]
@@ -610,6 +625,11 @@ hash = "908b489fa3e2d7a52b36a3ba693dcf3f5471d37f4b7ee6919995c2ce109575ae"
 metafile = true
 
 [[files]]
+file = "mods/inventory-profiles-next.pw.toml"
+hash = "49e93f4024865587cfbc140a710bf4fd99efae0feb26a802cf61315a9ba7dc74"
+metafile = true
+
+[[files]]
 file = "mods/item-collectors.pw.toml"
 hash = "34c8ac7715990893e956fea24204013a52193684c1e55251cf3334bafb0bcf56"
 metafile = true
@@ -657,6 +677,16 @@ metafile = true
 [[files]]
 file = "mods/l_enders-cataclysm.pw.toml"
 hash = "022899fd1ebdd51b21f99142b170c1a5aec41951b35fe3ffac535daaaea03bd6"
+metafile = true
+
+[[files]]
+file = "mods/libipn.pw.toml"
+hash = "f0f6f08c04b4a081c132f39c8efb53e8c2fdf735a8ceb2ea3de43d4a0a9aa48d"
+metafile = true
+
+[[files]]
+file = "mods/lighty.pw.toml"
+hash = "2839c6f9108aef66f6b80323bbb4094eb04d055c0d4f09aafd813e59fa06bc9b"
 metafile = true
 
 [[files]]
@@ -790,6 +820,11 @@ hash = "22ffca942573f1c39cc6c495122a31706a12eeb655c013c6c017aa1306ccaf7b"
 metafile = true
 
 [[files]]
+file = "mods/mod-name-tooltip.pw.toml"
+hash = "0f37846b5bc38059aad5800e48e22a7d24b915ef553e3241af2b63e9ba864237"
+metafile = true
+
+[[files]]
 file = "mods/modelfix.pw.toml"
 hash = "23007c9b06315a062ca923911d9fd89066946f6f52df31c06548fa8bc241b55c"
 metafile = true
@@ -862,6 +897,11 @@ metafile = true
 [[files]]
 file = "mods/octo-lib.pw.toml"
 hash = "ab4cb8adc490899c37f63b8dcae74e5f1daaacdc2da3951611b5460dc15e3070"
+metafile = true
+
+[[files]]
+file = "mods/oculus.pw.toml"
+hash = "075118dc36a83ea88c25dc5a1bdba0fb34bcb725873b9f55ea217801b6095244"
 metafile = true
 
 [[files]]
@@ -1242,4 +1282,9 @@ metafile = true
 [[files]]
 file = "resourcepacks/aquamarine-resoucepack-1.20+.pw.toml"
 hash = "f8731d3f21c07342098e2a505037b396e6579719c3c8ecda499e19860a22c84d"
+metafile = true
+
+[[files]]
+file = "resourcepacks/fresh-animations.pw.toml"
+hash = "39e55baebd76de39ee4b416bc7d16a3cb9630621dc40900b2d7b03de033d4462"
 metafile = true
