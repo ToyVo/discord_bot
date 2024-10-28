@@ -7697,6 +7697,11 @@ hash = "43bd0de3b867581d9e806c36d70096f427100bcb47c248121247e81f1f07a0d5"
 metafile = true
 
 [[files]]
+file = "mods/connector.pw.toml"
+hash = "a71da6b2e8a7654cdc2936e0ac684fbcbed513eb07b32f68f39497c27fe0de1d"
+metafile = true
+
+[[files]]
 file = "mods/construction-wand.pw.toml"
 hash = "119a7506c39a296fc3cd7d6f874c08b2664082811ba95daf2b98f27f398fb980"
 metafile = true
@@ -8017,6 +8022,11 @@ hash = "840c6fccf772c01c5986272e897d6386771f023fbfa89d404c66416ba378f6ee"
 metafile = true
 
 [[files]]
+file = "mods/forgified-fabric-api.pw.toml"
+hash = "83e5ef8ddf5f41c33cde52de9b4991067e8701ecb89353c3a5219a55f6ff04d5"
+metafile = true
+
+[[files]]
 file = "mods/framework.pw.toml"
 hash = "c54736c6ca21387a33ec422e2dac89789869c4b61705cfaddf69535a2c8008d7"
 metafile = true
@@ -8332,6 +8342,11 @@ hash = "79686fd4a5bdf8fee2bf67adf8e310c8e6a6eb7cbeb04c55f2b92770b3f1100e"
 metafile = true
 
 [[files]]
+file = "mods/mutant-monsters.pw.toml"
+hash = "6529f55293851714d814fa53a71b8af9182fbaae0f77313efe241f89ca5c485d"
+metafile = true
+
+[[files]]
 file = "mods/mystical-agradditions.pw.toml"
 hash = "65fd9c78fbbc624d10940c10e3aaba3bde0b696f9cafb456498c1e490ebae3d1"
 metafile = true
@@ -8442,6 +8457,11 @@ hash = "8da73006c589cc42fa26c0b1cfd7714a423112119b238738300d8d889b1abba6"
 metafile = true
 
 [[files]]
+file = "mods/puzzles-lib.pw.toml"
+hash = "09deeddd9aafe7378ef20894b86145cb86f93c1f114ec72f4456ec5f0310f598"
+metafile = true
+
+[[files]]
 file = "mods/rebornstorage.pw.toml"
 hash = "02bdcb95ad370287103eacc5edc4fb84f0054a509de3b5a5699bf35f0c9f0dce"
 metafile = true
@@ -8479,6 +8499,11 @@ metafile = true
 [[files]]
 file = "mods/resourceful-lib.pw.toml"
 hash = "33c1012df4c3267ee9e70509001739908b2f2c72ae0b2728a750b3516644aa2c"
+metafile = true
+
+[[files]]
+file = "mods/rpgdifficulty.pw.toml"
+hash = "4ee7d09be289eda3a0e6f706c6779245937f3527dafdbf07aaa0fc1126bb0ca1"
 metafile = true
 
 [[files]]
