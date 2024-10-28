@@ -8342,6 +8342,11 @@ hash = "79686fd4a5bdf8fee2bf67adf8e310c8e6a6eb7cbeb04c55f2b92770b3f1100e"
 metafile = true
 
 [[files]]
+file = "mods/more-overlays-updated.pw.toml"
+hash = "869c69737f60d1009b4f40b84409326170f2a1b6c327fc333854e5e8cb90d294"
+metafile = true
+
+[[files]]
 file = "mods/mutant-monsters.pw.toml"
 hash = "6529f55293851714d814fa53a71b8af9182fbaae0f77313efe241f89ca5c485d"
 metafile = true
