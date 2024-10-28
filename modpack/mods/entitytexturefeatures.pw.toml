@@ -11,3 +11,8 @@ hash = "e6463fb80bc89ec3f106c031bb975b24f7c6c667"
 [update.modrinth]
 mod-id = "BVzZfTc1"
 version = "GOfMvUim"
+
+[option]
+optional = true
+default = false
+description = "required for fresh animations"

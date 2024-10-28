@@ -1,0 +1,13 @@
+name = "SimpleOres2"
+filename = "SimpleOres2-1.20.1-6.0.0.3.jar"
+side = "both"
+
+[download]
+url = "https://cdn.modrinth.com/data/51dAkghQ/versions/GsmO9nWW/SimpleOres2-1.20.1-6.0.0.3.jar"
+hash-format = "sha1"
+hash = "034cd282e5dd7d00289e08f5138d0ddac8f3b74d"
+
+[update]
+[update.modrinth]
+mod-id = "51dAkghQ"
+version = "GsmO9nWW"

@@ -11,3 +11,9 @@ hash = "f71c3fa60bb7dc5999965d951569e4db8d23c694"
 [update.modrinth]
 mod-id = "4I1XuqiY"
 version = "SwaXdYpi"
+
+[option]
+optional = true
+default = false
+description = "required for fresh animations"
+

@@ -15,3 +15,4 @@ version = "vVuYfukI"
 [option]
 optional = true
 default = false
+description = "required for shaders"

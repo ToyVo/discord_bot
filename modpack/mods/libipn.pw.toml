@@ -11,3 +11,8 @@ hash = "3e7c7fcdc037a6ae3d9146e718d87fc83f88f6d5"
 [update.modrinth]
 mod-id = "onSQdWhM"
 version = "pdAXmKcS"
+
+[option]
+optional = true
+default = false
+description = "required for IPN"

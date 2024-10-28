@@ -1,0 +1,13 @@
+name = "SimpleCoreLib"
+filename = "SimpleCoreLib-1.20.1-6.0.1.2.jar"
+side = "both"
+
+[download]
+url = "https://cdn.modrinth.com/data/mA7yWMPS/versions/BgMT8cxQ/SimpleCoreLib-1.20.1-6.0.1.2.jar"
+hash-format = "sha1"
+hash = "1a97a3f1bce416d27c2879e1f497a4852862da54"
+
+[update]
+[update.modrinth]
+mod-id = "mA7yWMPS"
+version = "BgMT8cxQ"

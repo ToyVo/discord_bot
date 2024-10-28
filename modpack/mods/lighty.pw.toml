@@ -11,3 +11,8 @@ hash = "4a567699f0c88d957851ac5231760c350e5e0f5b"
 [update.modrinth]
 mod-id = "yjvKidNM"
 version = "9xbi0x5Q"
+
+[option]
+optional = true
+default = false
+description = "Light level mod"

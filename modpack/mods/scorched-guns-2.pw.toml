@@ -1,13 +1,13 @@
 name = "Scorched Guns 2"
-filename = "ScorchedGuns-0.3.2.5-1.20.1.jar"
+filename = "ScorchedGuns-0.3.5-1.20.1.jar"
 side = "both"
 
 [download]
-url = "https://cdn.modrinth.com/data/lDzXAiqs/versions/3DadKqko/ScorchedGuns-0.3.2.5-1.20.1.jar"
+url = "https://cdn.modrinth.com/data/lDzXAiqs/versions/518yFRDe/ScorchedGuns-0.3.5-1.20.1.jar"
 hash-format = "sha1"
-hash = "bfe1c02f0705fadfeb162484310c9ff7a6a405cb"
+hash = "968529238496458e749fda96e5278ad9e8590b84"
 
 [update]
 [update.modrinth]
 mod-id = "lDzXAiqs"
-version = "3DadKqko"
+version = "518yFRDe"
