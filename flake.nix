@@ -217,25 +217,6 @@
                       "${cfg.minecraft.datadir}:/data"
                     ];
                   };
-                  backups.service = {
-                    image = "docker.io/itzg/mc-backup";
-                    env_file = [ cfg.env_file ];
-                    environment = {
-                      BACKUP_METHOD = "rclone";
-                      BACKUP_INTERVAL = "2h";
-                      RCON_HOST = "mc";
-                      INITIAL_DELAY = 0;
-                      PAUSE_IF_NO_PLAYERS = "true";
-                      RLONE_REMOTE = "proton";
-                      RLONE_COMPRESS_METHOD = "zstd";
-                      RLONE_DEST_DIR = "minecraft-modded-backup";
-                    };
-                    volumes = [
-                      "${cfg.minecraft.datadir}:/data:ro"
-                      "${cfg.rclone_dir}:/tmp/.config/rclone"
-                    ];
-                    depends_on.mc.condition = "service_healthy";
-                  };
                 };
                 minecraft-geyser.settings.services = {
                   mc.service = {
@@ -265,24 +246,6 @@
                     volumes = [
                       "${cfg.minecraft_geyser.datadir}:/data"
                     ];
-                  };
-                  backups.service = {
-                    image = "docker.io/itzg/mc-backup";
-                    env_file = [ cfg.env_file ];
-                    environment = {
-                      BACKUP_INTERVAL = "2h";
-                      RCON_HOST = "mc";
-                      INITIAL_DELAY = 0;
-                      PAUSE_IF_NO_PLAYERS = "true";
-                      RLONE_REMOTE = "proton";
-                      RLONE_COMPRESS_METHOD = "zstd";
-                      RLONE_DEST_DIR = "minecraft-geyser-backup";
-                    };
-                    volumes = [
-                      "${cfg.minecraft_geyser.datadir}:/data:ro"
-                      "${cfg.rclone_dir}:/tmp/.config/rclone"
-                    ];
-                    depends_on.mc.condition = "service_healthy";
                   };
                 };
                 terraria.settings.services.terraria.service = {
