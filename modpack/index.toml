@@ -8172,11 +8172,6 @@ hash = "f0f6f08c04b4a081c132f39c8efb53e8c2fdf735a8ceb2ea3de43d4a0a9aa48d"
 metafile = true
 
 [[files]]
-file = "mods/lighty.pw.toml"
-hash = "2839c6f9108aef66f6b80323bbb4094eb04d055c0d4f09aafd813e59fa06bc9b"
-metafile = true
-
-[[files]]
 file = "mods/lionfish-api.pw.toml"
 hash = "b67788df2948db7f4aa69bb01ad539d4d54e5f1f823ed6d6bfaf2949cf972518"
 metafile = true
