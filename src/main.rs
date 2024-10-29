@@ -50,6 +50,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
         base_url: var("BASE_URL").unwrap_or_default(),
         client_id: var("DISCORD_CLIENT_ID").unwrap_or_default(),
         client_secret: var("DISCORD_CLIENT_SECRET").unwrap_or_default(),
+        db,
         discord_bot_spam_channel_id: var("DISCORD_BOT_SPAM_CHANNEL_ID").unwrap_or_default(),
         discord_minecraft_geyser_channel_id: var("DISCORD_MINECRAFT_GEYSER_CHANNEL_ID")
             .unwrap_or_default(),
@@ -74,7 +75,6 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
             env!("CARGO_PKG_REPOSITORY"),
             env!("CARGO_PKG_VERSION")
         ),
-        db,
     }));
 
     let interval_state = state.clone();

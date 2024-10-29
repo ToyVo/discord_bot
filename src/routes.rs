@@ -39,6 +39,7 @@ pub struct InnerState {
     pub base_url: String,
     pub client_id: String,
     pub client_secret: String,
+    pub db: Surreal<Client>,
     pub discord_bot_spam_channel_id: String,
     pub discord_minecraft_geyser_channel_id: String,
     pub discord_minecraft_modded_channel_id: String,
@@ -54,7 +55,6 @@ pub struct InnerState {
     pub tshock_base_url: String,
     pub tshock_token: String,
     pub user_agent: String,
-    pub db: Surreal<Client>,
 }
 
 pub fn app() -> Router<AppState> {

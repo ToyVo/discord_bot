@@ -1,0 +1,17 @@
+name: "Build and Cache"
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  aarch64-linux:
+    runs-on: [self-hosted, linux, ARM64]
+
+    steps:
+      - run: nix build github:$GITHUB_REPOSITORY/$GITHUB_SHA --json | nix run nixpkgs#jq -- -r '.[].outputs | to_entries[].value' | nix run nixpkgs#cachix push toyvo
+        env:
+          CACHIX_AUTH_TOKEN: ${{ secrets.CACHIX_AUTH_TOKEN }}
