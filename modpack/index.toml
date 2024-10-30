@@ -7862,11 +7862,6 @@ hash = "0448ff51462480e146c264fcbbbc1e39867ab5c4ffeaded0f79962d145409a77"
 metafile = true
 
 [[files]]
-file = "mods/deeperdarker.pw.toml"
-hash = "bc4d10d9ec79b464c27a65a4432af741bceb774287dbb24f8d607afbd70e0d9c"
-metafile = true
-
-[[files]]
 file = "mods/domum-ornamentum.pw.toml"
 hash = "360053eae8a35a1f879f70007e19b2839964947ee1536d9b18a128443f36d7b0"
 metafile = true
@@ -8559,16 +8554,6 @@ metafile = true
 [[files]]
 file = "mods/simple-voice-chat.pw.toml"
 hash = "4d261b6713df4695a8bc08a1eeba9d700873b01d74312f4b26bef8dc1e37ebdc"
-metafile = true
-
-[[files]]
-file = "mods/simplecore-api.pw.toml"
-hash = "5782d95d92557b22c76b2733af8f442903cadea93ec44662a9d3688633cb5d36"
-metafile = true
-
-[[files]]
-file = "mods/simpleores.pw.toml"
-hash = "b00f7bed0579de09dfe434bf3ae5f7cae2d04e01a8b1c8232e51ec3d596e6006"
 metafile = true
 
 [[files]]

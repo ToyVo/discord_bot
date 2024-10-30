@@ -1,5 +1,6 @@
 mod discord_handlers;
 mod minecraft_handler;
+mod log_viewer;
 
 use axum::extract::FromRef;
 use axum::http::StatusCode;
@@ -16,6 +17,7 @@ use tower_http::services::ServeDir;
 
 use crate::routes::discord_handlers::{discord_oauth_callback, interactions, verify_user};
 use crate::routes::minecraft_handler::modpack_info_endpoint;
+use crate::routes::log_viewer::log_viewer_endpoint;
 
 #[derive(Clone)]
 pub struct AppState(pub Arc<InnerState>);
@@ -49,9 +51,12 @@ pub struct InnerState {
     pub key: Key,
     pub minecraft_geyser_rcon_address: String,
     pub minecraft_geyser_rcon_password: String,
+    pub minecraft_geyser_service_name: String,
     pub minecraft_modded_rcon_address: String,
     pub minecraft_modded_rcon_password: String,
+    pub minecraft_modded_service_name: String,
     pub public_key: String,
+    pub terraria_service_name: String,
     pub tshock_base_url: String,
     pub tshock_token: String,
     pub user_agent: String,
@@ -65,6 +70,7 @@ pub fn app() -> Router<AppState> {
         .route("/terms-of-service", get(terms_of_service_endpoint))
         .route("/privacy-policy", get(privacy_policy_endpoint))
         .route("/minecraft", get(modpack_info_endpoint))
+        .route("/logs", get(log_viewer_endpoint))
         .route("/", get(app_endpoint))
         .nest_service(
             "/modpack",
@@ -77,7 +83,7 @@ pub fn app() -> Router<AppState> {
         .fallback_service(get(not_found_endpoint))
 }
 
-fn html_app<S: AsRef<str>>(content: Element, title: S) -> Html<String> {
+pub fn html_app<S: AsRef<str>>(content: Element, title: S) -> Html<String> {
     // render the rsx! macro to HTML
     Html(format!(
         r#"<!DOCTYPE html>

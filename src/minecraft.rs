@@ -102,7 +102,7 @@ pub async fn track_players(state: &AppState) -> Result<(), AppError> {
         &state.minecraft_modded_rcon_password,
         &state.discord_minecraft_modded_channel_id,
         "minecraft_modded",
-        "arion-minecraft-modded.service",
+        &state.minecraft_modded_service_name,
         state,
     )
     .await?;
@@ -111,7 +111,7 @@ pub async fn track_players(state: &AppState) -> Result<(), AppError> {
         &state.minecraft_geyser_rcon_password,
         &state.discord_minecraft_geyser_channel_id,
         "minecraft_geyser",
-        "arion-minecraft-geyser.service",
+        &state.minecraft_geyser_service_name,
         state,
     )
     .await?;

@@ -63,10 +63,13 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
         minecraft_geyser_rcon_address: var("MINECRAFT_RCON_ADDRESS")
             .unwrap_or(String::from("localhost:25576")),
         minecraft_geyser_rcon_password: var("RCON_PASSWORD").unwrap_or_default(),
+        minecraft_geyser_service_name: var("MINECRAFT_MODDED_SERVICE_NAME").unwrap_or(String::from("arion-minecraft-geyser.service")),
         minecraft_modded_rcon_address: var("MINECRAFT_RCON_ADDRESS")
             .unwrap_or(String::from("localhost:25575")),
         minecraft_modded_rcon_password: var("RCON_PASSWORD").unwrap_or_default(),
+        minecraft_modded_service_name: var("MINECRAFT_MODDED_SERVICE_NAME").unwrap_or(String::from("arion-minecraft-modded.service")),
         public_key: var("DISCORD_PUBLIC_KEY").unwrap_or_default(),
+        terraria_service_name: var("TERRARIA_SERVICE_NAME").unwrap_or(String::from("arion-terraria.service")),
         tshock_base_url: var("TSHOCK_REST_BASE_URL")
             .unwrap_or(String::from("http://localhost:7878")),
         tshock_token: var("TSHOCK_APPLICATION_TOKEN").unwrap_or_default(),

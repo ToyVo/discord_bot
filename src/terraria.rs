@@ -114,10 +114,10 @@ pub fn get_player_changes(before: &[String], after: &[String]) -> Option<String>
 }
 
 pub async fn track_players(state: &AppState) -> Result<(), AppError> {
-    if !systemctl_running("arion-terraria.service").await? {
+    if !systemctl_running(&state.terraria_service_name).await? {
         return Ok(())
     }
-    
+
     // get nicknames
     let status = get_status(state).await?;
     let players = status

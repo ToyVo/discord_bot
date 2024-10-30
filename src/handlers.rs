@@ -1,8 +1,6 @@
 use serde_json::{json, Value};
 use serenity::all::{CommandDataOptionValue, CommandInteraction};
-use serenity::builder::{
-    CreateInteractionResponse, CreateInteractionResponseMessage,
-};
+use serenity::builder::{CreateInteractionResponse, CreateInteractionResponseMessage};
 use serenity::json;
 use tokio::process::Command;
 
@@ -33,24 +31,32 @@ pub async fn handle_slash_command(
                 tokio::spawn(async move {
                     let server = payload.data.name;
                     let action = s.as_str();
-                    let service_name = format!("arion-{server}.service");
-                    let content = match Command::new("systemctl")
-                        .args([action, service_name.as_str()])
-                        .output()
-                        .await
-                    {
-                        Ok(_) => {
-                            format!("Successfully {action}ed {server} server")
-                        }
-                        Err(e) => {
-                            tracing::error!("Could not {action} {server} server\n{e:#?}");
-                            format!("There was an issue {action}ing {server} server")
-                        }
+                    let service_name = match server.as_str() {
+                        "minecraft-geyser" => Some(&state.minecraft_geyser_service_name),
+                        "minecraft-modded" => Some(&state.minecraft_modded_service_name),
+                        "terraria" => Some(&state.terraria_service_name),
+                        _ => None,
                     };
-                    if let Err(e) =
-                        replace_initial_interaction_response(content, payload.token, &state).await
-                    {
-                        tracing::error!("Error submitting followup {e:#?}")
+                    if let Some(service_name) = service_name {
+                        let content = match Command::new("systemctl")
+                            .args([action, service_name.as_str()])
+                            .output()
+                            .await
+                        {
+                            Ok(_) => {
+                                format!("Successfully {action}ed {server} server")
+                            }
+                            Err(e) => {
+                                tracing::error!("Could not {action} {server} server\n{e:#?}");
+                                format!("There was an issue {action}ing {server} server")
+                            }
+                        };
+                        if let Err(e) =
+                            replace_initial_interaction_response(content, payload.token, &state)
+                                .await
+                        {
+                            tracing::error!("Error submitting followup {e:#?}")
+                        }
                     }
                 });
                 return Ok(json::to_value(CreateInteractionResponse::Message(
