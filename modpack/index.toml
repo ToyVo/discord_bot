@@ -8047,11 +8047,6 @@ hash = "1d49ff9d4f8f52975e51893b36fdddd4ec7a09e17d46664272ed27f62940980c"
 metafile = true
 
 [[files]]
-file = "mods/fusion.pw.toml"
-hash = "0e1e977dcdaa0faea640cce61a6269a630b4be50b4913c2bc86827b6bd2f5e49"
-metafile = true
-
-[[files]]
 file = "mods/geckolib.pw.toml"
 hash = "315418827149c57947f77defb618c60eb776209bb5ae966d1a4b5af1bca96539"
 metafile = true
