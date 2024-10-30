@@ -7968,7 +7968,7 @@ metafile = true
 
 [[files]]
 file = "mods/essential.pw.toml"
-hash = "262fd7311a25481fc6c0d83d066b4d77b4e02d2ff9af0bbd73bb805916f726af"
+hash = "4f6df42b75cd6be177907af067f3a57ce8e9950dbe9417b11f43b3c1ac0cb722"
 metafile = true
 
 [[files]]
@@ -8133,7 +8133,7 @@ metafile = true
 
 [[files]]
 file = "mods/just-enough-resources-jer.pw.toml"
-hash = "83219231c7af4677a2507e01ca0faf39acca69f05506148d1d6a3e47b4c94562"
+hash = "e4e7107718506a0ed56224ca1ea1dc0de79d40d68b37bee918d30bec35bd3cb8"
 metafile = true
 
 [[files]]
