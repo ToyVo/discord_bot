@@ -15,10 +15,14 @@ pub async fn log_viewer_endpoint(
         .get("unit")
         .unwrap_or(&state.minecraft_modded_service_name);
 
-    if unit.as_str() != state.minecraft_modded_service_name
-        && unit.as_str() != state.minecraft_geyser_service_name
-        && unit.as_str() != state.terraria_service_name
-    {
+    let valid_services = [
+        state.minecraft_modded_service_name.clone(),
+        state.minecraft_geyser_service_name.clone(),
+        state.terraria_service_name.clone(),
+        String::from("discord_bot.service")
+    ];
+
+    if !valid_services.contains(unit) {
         return (StatusCode::BAD_REQUEST, html_app(rsx! {"400"}, "400"));
     }
 
@@ -27,14 +31,15 @@ pub async fn log_viewer_endpoint(
     } else {
         "1 hour ago"
     };
-    let until = query.get("until");
 
     let mut journalctl_args = vec!["-u", unit, "-S", since];
 
-    if let Some(until) = until {
+    if let Some(until) = query.get("until") {
         journalctl_args.push("-U");
         journalctl_args.push(until);
     }
+
+    tracing::debug!("Fetching logs: {journalctl_args:#?}");
 
     let output = Command::new("journalctl")
         .args(journalctl_args)
@@ -49,7 +54,36 @@ pub async fn log_viewer_endpoint(
                     StatusCode::OK,
                     html_app(
                         rsx! {
-                            div {
+                            label {
+                                r#for: "unit-select",
+                                "Unit"
+                            }
+                            select {
+                                id: "unit-select",
+                                for service in valid_services {
+                                    option {
+                                        value: service.clone()
+                                    }
+                                }
+                            }
+                            label {
+                                r#for: "since-input",
+                                "Since"
+                            }
+                            input {
+                                id: "since-input",
+                                r#type: "datetime-local"
+                            }
+                            label {
+                                r#for: "until-input",
+                                "Until"
+                            }
+                            input {
+                                id: "until-input",
+                                r#type: "datetime-local"
+                            }
+                            pre {
+                                margin: 0,
                                 {logs}
                             }
                         },
