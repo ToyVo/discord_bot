@@ -16,8 +16,8 @@ pub async fn log_viewer_endpoint(
         .unwrap_or(&state.minecraft_modded_service_name);
 
     if unit.as_str() != state.minecraft_modded_service_name
-        || unit.as_str() != state.minecraft_geyser_service_name
-        || unit.as_str() != state.terraria_service_name
+        && unit.as_str() != state.minecraft_geyser_service_name
+        && unit.as_str() != state.terraria_service_name
     {
         return (StatusCode::BAD_REQUEST, html_app(rsx! {"400"}, "400"));
     }
