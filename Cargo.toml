@@ -5,6 +5,11 @@ authors = ["Collin Diekvoss <collin@diekvoss.com>"]
 edition = "2021"
 repository = "https://github.com/toyvo/discord_bot"
 
+[features]
+db = []
+watchers = ["db"]
+
+
 [dependencies]
 anyhow = "1"
 axum = "0"

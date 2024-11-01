@@ -1,12 +1,24 @@
+use crate::error::AppError;
+use crate::routes::{html_app, AppState};
 use axum::extract::{Query, State};
 use axum::http::StatusCode;
 use axum::response::IntoResponse;
 use dioxus::prelude::*;
-use tokio::time::{Instant,Duration};
 use std::collections::HashMap;
 use tokio::process::Command;
+use tokio::time::{Duration, Instant};
 
-use crate::routes::{html_app, AppState};
+async fn get_logs(args: &[&str]) -> Result<String, AppError> {
+    #[cfg(target_os = "linux")]
+    let output = Command::new("journalctl").args(args).output().await?;
+    #[cfg(target_os = "linux")]
+    let logs = std::str::from_utf8(&output.stdout)?;
+    #[cfg(target_os = "linux")]
+    let logs = logs.to_string();
+    #[cfg(not(target_os = "linux"))]
+    let logs = format!("No logs available on this platform. {args:#?}");
+    Ok(logs)
+}
 
 pub async fn log_viewer_endpoint(
     Query(query): Query<HashMap<String, String>>,
@@ -45,76 +57,65 @@ pub async fn log_viewer_endpoint(
 
     tracing::debug!("Fetching logs: {journalctl_args:#?}");
 
-    let output = Command::new("journalctl")
-        .args(journalctl_args)
-        .output()
-        .await;
-
-    match output {
-        Ok(output) => {
-            let logs = std::str::from_utf8(&output.stdout);
-            match logs {
-                Ok(logs) => (
-                    StatusCode::OK,
-                    html_app(
-                        rsx! {
-                            div {
-                                label {
-                                    r#for: "unit-select",
-                                    "Unit"
-                                }
-                                select {
-                                    id: "unit-select",
-                                    for service in valid_services {
-                                        option {
-                                            value: service.clone(),
-                                            {service.clone()}
-                                        }
-                                    }
-                                }
-                                label {
-                                    r#for: "since-input",
-                                    "Since"
-                                }
-                                input {
-                                    id: "since-input",
-                                    r#type: "datetime-local",
-                                    value: ""
-                                }
-                                label {
-                                    r#for: "until-input",
-                                    "Until"
-                                }
-                                input {
-                                    id: "until-input",
-                                    r#type: "datetime-local",
-                                    value: ""
+    match get_logs(&journalctl_args).await {
+        Ok(logs) => (
+            StatusCode::OK,
+            html_app(
+                rsx! {
+                    form {
+                        label {
+                            r#for: "unit-select",
+                            "Unit"
+                        }
+                        select {
+                            id: "unit-select",
+                            name: "unit",
+                            for service in valid_services {
+                                option {
+                                    value: service.clone(),
+                                    selected: service == unit.as_str(),
+                                    {service.clone()}
                                 }
                             }
-                            pre {
-                                margin: 0,
-                                {logs}
-                            }
-                        },
-                        "Log Viewer",
-                    ),
-                ),
-                Err(e) => {
-                    tracing::error!("failed to parse journalctl: {e:#?}");
-                    (
-                        StatusCode::INTERNAL_SERVER_ERROR,
-                        html_app(
-                            rsx! {
-                                "500"
-                            },
-                            "500",
-                        ),
-                    )
-                }
-            }
-        }
+                        }
+                        label {
+                            r#for: "since-input",
+                            "Since"
+                        }
+                        input {
+                            id: "since-input",
+                            name: "since",
+                            r#type: "datetime-local",
+                            value: ""
+                        }
+                        label {
+                            r#for: "until-input",
+                            "Until"
+                        }
+                        input {
+                            id: "until-input",
+                            name: "until",
+                            r#type: "datetime-local",
+                            value: ""
+                        }
+                        small {
+                            "Note: time must be in Central Time, Standard (UTC-6) (Winter), Daylight (UTC-5) (Summer)"
+                        }
+                        button {
+                            r#type: "submit",
+                            "Fetch Logs"
+                        }
+                    }
+                    pre {
+                        margin: 0,
+                        {logs}
+                    }
+                },
+                "Log Viewer",
+            ),
+        ),
         Err(e) => {
-            tracing::error!("failed to run journalctl: {e:#?}");
+            tracing::error!("failed to get logs: {e:#?}");
             (
                 StatusCode::INTERNAL_SERVER_ERROR,
                 html_app(

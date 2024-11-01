@@ -1,11 +1,19 @@
+#[cfg(feature = "watchers")]
 use crate::error::AppError;
+#[cfg(feature = "watchers")]
 use crate::models::{GamePlayers, GameStatus};
+#[cfg(feature = "watchers")]
 use crate::routes::AppState;
+#[cfg(feature = "watchers")]
 use crate::terraria::get_player_changes;
+#[cfg(feature = "watchers")]
 use crate::{discord_utils, systemctl_running};
+#[cfg(feature = "watchers")]
 use anyhow::Context;
+#[cfg(feature = "watchers")]
 use serde_json::json;
 
+#[cfg(feature = "watchers")]
 async fn track_generic<S: AsRef<str>>(
     minecraft_rcon_address: S,
     minecraft_rcon_password: S,
@@ -96,6 +104,7 @@ async fn track_generic<S: AsRef<str>>(
     Ok(())
 }
 
+#[cfg(feature = "watchers")]
 pub async fn track_players(state: &AppState) -> Result<(), AppError> {
     track_generic(
         &state.minecraft_modded_rcon_address,

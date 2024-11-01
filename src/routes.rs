@@ -1,6 +1,6 @@
 mod discord_handlers;
-mod minecraft_handler;
 mod log_viewer;
+mod minecraft_handler;
 
 use axum::extract::FromRef;
 use axum::http::StatusCode;
@@ -11,13 +11,15 @@ use axum_extra::extract::cookie::Key;
 use dioxus::prelude::*;
 use std::ops::Deref;
 use std::sync::Arc;
+#[cfg(feature = "db")]
 use surrealdb::engine::remote::ws::Client;
+#[cfg(feature = "db")]
 use surrealdb::Surreal;
 use tower_http::services::ServeDir;
 
 use crate::routes::discord_handlers::{discord_oauth_callback, interactions, verify_user};
-use crate::routes::minecraft_handler::modpack_info_endpoint;
 use crate::routes::log_viewer::log_viewer_endpoint;
+use crate::routes::minecraft_handler::modpack_info_endpoint;
 
 #[derive(Clone)]
 pub struct AppState(pub Arc<InnerState>);
@@ -41,6 +43,7 @@ pub struct InnerState {
     pub base_url: String,
     pub client_id: String,
     pub client_secret: String,
+    #[cfg(feature = "db")]
     pub db: Surreal<Client>,
     pub discord_bot_spam_channel_id: String,
     pub discord_minecraft_geyser_channel_id: String,

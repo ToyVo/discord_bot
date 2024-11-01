@@ -5,8 +5,11 @@ use axum::{
 use axum_extra::extract::cookie::Key;
 use serenity::all::{CommandOptionType, CommandType, CreateCommand, CreateCommandOption};
 use std::{env::var, net::SocketAddr, sync::Arc, time::Duration};
+#[cfg(feature = "db")]
 use surrealdb::engine::remote::ws::Ws;
+#[cfg(feature = "db")]
 use surrealdb::opt::auth::Root;
+#[cfg(feature = "db")]
 use surrealdb::Surreal;
 use tokio::{net::TcpListener, signal};
 use tower::ServiceBuilder;
@@ -19,6 +22,7 @@ use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
 
 use discord_bot::discord_utils::install_global_commands;
 use discord_bot::routes::{app, AppState, InnerState};
+#[cfg(feature = "watchers")]
 use discord_bot::{minecraft, terraria};
 
 #[tokio::main]
@@ -31,10 +35,14 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
         .with(tracing_subscriber::fmt::layer().without_time())
         .init();
 
+    #[cfg(feature = "db")]
     let surreal_bind = var("SURREAL_BIND").unwrap_or(String::from("127.0.0.1:8000"));
+    #[cfg(feature = "db")]
     let surreal_pass = var("SURREAL_PASS").unwrap_or_default();
+    #[cfg(feature = "db")]
     let db = Surreal::new::<Ws>(surreal_bind).await?;
 
+    #[cfg(feature = "db")]
     db.signin(Root {
         username: "root",
         password: surreal_pass.as_str(),
@@ -42,6 +50,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
     .await?;
 
     // Select a specific namespace / database
+    #[cfg(feature = "db")]
     db.use_ns(env!("CARGO_PKG_NAME"))
         .use_db(env!("CARGO_PKG_NAME"))
         .await?;
@@ -50,6 +59,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
         base_url: var("BASE_URL").unwrap_or_default(),
         client_id: var("DISCORD_CLIENT_ID").unwrap_or_default(),
         client_secret: var("DISCORD_CLIENT_SECRET").unwrap_or_default(),
+        #[cfg(feature = "db")]
         db,
         discord_bot_spam_channel_id: var("DISCORD_BOT_SPAM_CHANNEL_ID").unwrap_or_default(),
         discord_minecraft_geyser_channel_id: var("DISCORD_MINECRAFT_GEYSER_CHANNEL_ID")
@@ -63,13 +73,16 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
         minecraft_geyser_rcon_address: var("MINECRAFT_RCON_ADDRESS")
             .unwrap_or(String::from("localhost:25576")),
         minecraft_geyser_rcon_password: var("RCON_PASSWORD").unwrap_or_default(),
-        minecraft_geyser_service_name: var("MINECRAFT_MODDED_SERVICE_NAME").unwrap_or(String::from("arion-minecraft-geyser.service")),
+        minecraft_geyser_service_name: var("MINECRAFT_MODDED_SERVICE_NAME")
+            .unwrap_or(String::from("arion-minecraft-geyser.service")),
         minecraft_modded_rcon_address: var("MINECRAFT_RCON_ADDRESS")
             .unwrap_or(String::from("localhost:25575")),
         minecraft_modded_rcon_password: var("RCON_PASSWORD").unwrap_or_default(),
-        minecraft_modded_service_name: var("MINECRAFT_MODDED_SERVICE_NAME").unwrap_or(String::from("arion-minecraft-modded.service")),
+        minecraft_modded_service_name: var("MINECRAFT_MODDED_SERVICE_NAME")
+            .unwrap_or(String::from("arion-minecraft-modded.service")),
         public_key: var("DISCORD_PUBLIC_KEY").unwrap_or_default(),
-        terraria_service_name: var("TERRARIA_SERVICE_NAME").unwrap_or(String::from("arion-terraria.service")),
+        terraria_service_name: var("TERRARIA_SERVICE_NAME")
+            .unwrap_or(String::from("arion-terraria.service")),
         tshock_base_url: var("TSHOCK_REST_BASE_URL")
             .unwrap_or(String::from("http://localhost:7878")),
         tshock_token: var("TSHOCK_APPLICATION_TOKEN").unwrap_or_default(),
@@ -80,6 +93,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
         ),
     }));
 
+    #[cfg(feature = "watchers")]
     let interval_state = state.clone();
 
     let commands = [
@@ -121,6 +135,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
         tracing::error!("Failed to update slash commands\n{e:#?}");
     }
 
+    #[cfg(feature = "watchers")]
     tokio::spawn(async move {
         let mut interval = tokio::time::interval(Duration::from_secs(60));
         loop {

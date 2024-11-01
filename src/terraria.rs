@@ -1,10 +1,13 @@
-use crate::{discord_utils, systemctl_running};
 use crate::error::AppError;
+#[cfg(feature = "watchers")]
 use crate::models::{GamePlayers, GameStatus};
 use crate::routes::AppState;
+#[cfg(feature = "watchers")]
+use crate::{discord_utils, systemctl_running};
+#[cfg(feature = "watchers")]
 use anyhow::Context;
 use oxford_join::OxfordJoin;
-use serde_json::{json, Value};
+use serde_json::Value;
 
 /// expected structure:
 /// not returning anything parsed just in case
@@ -113,9 +116,10 @@ pub fn get_player_changes(before: &[String], after: &[String]) -> Option<String>
     )
 }
 
+#[cfg(feature = "watchers")]
 pub async fn track_players(state: &AppState) -> Result<(), AppError> {
     if !systemctl_running(&state.terraria_service_name).await? {
-        return Ok(())
+        return Ok(());
     }
 
     // get nicknames
