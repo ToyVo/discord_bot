@@ -83,6 +83,7 @@ pub fn get_player_changes(before: &[String], after: &[String]) -> Option<String>
     // player1, player2, and player3 have joined. player4, player5, and player6 have disconnected
     Some(
         [
+            String::from("@silent"),
             if !joined.is_empty() {
                 format!(
                     "{} {} joined",

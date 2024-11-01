@@ -3,10 +3,12 @@ use crate::routes::{html_app, AppState};
 use axum::extract::{Query, State};
 use axum::http::StatusCode;
 use axum::response::IntoResponse;
+use chrono::Utc;
 use dioxus::prelude::*;
 use std::collections::HashMap;
+#[cfg(target_os = "linux")]
 use tokio::process::Command;
-use tokio::time::{Duration, Instant};
+use tokio::time::Duration;
 
 async fn get_logs(args: &[&str]) -> Result<String, AppError> {
     #[cfg(target_os = "linux")]
@@ -39,21 +41,22 @@ pub async fn log_viewer_endpoint(
         return (StatusCode::BAD_REQUEST, html_app(rsx! {"400"}, "400"));
     }
 
-    let now = Instant::now();
+    let now = Utc::now();
 
     let since = if let Some(since) = query.get("since") {
-        since.as_str()
+        since
     } else {
-        let ts = now - Duration::from_secs(3600);
-        "1 hour ago"
+        let one_hour_ago = now - Duration::from_secs(3600);
+        &one_hour_ago.format("%Y-%m-%dT%H:%M:%S").to_string()
     };
 
-    let mut journalctl_args = vec!["-u", unit, "-S", since];
+    let until = if let Some(until) = query.get("until") {
+        until
+    } else {
+        &now.format("%Y-%m-%dT%H:%M:%S").to_string()
+    };
 
-    if let Some(until) = query.get("until") {
-        journalctl_args.push("-U");
-        journalctl_args.push(until);
-    }
+    let journalctl_args = vec!["--utc", "-u", unit, "-S", since, "-U", until];
 
     tracing::debug!("Fetching logs: {journalctl_args:#?}");
 
@@ -86,7 +89,7 @@ pub async fn log_viewer_endpoint(
                             id: "since-input",
                             name: "since",
                             r#type: "datetime-local",
-                            value: ""
+                            value: since.as_str(),
                         }
                         label {
                             r#for: "until-input",
@@ -96,10 +99,10 @@ pub async fn log_viewer_endpoint(
                             id: "until-input",
                             name: "until",
                             r#type: "datetime-local",
-                            value: ""
+                            value: until.as_str(),
                         }
                         small {
-                            "Note: time must be in Central Time, Standard (UTC-6) (Winter), Daylight (UTC-5) (Summer)"
+                            "Note: time must be in UTC"
                         }
                         button {
                             r#type: "submit",

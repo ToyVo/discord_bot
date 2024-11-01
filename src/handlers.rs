@@ -44,11 +44,11 @@ pub async fn handle_slash_command(
                             .await
                         {
                             Ok(_) => {
-                                format!("Successfully {action}ed {server} server")
+                                format!("@silent Successfully {action}ed {server} server")
                             }
                             Err(e) => {
                                 tracing::error!("Could not {action} {server} server\n{e:#?}");
-                                format!("There was an issue {action}ing {server} server")
+                                format!("@silent There was an issue {action}ing {server} server")
                             }
                         };
                         if let Err(e) =
@@ -61,17 +61,17 @@ pub async fn handle_slash_command(
                 });
                 return Ok(json::to_value(CreateInteractionResponse::Message(
                     CreateInteractionResponseMessage::new().content(format!(
-                        "Successfully requested {action} of {server} server"
+                        "@silent Successfully requested {action} of {server} server"
                     )),
                 ))?);
             }
             ("terraria", "action", CommandDataOptionValue::String(s)) if s == "broadcast" => {
                 tokio::spawn(async move {
                     let content = match terraria::broadcast(&state, "").await {
-                        Ok(_) => String::from("Successfully broadcast message to terraria server"),
+                        Ok(_) => String::from("@silent Successfully broadcast message to terraria server"),
                         Err(e) => {
                             tracing::error!("Could not send message to terraria server\n{e:#?}");
-                            String::from("There was an issue sending message to terraria server")
+                            String::from("@silent There was an issue sending message to terraria server")
                         }
                     };
                     if let Err(e) =
@@ -82,7 +82,7 @@ pub async fn handle_slash_command(
                 });
                 return Ok(json::to_value(CreateInteractionResponse::Message(
                     CreateInteractionResponseMessage::new()
-                        .content("Successfully requested broadcast of message to terraria server"),
+                        .content("@silent Successfully requested broadcast of message to terraria server"),
                 ))?);
             }
             (_, _, _) => {}
