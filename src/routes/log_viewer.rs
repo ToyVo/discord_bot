@@ -3,7 +3,7 @@ use crate::routes::{html_app, AppState};
 use axum::extract::{Query, State};
 use axum::http::StatusCode;
 use axum::response::IntoResponse;
-use chrono::Utc;
+use chrono::prelude::*;
 use dioxus::prelude::*;
 use std::collections::HashMap;
 #[cfg(target_os = "linux")]
@@ -44,19 +44,20 @@ pub async fn log_viewer_endpoint(
     let now = Utc::now();
 
     let since = if let Some(since) = query.get("since") {
-        since
+        since.parse::<DateTime<Utc>>().unwrap_or(now - Duration::from_secs(3600))
     } else {
-        let one_hour_ago = now - Duration::from_secs(3600);
-        &one_hour_ago.format("%Y-%m-%dT%H:%M:%S").to_string()
+        now - Duration::from_secs(3600)
     };
 
     let until = if let Some(until) = query.get("until") {
-        until
+        until.parse::<DateTime<Utc>>().unwrap_or(now)
     } else {
-        &now.format("%Y-%m-%dT%H:%M:%S").to_string()
+        now
     };
 
-    let journalctl_args = vec!["--utc", "-u", unit, "-S", since, "-U", until];
+    let since_string = since.to_rfc3339();
+    let until_string = since.to_rfc3339();
+    let journalctl_args = vec!["--utc", "-u", unit, "-S", since_string.as_str(), "-U", until_string.as_str()];
 
     tracing::debug!("Fetching logs: {journalctl_args:#?}");
 
@@ -89,7 +90,7 @@ pub async fn log_viewer_endpoint(
                             id: "since-input",
                             name: "since",
                             r#type: "datetime-local",
-                            value: since.as_str(),
+                            value: since.format("%Y-%m-%dT%H:%M:%S").to_string(),
                         }
                         label {
                             r#for: "until-input",
@@ -99,10 +100,10 @@ pub async fn log_viewer_endpoint(
                             id: "until-input",
                             name: "until",
                             r#type: "datetime-local",
-                            value: until.as_str(),
+                            value: until.format("%Y-%m-%dT%H:%M:%S").to_string(),
                         }
                         small {
-                            "Note: time must be in UTC"
+                            "Note: time shown in UTC"
                         }
                         button {
                             r#type: "submit",
