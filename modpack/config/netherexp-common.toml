@@ -117,6 +117,10 @@
 	reduce_soul_sand_slowness = false
 	#Soul Speed will no longer damage your boots when enabled
 	remove_soul_speed_durability_penalty = false
+	#Secondary and Tertiary sub-biomes will start generating if enabled
+	enable_sub_biomes = true
+	#Defines the weight for Secondary sub-biome regions
+	secondary_sub_biome_weights = 2
 
 #Particle & Sound Settings
 [particles_and_sounds]
@@ -138,34 +142,4 @@
 	glowstone_sounds = true
 	#Quartz Blocks will produce unique sounds
 	quartz_sounds = true
-
-#Experimental Settings
-[experimental]
-	#Enables the gold related configs 
-	#This feature is still experimental and is subject to change, so far has only been implemented on Fabric
-	enable_gold_tweaks = false
-	#Lets you change Golden Tools Durability 
-	#if you want the vanilla value back, set to "32"
-	gold_tools_durability = 96
-	#Lets you change Golden Tools Speed 
-	#if you want the vanilla value back, set to "12.0"
-	gold_tools_speed = 16.0
-	#Lets you change the Mining Tier of Golden Tools 
-	#VANILLA - behaves like wooden tools 
-	#STONE_LIKE - lets you break blocks stone tools can break 
-	#IRON_LIKE - lets you break blocks iron tools can break 
-	#DIAMOND_LIKE - lets you break blocks diamond tools can break 
-	# 
-	#Allowed Values: VANILLA, STONE_LIKE, IRON_LIKE, DIAMOND_LIKE
-	gold_tools_mining_tier = "VANILLA"
-	#Lets you change Golden Armor Durability Multiplier
-	gold_armor_durability = 7
-	#Defines the armor points Golden Boots give when worn
-	gold_boots_protection = 1
-	#Defines the armor points Golden Leggings give when worn
-	gold_leggings_protection = 3
-	#Defines the armor points Golden Chestplate give when worn
-	gold_chestplate_protection = 5
-	#Defines the armor points Golden Helmet give when worn
-	gold_helmet_protection = 2
 
