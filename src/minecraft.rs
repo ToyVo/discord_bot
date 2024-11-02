@@ -11,7 +11,15 @@ use crate::{discord_utils, systemctl_running};
 #[cfg(feature = "watchers")]
 use anyhow::Context;
 #[cfg(feature = "watchers")]
-use serde_json::json;
+use rcon::Connection;
+#[cfg(feature = "watchers")]
+use serenity::all::MessageFlags;
+#[cfg(feature = "watchers")]
+use serenity::builder::CreateMessage;
+#[cfg(feature = "watchers")]
+use tokio::net::TcpStream;
+#[cfg(feature = "watchers")]
+use tokio::sync::RwLock;
 
 #[cfg(feature = "watchers")]
 async fn track_generic<S: AsRef<str>>(
@@ -56,9 +64,9 @@ async fn track_generic<S: AsRef<str>>(
     if let Some(message) = get_player_changes(&last_player_names, &players) {
         tracing::info!("{}", message);
         let message = discord_utils::create_message(
-            json!({
-                "content": message
-            }),
+            CreateMessage::new()
+                .content(message)
+                .flags(MessageFlags::SUPPRESS_NOTIFICATIONS),
             &discord_minecraft_channel_id,
             state,
         )

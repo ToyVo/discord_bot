@@ -4,7 +4,7 @@ use reqwest::Method;
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
 use serenity::all::{CreateInteractionResponseFollowup, User, UserId};
-use serenity::builder::CreateCommand;
+use serenity::builder::{CreateCommand, CreateMessage};
 use serenity::interactions_endpoint::Verifier;
 
 use crate::error::AppError;
@@ -77,7 +77,7 @@ pub async fn install_global_commands(
 }
 
 pub async fn create_message<S: AsRef<str>>(
-    payload: Value,
+    payload: CreateMessage,
     channel_id: S,
     state: &AppState,
 ) -> Result<Value, AppError> {
@@ -183,15 +183,21 @@ pub async fn delete_message<S: AsRef<str>>(
     Ok(())
 }
 
-pub async fn replace_initial_interaction_response<S: AsRef<str>>(content: impl Into<String>, token: S, state: &AppState) -> Result<(), AppError> {
+pub async fn replace_initial_interaction_response<S: AsRef<str>>(
+    content: impl Into<String>,
+    token: S,
+    state: &AppState,
+) -> Result<(), AppError> {
     discord_request(
         format!(
             "webhooks/{}/{}/messages/@original",
-            state.client_id, token.as_ref()
+            state.client_id,
+            token.as_ref()
         ),
         Method::PATCH,
         Some(&CreateInteractionResponseFollowup::new().content(content)),
         state,
-    ).await?;
+    )
+    .await?;
     Ok(())
 }

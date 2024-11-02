@@ -7,9 +7,11 @@ use crate::{discord_utils, systemctl_running};
 #[cfg(feature = "watchers")]
 use anyhow::Context;
 use oxford_join::OxfordJoin;
-#[cfg(feature = "watchers")]
-use serde_json::json;
 use serde_json::Value;
+#[cfg(feature = "watchers")]
+use serenity::all::MessageFlags;
+#[cfg(feature = "watchers")]
+use serenity::builder::CreateMessage;
 
 /// expected structure:
 /// not returning anything parsed just in case
@@ -154,9 +156,9 @@ pub async fn track_players(state: &AppState) -> Result<(), AppError> {
     if let Some(message) = get_player_changes(&last_player_nicknames, &player_nicknames) {
         tracing::info!("{}", message);
         let message = discord_utils::create_message(
-            json!({
-                "content": message,
-            }),
+            CreateMessage::new()
+                .content(message)
+                .flags(MessageFlags::SUPPRESS_NOTIFICATIONS),
             &state.discord_terraria_channel_id,
             state,
         )
