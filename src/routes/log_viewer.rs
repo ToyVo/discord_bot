@@ -46,7 +46,7 @@ pub async fn log_viewer_endpoint(
     let now = Utc::now();
 
     let since = if let Some(since) = query.get("since") {
-        format!("{since}z")
+        format!("{since}Z")
             .parse::<DateTime<Utc>>()
             .unwrap_or(now - Duration::from_secs(3600))
     } else {
@@ -54,7 +54,7 @@ pub async fn log_viewer_endpoint(
     };
 
     let until = if let Some(until) = query.get("until") {
-        format!("{until}z").parse::<DateTime<Utc>>().unwrap_or(now)
+        format!("{until}Z").parse::<DateTime<Utc>>().unwrap_or(now)
     } else {
         now
     };
