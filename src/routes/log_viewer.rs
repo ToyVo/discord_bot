@@ -36,7 +36,6 @@ pub async fn log_viewer_endpoint(
         state.minecraft_modded_service_name.clone(),
         state.minecraft_geyser_service_name.clone(),
         state.terraria_service_name.clone(),
-        String::from("discord_bot.service"),
     ];
 
     if !valid_services.contains(unit) {
