@@ -60,7 +60,7 @@ pub async fn log_viewer_endpoint(
     };
 
     let since_string = since.to_rfc3339();
-    let until_string = since.to_rfc3339();
+    let until_string = until.to_rfc3339();
     let journalctl_args = vec![
         "--utc",
         "-u",
