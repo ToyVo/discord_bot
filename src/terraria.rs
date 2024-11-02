@@ -7,6 +7,8 @@ use crate::{discord_utils, systemctl_running};
 #[cfg(feature = "watchers")]
 use anyhow::Context;
 use oxford_join::OxfordJoin;
+#[cfg(feature = "watchers")]
+use serde_json::json;
 use serde_json::Value;
 
 /// expected structure:
