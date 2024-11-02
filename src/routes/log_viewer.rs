@@ -46,20 +46,30 @@ pub async fn log_viewer_endpoint(
     let now = Utc::now();
 
     let since = if let Some(since) = query.get("since") {
-        format!("{since}z").parse::<DateTime<Utc>>().unwrap_or(now - Duration::from_secs(3600))
+        format!("{since}z")
+            .parse::<DateTime<Utc>>()
+            .unwrap_or(now - Duration::from_secs(3600))
     } else {
         now - Duration::from_secs(3600)
     };
 
     let until = if let Some(until) = query.get("until") {
-        format!("{until}z").parse::<DateTime<Utc>>().unwrap_or(now - Duration::from_secs(3600))
+        format!("{until}z").parse::<DateTime<Utc>>().unwrap_or(now)
     } else {
         now
     };
 
     let since_string = since.to_rfc3339();
     let until_string = since.to_rfc3339();
-    let journalctl_args = vec!["--utc", "-u", unit, "-S", since_string.as_str(), "-U", until_string.as_str()];
+    let journalctl_args = vec![
+        "--utc",
+        "-u",
+        unit,
+        "-S",
+        since_string.as_str(),
+        "-U",
+        until_string.as_str(),
+    ];
 
     tracing::debug!("Fetching logs: {journalctl_args:#?}");
 
