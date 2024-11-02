@@ -30,6 +30,8 @@ pub async fn log_viewer_endpoint(
         .get("unit")
         .unwrap_or(&state.minecraft_modded_service_name);
 
+    tracing::debug!("{query:#?}");
+
     let valid_services = [
         state.minecraft_modded_service_name.clone(),
         state.minecraft_geyser_service_name.clone(),
@@ -44,13 +46,13 @@ pub async fn log_viewer_endpoint(
     let now = Utc::now();
 
     let since = if let Some(since) = query.get("since") {
-        since.parse::<DateTime<Utc>>().unwrap_or(now - Duration::from_secs(3600))
+        format!("{since}z").parse::<DateTime<Utc>>().unwrap_or(now - Duration::from_secs(3600))
     } else {
         now - Duration::from_secs(3600)
     };
 
     let until = if let Some(until) = query.get("until") {
-        until.parse::<DateTime<Utc>>().unwrap_or(now)
+        format!("{until}z").parse::<DateTime<Utc>>().unwrap_or(now - Duration::from_secs(3600))
     } else {
         now
     };
