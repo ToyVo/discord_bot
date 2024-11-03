@@ -9,12 +9,18 @@ use axum::routing::{get, post};
 use axum::Router;
 use axum_extra::extract::cookie::Key;
 use dioxus::prelude::*;
+#[cfg(feature = "watchers")]
+use rcon::Connection;
 use std::ops::Deref;
 use std::sync::Arc;
 #[cfg(feature = "db")]
 use surrealdb::engine::remote::ws::Client;
 #[cfg(feature = "db")]
 use surrealdb::Surreal;
+#[cfg(feature = "watchers")]
+use tokio::net::TcpStream;
+#[cfg(feature = "watchers")]
+use tokio::sync::RwLock;
 use tower_http::services::ServeDir;
 
 use crate::routes::discord_handlers::{discord_oauth_callback, interactions, verify_user};
@@ -52,9 +58,13 @@ pub struct InnerState {
     pub discord_token: String,
     pub forge_api_key: String,
     pub key: Key,
+    #[cfg(feature = "watchers")]
+    pub minecraft_geyser_connection: RwLock<Option<Connection<TcpStream>>>,
     pub minecraft_geyser_rcon_address: String,
     pub minecraft_geyser_rcon_password: String,
     pub minecraft_geyser_service_name: String,
+    #[cfg(feature = "watchers")]
+    pub minecraft_modded_connection: RwLock<Option<Connection<TcpStream>>>,
     pub minecraft_modded_rcon_address: String,
     pub minecraft_modded_rcon_password: String,
     pub minecraft_modded_service_name: String,

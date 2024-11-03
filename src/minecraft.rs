@@ -28,22 +28,44 @@ async fn track_generic<S: AsRef<str>>(
     discord_minecraft_channel_id: S,
     surreal_id: &str,
     service_name: &str,
+    connection: &RwLock<Option<Connection<TcpStream>>>,
     state: &AppState,
 ) -> Result<(), AppError> {
+    let mut con = connection.write().await;
+
     if !systemctl_running(service_name).await? {
+        if con.is_some() {
+            *con = None;
+        }
         return Ok(());
     }
 
-    let mut server = <rcon::Connection<tokio::net::TcpStream>>::builder()
-        .enable_minecraft_quirks(true)
-        .connect(
-            minecraft_rcon_address.as_ref(),
-            minecraft_rcon_password.as_ref(),
-        )
-        .await?;
+    if con.is_none() {
+        let server = <Connection<TcpStream>>::builder()
+            .enable_minecraft_quirks(true)
+            .connect(
+                minecraft_rcon_address.as_ref(),
+                minecraft_rcon_password.as_ref(),
+            )
+            .await?;
+        *con = Some(server);
+    }
+
+    let server = con.as_mut().unwrap();
 
     // list response "There are n of a max of m players online: <player1>"
-    let res = server.cmd("list").await?;
+    let res = server.cmd("list").await;
+
+    // if there is an error executing command, assume the server is down, set connection to None to try again later
+    if let Err(e) = res {
+        tracing::info!("Couldn't execute command: {e}");
+        *con = None;
+        return Ok(());
+    }
+
+    let res = res?;
+
+    tracing::debug!("{res:#?}");
 
     // Parse response to get list of player names in a vector
     let start_index = res.find(':').context("Could not find ':' in response")?;
@@ -120,6 +142,7 @@ pub async fn track_players(state: &AppState) -> Result<(), AppError> {
         &state.discord_minecraft_modded_channel_id,
         "minecraft_modded",
         &state.minecraft_modded_service_name,
+        &state.minecraft_modded_connection,
         state,
     )
     .await?;
@@ -129,6 +152,7 @@ pub async fn track_players(state: &AppState) -> Result<(), AppError> {
         &state.discord_minecraft_geyser_channel_id,
         "minecraft_geyser",
         &state.minecraft_geyser_service_name,
+        &state.minecraft_geyser_connection,
         state,
     )
     .await?;

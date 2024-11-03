@@ -70,11 +70,15 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
         discord_token: var("DISCORD_TOKEN").unwrap_or_default(),
         forge_api_key: var("FORGE_API_KEY").unwrap_or_default(),
         key: Key::generate(),
+        #[cfg(feature = "watchers")]
+        minecraft_geyser_connection: Default::default(),
         minecraft_geyser_rcon_address: var("MINECRAFT_RCON_ADDRESS")
             .unwrap_or(String::from("localhost:25576")),
         minecraft_geyser_rcon_password: var("RCON_PASSWORD").unwrap_or_default(),
         minecraft_geyser_service_name: var("MINECRAFT_MODDED_SERVICE_NAME")
             .unwrap_or(String::from("arion-minecraft-geyser.service")),
+        #[cfg(feature = "watchers")]
+        minecraft_modded_connection: Default::default(),
         minecraft_modded_rcon_address: var("MINECRAFT_RCON_ADDRESS")
             .unwrap_or(String::from("localhost:25575")),
         minecraft_modded_rcon_password: var("RCON_PASSWORD").unwrap_or_default(),
@@ -137,7 +141,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
 
     #[cfg(feature = "watchers")]
     tokio::spawn(async move {
-        let mut interval = tokio::time::interval(Duration::from_secs(60));
+        let mut interval = tokio::time::interval(Duration::from_secs(5));
         loop {
             tracing::debug!("Interval tick");
             interval.tick().await;

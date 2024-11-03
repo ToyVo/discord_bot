@@ -1,5 +1,5 @@
-use tokio::process::Command;
 use crate::error::AppError;
+use tokio::process::Command;
 
 pub mod discord_utils;
 pub mod error;
