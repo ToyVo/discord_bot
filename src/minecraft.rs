@@ -65,8 +65,6 @@ async fn track_generic<S: AsRef<str>>(
 
     let res = res?;
 
-    tracing::debug!("{res:#?}");
-
     // Parse response to get list of player names in a vector
     let start_index = res.find(':').context("Could not find ':' in response")?;
     let players = res[start_index + 1..]

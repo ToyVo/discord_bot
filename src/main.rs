@@ -143,13 +143,12 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
     tokio::spawn(async move {
         let mut interval = tokio::time::interval(Duration::from_secs(5));
         loop {
-            tracing::debug!("Interval tick");
             interval.tick().await;
             if let Err(e) = terraria::track_players(&interval_state).await {
-                tracing::error!("Failed to get status from terraria\n{e:#?}");
+                tracing::error!("Failed to get status from terraria\n{e}");
             }
             if let Err(e) = minecraft::track_players(&interval_state).await {
-                tracing::error!("Failed to get status from minecraft\n{e:#?}");
+                tracing::error!("Failed to get status from minecraft\n{e}");
             }
         }
     });
