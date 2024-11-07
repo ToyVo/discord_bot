@@ -8508,6 +8508,11 @@ hash = "09deeddd9aafe7378ef20894b86145cb86f93c1f114ec72f4456ec5f0310f598"
 metafile = true
 
 [[files]]
+file = "mods/re-avaritia.pw.toml"
+hash = "d089342615a9a78cec6e08ac01a474fc4938da9c7feab9d16444d558c1dfa21e"
+metafile = true
+
+[[files]]
 file = "mods/rebornstorage.pw.toml"
 hash = "02bdcb95ad370287103eacc5edc4fb84f0054a509de3b5a5699bf35f0c9f0dce"
 metafile = true
