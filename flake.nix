@@ -152,8 +152,10 @@
             };
             config = lib.mkIf cfg.enable {
               nixpkgs.overlays = [ self.overlays.default ];
+              services.surrealdb.enable = lib.mkDefault true;
               systemd.services = {
                 discord_bot = {
+                  after = [ "surrealdb.service" ];
                   wantedBy = [ "multi-user.target" ];
                   serviceConfig = {
                     WorkingDirectory = ./.;
