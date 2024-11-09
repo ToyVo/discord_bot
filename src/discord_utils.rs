@@ -22,7 +22,7 @@ pub async fn store_discord_tokens(
     user_id: &UserId,
     tokens: &DiscordTokens<String>,
 ) -> Result<(), AppError> {
-    tracing::info!("{user_id}, {tokens:#?}");
+    tracing::info!("{user_id}, {tokens:?}");
     Ok(())
 }
 
@@ -53,7 +53,7 @@ pub async fn discord_request<S: AsRef<str>, T: Serialize + ?Sized>(
 
     let response = builder.send().await?;
 
-    tracing::debug!("response from {method} {url}: {response:#?}");
+    tracing::debug!("response from {method} {url}: {response:?}");
 
     let content_type = response.headers().get(header::CONTENT_TYPE.as_str());
     if content_type.is_some()
@@ -73,7 +73,7 @@ pub async fn install_global_commands(
 ) -> Result<Value, AppError> {
     let endpoint = format!("applications/{}/commands", state.client_id);
     let response = discord_request(endpoint, Method::PUT, Some(&commands), state).await?;
-    Ok(response.context("json not found")?)
+    Ok(response.context("Response not found from installing commands")?)
 }
 
 pub async fn create_message<S: AsRef<str>>(
@@ -83,7 +83,7 @@ pub async fn create_message<S: AsRef<str>>(
 ) -> Result<Value, AppError> {
     let endpoint = format!("channels/{}/messages", channel_id.as_ref());
     let response = discord_request(endpoint, Method::POST, Some(&payload), state).await?;
-    let json = response.context("json not found")?;
+    let json = response.context("Response not found from creating message")?;
     tracing::info!(
         "Message created {}",
         json.get("id")

@@ -136,7 +136,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
     ];
 
     if let Err(e) = install_global_commands(&commands, &state).await {
-        tracing::error!("Failed to update slash commands\n{e:#?}");
+        tracing::error!("Failed to update slash commands: {e}");
     }
 
     #[cfg(feature = "watchers")]
@@ -145,10 +145,10 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
         loop {
             interval.tick().await;
             if let Err(e) = terraria::track_players(&interval_state).await {
-                tracing::error!("Failed to get status from terraria\n{e}");
+                tracing::error!("Failed to get status from terraria: {e}");
             }
             if let Err(e) = minecraft::track_players(&interval_state).await {
-                tracing::error!("Failed to get status from minecraft\n{e}");
+                tracing::error!("Failed to get status from minecraft: {e}");
             }
         }
     });
@@ -194,10 +194,10 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
             .with_graceful_shutdown(shutdown_signal())
             .await
             {
-                tracing::error!("Failed to start service\n{e:#?}");
+                tracing::error!("Failed to start service: {e}");
             }
         }
-        Err(e) => tracing::error!("Failed to bind listener\n{e:#?}"),
+        Err(e) => tracing::error!("Failed to bind listener: {e}"),
     }
 
     Ok(())

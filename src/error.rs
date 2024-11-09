@@ -21,19 +21,19 @@ pub enum AppError {
 impl IntoResponse for AppError {
     fn into_response(self) -> Response {
         match self {
-            AppError::Anyhow(e) => tracing::error!("Anyhow error: {:#}", e),
-            AppError::Cron(e) => tracing::error!("Cron error: {:#}", e),
-            AppError::EnvVar(e) => tracing::error!("Environment variable error: {:#}", e),
-            AppError::Io(e) => tracing::error!("IO error: {:#}", e),
-            AppError::Json(e) => tracing::error!("JSON error: {:#}", e),
-            AppError::Other(e) => tracing::error!("Other error: {:#}", e),
-            AppError::Parse(e) => tracing::error!("Parse error: {:#}", e),
-            AppError::Rcon(e) => tracing::error!("RCON error: {:#}", e),
-            AppError::Request(e) => tracing::error!("Request error: {:#}", e),
-            AppError::Serenity(e) => tracing::error!("Serenity error: {:#}", e),
-            AppError::Surreal(e) => tracing::error!("Surreal error: {:#}", e),
-            AppError::Toml(e) => tracing::error!("TOML error: {:#}", e),
-            AppError::UTF8(e) => tracing::error!("UTF-8 error: {:#}", e),
+            AppError::Anyhow(e) => tracing::error!("Anyhow error: {e:}"),
+            AppError::Cron(e) => tracing::error!("Cron error: {e:}"),
+            AppError::EnvVar(e) => tracing::error!("Environment variable error: {e}"),
+            AppError::Io(e) => tracing::error!("IO error: {e:}"),
+            AppError::Json(e) => tracing::error!("JSON error: {e:}"),
+            AppError::Other(e) => tracing::error!("Other error: {e:}"),
+            AppError::Parse(e) => tracing::error!("Parse error: {e:}"),
+            AppError::Rcon(e) => tracing::error!("RCON error: {e:}"),
+            AppError::Request(e) => tracing::error!("Request error: {e:}"),
+            AppError::Serenity(e) => tracing::error!("Serenity error: {e:}"),
+            AppError::Surreal(e) => tracing::error!("Surreal error: {e:}"),
+            AppError::Toml(e) => tracing::error!("TOML error: {e:}"),
+            AppError::UTF8(e) => tracing::error!("UTF-8 error: {e:}"),
         }
 
         (StatusCode::INTERNAL_SERVER_ERROR, "Something went wrong").into_response()

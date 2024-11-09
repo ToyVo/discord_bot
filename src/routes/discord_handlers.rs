@@ -22,7 +22,7 @@ pub async fn interactions(
     State(state): State<AppState>,
     body: String,
 ) -> Result<impl IntoResponse, AppError> {
-    tracing::info!("Request received: {headers:#?} {body}");
+    tracing::info!("Request received: {headers:?} {body}");
 
     // Parse request body and verifies incoming requests
     if discord_utils::verify_request(&headers, &body, &state)
@@ -35,7 +35,7 @@ pub async fn interactions(
     let payload = match Json::<Interaction>::from_bytes(body.as_bytes()) {
         Ok(payload) => payload.0,
         Err(e) => {
-            tracing::error!("Could not parse body\n{e:#?}");
+            tracing::error!("Could not parse body: {e}");
             return Ok((StatusCode::BAD_REQUEST, Json(json!({}))));
         }
     };

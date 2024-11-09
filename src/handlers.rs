@@ -13,7 +13,7 @@ pub async fn handle_slash_command(
     payload: CommandInteraction,
     state: AppState,
 ) -> Result<Value, AppError> {
-    tracing::info!("Received discord slash command request, {:#?}", &payload);
+    tracing::info!("Received discord slash command request, {:?}", &payload);
     for option in payload.data.options {
         // TODO: single source of truth for this and install_global_commands
         match (
@@ -47,7 +47,7 @@ pub async fn handle_slash_command(
                                 format!("Successfully {action}ed {server} server")
                             }
                             Err(e) => {
-                                tracing::error!("Could not {action} {server} server\n{e:#?}");
+                                tracing::error!("Could not {action} {server} server: {e}");
                                 format!("There was an issue {action}ing {server} server")
                             }
                         };
@@ -55,7 +55,7 @@ pub async fn handle_slash_command(
                             replace_initial_interaction_response(content, payload.token, &state)
                                 .await
                         {
-                            tracing::error!("Error submitting followup {e:#?}")
+                            tracing::error!("Error submitting followup {e:?}")
                         }
                     }
                 });
@@ -72,14 +72,14 @@ pub async fn handle_slash_command(
                     let content = match terraria::broadcast(&state, "").await {
                         Ok(_) => String::from("Successfully broadcast message to terraria server"),
                         Err(e) => {
-                            tracing::error!("Could not send message to terraria server\n{e:#?}");
+                            tracing::error!("Could not send message to terraria server: {e}");
                             String::from("There was an issue sending message to terraria server")
                         }
                     };
                     if let Err(e) =
                         replace_initial_interaction_response(content, payload.token, &state).await
                     {
-                        tracing::error!("Error submitting followup {e:#?}")
+                        tracing::error!("Error submitting followup {e:?}")
                     }
                 });
                 return Ok(json::to_value(CreateInteractionResponse::Message(

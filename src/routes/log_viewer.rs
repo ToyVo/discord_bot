@@ -18,7 +18,7 @@ async fn get_logs(args: &[&str]) -> Result<String, AppError> {
     #[cfg(target_os = "linux")]
     let logs = logs.to_string();
     #[cfg(not(target_os = "linux"))]
-    let logs = format!("No logs available on this platform. {args:#?}");
+    let logs = format!("No logs available on this platform. {args:?}");
     Ok(logs)
 }
 
@@ -30,7 +30,7 @@ pub async fn log_viewer_endpoint(
         .get("unit")
         .unwrap_or(&state.minecraft_modded_service_name);
 
-    tracing::debug!("{query:#?}");
+    tracing::debug!("{query:?}");
 
     let valid_services = [
         state.minecraft_modded_service_name.clone(),
@@ -70,7 +70,7 @@ pub async fn log_viewer_endpoint(
         until_string.as_str(),
     ];
 
-    tracing::debug!("Fetching logs: {journalctl_args:#?}");
+    tracing::debug!("Fetching logs: {journalctl_args:?}");
 
     match get_logs(&journalctl_args).await {
         Ok(logs) => (
@@ -130,7 +130,7 @@ pub async fn log_viewer_endpoint(
             ),
         ),
         Err(e) => {
-            tracing::error!("failed to get logs: {e:#?}");
+            tracing::error!("failed to get logs: {e:?}");
             (
                 StatusCode::INTERNAL_SERVER_ERROR,
                 html_app(
