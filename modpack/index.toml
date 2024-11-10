@@ -8433,6 +8433,11 @@ hash = "1c4971b54ae5774ba1af7e871371b49f16c6fc6c31a44e6bc096370e6b9f3e17"
 metafile = true
 
 [[files]]
+file = "mods/observable.pw.toml"
+hash = "c95ef4c5245095d5c8636ae6a0f946aecf77918a034efe9164007e4094b0fa58"
+metafile = true
+
+[[files]]
 file = "mods/octo-lib.pw.toml"
 hash = "ab4cb8adc490899c37f63b8dcae74e5f1daaacdc2da3951611b5460dc15e3070"
 metafile = true
