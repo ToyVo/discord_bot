@@ -206,7 +206,7 @@
                       TYPE = "FORGE";
                       FORGE_VERSION = "47.3.10";
                       VERSION = "1.20.1";
-                      MEMORY = "16g";
+                      MEMORY = "20g";
                       OPS = "4cb4aff4-a0ed-4eaf-b912-47825b2ed30d";
                       EXISTING_OPS_FILE = "MERGE";
                       EXISTING_WHITELIST_FILE = "MERGE";
