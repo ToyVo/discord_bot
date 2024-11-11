@@ -220,6 +220,7 @@
                       ALLOW_FLIGHT = "TRUE";
                       DIFFICULTY = "hard";
                       VIEW_DISTANCE = "8";
+                      SIMULATION_DISTANCE = "8";
                       MAX_CHAINED_NEIGHBOR_UPDATES="10000";
                       MAX_WORLD_SIZE="12500";
                       RATE_LIMIT="100";
