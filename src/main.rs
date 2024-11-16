@@ -158,7 +158,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
             }
             #[cfg(feature = "backups")]
             if let Err(e) = minecraft::backup_world(&interval_state).await {
-                tracing::error!("Failed to backup minecraft: {e} {}", Backtrace::capture());
+                tracing::error!("Failed to backup minecraft: {e}");
             }
         }
     });

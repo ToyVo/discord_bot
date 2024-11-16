@@ -267,23 +267,14 @@ pub async fn backup_data_dir<S: AsRef<str>>(
 
         std::fs::create_dir_all(format!("{}/backups", minecraft_data_dir))?;
 
+        tracing::debug!("Creating backup: tar {}", &tar_args.join(" "));
         let output = Command::new("tar")
             // add --exclude PATTERN as many times as needed
             .args(&tar_args)
             .output()
             .await?;
 
-        match output.status.code() {
-            Some(0) => {
-                // success
-            }
-            Some(1) => {
-                // file changed during the tar operation, so we need to re-run it
-            }
-            _ => {
-                // some error
-            }
-        }
+        tracing::debug!("tar output: {}", output.status);
 
         if server_running {
             let server = con.as_mut().unwrap();
