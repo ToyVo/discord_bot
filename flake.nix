@@ -330,6 +330,8 @@
                       nativeBuildInputs =
                         with pkgs;
                         [
+                          installShellFiles
+                          makeBinaryWrapper
                           libiconv
                           openssl
                           pkg-config
