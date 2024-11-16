@@ -2,6 +2,8 @@ use crate::error::AppError;
 #[cfg(feature = "watchers")]
 use crate::models::{GamePlayers, GameStatus};
 use crate::routes::AppState;
+#[cfg(feature = "db")]
+use crate::DB;
 #[cfg(feature = "watchers")]
 use crate::{discord_utils, systemctl_running};
 #[cfg(feature = "watchers")]
@@ -14,8 +16,6 @@ use serde_json::Value;
 use serenity::all::MessageFlags;
 #[cfg(feature = "watchers")]
 use serenity::builder::CreateMessage;
-#[cfg(feature = "db")]
-use crate::DB;
 
 /// expected structure:
 /// not returning anything parsed just in case
@@ -149,8 +149,7 @@ pub async fn track_players(state: &AppState) -> Result<(), AppError> {
         })
         .collect();
 
-    let last_player_nicknames: Option<GamePlayers> =
-        DB.select(("players", "terraria")).await?;
+    let last_player_nicknames: Option<GamePlayers> = DB.select(("players", "terraria")).await?;
     let last_player_nicknames = if let Some(data) = last_player_nicknames {
         data.players
     } else {

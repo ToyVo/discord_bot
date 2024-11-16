@@ -10,6 +10,8 @@ use crate::models::{GamePlayers, GameStatus};
 use crate::routes::AppState;
 #[cfg(feature = "watchers")]
 use crate::terraria::get_player_changes;
+#[cfg(feature = "db")]
+use crate::DB;
 #[cfg(feature = "watchers")]
 use crate::{discord_utils, systemctl_running};
 #[cfg(feature = "watchers")]
@@ -28,8 +30,6 @@ use tokio::net::TcpStream;
 use tokio::process::Command;
 #[cfg(feature = "watchers")]
 use tokio::sync::RwLock;
-#[cfg(feature = "db")]
-use crate::DB;
 
 #[cfg(feature = "watchers")]
 async fn initiate_connection<S: AsRef<str>>(
@@ -70,7 +70,14 @@ async fn track_generic<S: AsRef<str>>(
     connection: &RwLock<Option<Connection<TcpStream>>>,
     state: &AppState,
 ) -> Result<(), AppError> {
-    if !initiate_connection(minecraft_rcon_address, minecraft_rcon_password, service_name, connection).await? {
+    if !initiate_connection(
+        minecraft_rcon_address,
+        minecraft_rcon_password,
+        service_name,
+        connection,
+    )
+    .await?
+    {
         let _upserted: Option<GamePlayers> = DB
             .upsert(("players", surreal_id))
             .content(GamePlayers {
@@ -82,7 +89,7 @@ async fn track_generic<S: AsRef<str>>(
         return Ok(());
     }
 
-    let mut con   = connection.write().await;
+    let mut con = connection.write().await;
     let server = con.as_mut().unwrap();
 
     // list response "There are n of a max of m players online: <player1>"
@@ -191,15 +198,15 @@ pub async fn backup_data_dir<S: AsRef<str>>(
 ) -> Result<(), AppError> {
     let now = Utc::now();
     let backup_interval = std::time::Duration::from_secs(7200);
-    
-    let last_backup_time = match DB.select(("last_backup", surreal_id)).await{
+
+    let last_backup_time = match DB.select(("last_backup", surreal_id)).await {
         Ok(Some(data)) => data,
         _ => GameBackup {
             game: surreal_id.to_string(),
             // ensure a backup is created
             time: now - backup_interval,
             filename: "".to_string(),
-        }
+        },
     };
 
     let last_player_names = match DB.select(("players", surreal_id)).await {
@@ -209,7 +216,7 @@ pub async fn backup_data_dir<S: AsRef<str>>(
             // ensure a backup is created
             time: now - backup_interval,
             players: vec![],
-        }
+        },
     };
 
     let should_backup_if_no_players = last_backup_time.time <= last_player_names.time;
@@ -217,9 +224,15 @@ pub async fn backup_data_dir<S: AsRef<str>>(
     if last_backup_time.time + backup_interval <= now
         && (!last_player_names.players.is_empty() || should_backup_if_no_players)
     {
-        let server_running =initiate_connection(minecraft_rcon_address, minecraft_rcon_password, service_name, connection).await?;
+        let server_running = initiate_connection(
+            minecraft_rcon_address,
+            minecraft_rcon_password,
+            service_name,
+            connection,
+        )
+        .await?;
 
-        let mut con   = connection.write().await;
+        let mut con = connection.write().await;
 
         if server_running {
             let server = con.as_mut().unwrap();
@@ -229,11 +242,23 @@ pub async fn backup_data_dir<S: AsRef<str>>(
             fs_sync().await?;
         }
 
-        let mut tar_args = vec![String::from("-C"), minecraft_data_dir.clone(), String::from("--zstd"), String::from("-cf")];
+        let mut tar_args = vec![
+            String::from("-C"),
+            minecraft_data_dir.clone(),
+            String::from("--zstd"),
+            String::from("-cf"),
+        ];
         let backup_name = format!("{surreal_id}-{}.tar.zst", now.format("%Y-%m-%d_%H-%M-%S"));
         let backup_destination = format!("{}/backups/{backup_name}", minecraft_data_dir.clone());
         tar_args.push(backup_destination.clone());
-        let exclude_patterns = vec!["*.jar", "cache", "logs", "*.tmp", "backups", "server.properties"];
+        let exclude_patterns = vec![
+            "*.jar",
+            "cache",
+            "logs",
+            "*.tmp",
+            "backups",
+            "server.properties",
+        ];
         for pattern in exclude_patterns {
             let arg = format!("--exclude={pattern}");
             tar_args.push(arg);
@@ -247,7 +272,7 @@ pub async fn backup_data_dir<S: AsRef<str>>(
             .args(&tar_args)
             .output()
             .await?;
-        
+
         match output.status.code() {
             Some(0) => {
                 // success
@@ -274,7 +299,7 @@ pub async fn backup_data_dir<S: AsRef<str>>(
                 time: now,
             })
             .await?;
-        
+
         let rclone_destination = format!("{}:{surreal_id}", &state.rclone_remote);
         let output = Command::new("rclone")
             .args(["copy", &backup_destination, &rclone_destination])
@@ -285,8 +310,11 @@ pub async fn backup_data_dir<S: AsRef<str>>(
             .args(["ls", &rclone_destination])
             .output()
             .await?;
-        
-        tracing::info!("Backups in remote: {:?}", String::from_utf8(output.stdout).unwrap())
+
+        tracing::info!(
+            "Backups in remote: {:?}",
+            String::from_utf8(output.stdout).unwrap()
+        )
         // TODO: prune old backups
     }
     Ok(())
@@ -303,7 +331,7 @@ pub async fn backup_world(state: &AppState) -> Result<(), AppError> {
         &state.minecraft_modded_connection,
         state,
     )
-        .await?;
+    .await?;
     backup_data_dir(
         &state.minecraft_geyser_rcon_address,
         &state.minecraft_geyser_rcon_password,
@@ -313,6 +341,6 @@ pub async fn backup_world(state: &AppState) -> Result<(), AppError> {
         &state.minecraft_geyser_connection,
         state,
     )
-        .await?;
+    .await?;
     Ok(())
 }

@@ -166,8 +166,8 @@
                     ${pkgs.discord_bot}/bin/discord_bot
                   '';
                 };
-                arion-terraria.wantedBy = lib.mkForce [];
-                arion-minecraft-geyser.wantedBy = lib.mkForce [];
+                arion-terraria.wantedBy = lib.mkForce [ ];
+                arion-minecraft-geyser.wantedBy = lib.mkForce [ ];
               };
               networking.firewall = {
                 allowedTCPPorts =
@@ -222,9 +222,9 @@
                       DIFFICULTY = "hard";
                       VIEW_DISTANCE = "8";
                       SIMULATION_DISTANCE = "8";
-                      MAX_CHAINED_NEIGHBOR_UPDATES="10000";
-                      MAX_WORLD_SIZE="12500";
-                      RATE_LIMIT="100";
+                      MAX_CHAINED_NEIGHBOR_UPDATES = "10000";
+                      MAX_WORLD_SIZE = "12500";
+                      RATE_LIMIT = "100";
                       RCON_CMDS_STARTUP = "gamerule playersSleepingPercentage 0\ngamerule mobGriefing false\ngamerule doFireTick false\ngamerule doInsomnia false";
                     };
                     volumes = [
@@ -297,32 +297,49 @@
             src = ./.;
           };
           cargoNix = pkgs.callPackage "${generatedCargoNix}/default.nix" {
-            rootFeatures = ["db" "watchers" "backups"];
+            rootFeatures = [
+              "db"
+              "watchers"
+              "backups"
+            ];
             buildRustCrateForPkgs =
               pkgs:
               pkgs.buildRustCrate.override {
                 defaultCrateOverrides = pkgs.defaultCrateOverrides // {
-                  discord_bot = attrs: {
-                    version = "${cargoToml.package.version}-${rev}";
-                    buildInputs =
-                      with pkgs.darwin.apple_sdk.frameworks;
-                      lib.optionals pkgs.stdenv.isDarwin [
-                        CoreServices
-                        SystemConfiguration
+                  discord_bot =
+                    attrs:
+                    let
+                      runtimeDeps = with pkgs; [
+                        gnutar
+                        rclone
+                        zstd
                       ];
-                    nativeBuildInputs = with pkgs; [
-                      libiconv
-                      openssl
-                      pkg-config
-                      rustPlatform.bindgenHook
-                      rclone
-                      gnutar
-                      zstd
-                    ];
-                    OPENSSL_NO_VENDOR = 1;
-                    OPENSSL_LIB_DIR = "${lib.getLib pkgs.openssl}/lib";
-                    OPENSSL_DIR = "${lib.getDev pkgs.openssl}";
-                  };
+                    in
+                    {
+                      version = "${cargoToml.package.version}-${rev}";
+                      postInstall = ''
+                        wrapProgram $out/bin/discord_bot \
+                          --prefix PATH : ${lib.makeBinPath runtimeDeps}
+                      '';
+                      buildInputs =
+                        with pkgs.darwin.apple_sdk.frameworks;
+                        lib.optionals pkgs.stdenv.isDarwin [
+                          CoreServices
+                          SystemConfiguration
+                        ];
+                      nativeBuildInputs =
+                        with pkgs;
+                        [
+                          libiconv
+                          openssl
+                          pkg-config
+                          rustPlatform.bindgenHook
+                        ]
+                        ++ runtimeDeps;
+                      OPENSSL_NO_VENDOR = 1;
+                      OPENSSL_LIB_DIR = "${lib.getLib pkgs.openssl}/lib";
+                      OPENSSL_DIR = "${lib.getDev pkgs.openssl}";
+                    };
                 };
               };
           };
@@ -346,7 +363,9 @@
                 export RUST_LOG="discord_bot=trace"
                 export RUST_SRC_PATH=${pkgs.rustPlatform.rustLibSrc}
               '';
-              buildInputs = with pkgs.darwin.apple_sdk.frameworks; lib.optionals pkgs.stdenv.isDarwin [ SystemConfiguration ];
+              buildInputs =
+                with pkgs.darwin.apple_sdk.frameworks;
+                lib.optionals pkgs.stdenv.isDarwin [ SystemConfiguration ];
               nativeBuildInputs = with pkgs; [
                 rustc
                 pkg-config

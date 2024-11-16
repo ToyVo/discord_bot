@@ -20,10 +20,10 @@ use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
 
 use discord_bot::discord_utils::install_global_commands;
 use discord_bot::routes::{app, AppState, InnerState};
-#[cfg(feature = "watchers")]
-use discord_bot::{minecraft, terraria};
 #[cfg(feature = "db")]
 use discord_bot::DB;
+#[cfg(feature = "watchers")]
+use discord_bot::{minecraft, terraria};
 #[cfg(feature = "watchers")]
 use std::backtrace::Backtrace;
 
