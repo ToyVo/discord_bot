@@ -313,6 +313,7 @@
                         gnutar
                         rclone
                         zstd
+                        uutils-coreutils-noprefix
                       ];
                     in
                     {

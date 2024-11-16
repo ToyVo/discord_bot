@@ -34,9 +34,11 @@ pub async fn systemctl_running<S: AsRef<str>>(_service_name: S) -> Result<bool, 
 }
 
 pub async fn fs_sync() -> Result<(), AppError> {
-    let output = Command::new("sync").output().await?;
-    match output.status.code() {
-        Some(0) => Ok(()),
-        _ => Err(AppError::Other(String::from("Syncing filesystem failed"))),
+    match Command::new("sync").output().await {
+        Ok(output) => match output.status.code() {
+            Some(0) => Ok(()),
+            _ => Err(AppError::Other(String::from("Syncing filesystem failed"))),
+        },
+        Err(e) => Err(AppError::Other(format!("Syncing filesystem failed: {e}"))),
     }
 }
