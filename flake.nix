@@ -296,7 +296,7 @@
             src = ./.;
           };
           cargoNix = pkgs.callPackage "${generatedCargoNix}/default.nix" {
-            rootFeatures = ["db" "watchers"];
+            rootFeatures = ["db" "watchers" "backups"];
             buildRustCrateForPkgs =
               pkgs:
               pkgs.buildRustCrate.override {
