@@ -9,8 +9,6 @@ use std::{env::var, net::SocketAddr, sync::Arc, time::Duration};
 use surrealdb::engine::remote::ws::Ws;
 #[cfg(feature = "db")]
 use surrealdb::opt::auth::Root;
-#[cfg(feature = "db")]
-use surrealdb::Surreal;
 use tokio::{net::TcpListener, signal};
 use tower::ServiceBuilder;
 use tower_http::{
@@ -24,6 +22,8 @@ use discord_bot::discord_utils::install_global_commands;
 use discord_bot::routes::{app, AppState, InnerState};
 #[cfg(feature = "watchers")]
 use discord_bot::{minecraft, terraria};
+#[cfg(feature = "db")]
+use discord_bot::DB;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
@@ -40,10 +40,10 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
     #[cfg(feature = "db")]
     let surreal_pass = var("SURREAL_PASS").unwrap_or_default();
     #[cfg(feature = "db")]
-    let db = Surreal::new::<Ws>(surreal_bind).await?;
+    DB.connect::<Ws>(surreal_bind).await?;
 
     #[cfg(feature = "db")]
-    db.signin(Root {
+    DB.signin(Root {
         username: "root",
         password: surreal_pass.as_str(),
     })
@@ -51,7 +51,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
 
     // Select a specific namespace / database
     #[cfg(feature = "db")]
-    db.use_ns(env!("CARGO_PKG_NAME"))
+    DB.use_ns(env!("CARGO_PKG_NAME"))
         .use_db(env!("CARGO_PKG_NAME"))
         .await?;
 
@@ -59,8 +59,6 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
         base_url: var("BASE_URL").unwrap_or_default(),
         client_id: var("DISCORD_CLIENT_ID").unwrap_or_default(),
         client_secret: var("DISCORD_CLIENT_SECRET").unwrap_or_default(),
-        #[cfg(feature = "db")]
-        db,
         discord_bot_spam_channel_id: var("DISCORD_BOT_SPAM_CHANNEL_ID").unwrap_or_default(),
         discord_minecraft_geyser_channel_id: var("DISCORD_MINECRAFT_GEYSER_CHANNEL_ID")
             .unwrap_or_default(),
@@ -72,19 +70,25 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
         key: Key::generate(),
         #[cfg(feature = "watchers")]
         minecraft_geyser_connection: Default::default(),
+        minecraft_geyser_data_dir: var("MINECRAFT_GEYSER_DATA_DIR")
+            .unwrap_or(String::from("/minecraft-geyser-data")),
         minecraft_geyser_rcon_address: var("MINECRAFT_RCON_ADDRESS")
             .unwrap_or(String::from("localhost:25576")),
         minecraft_geyser_rcon_password: var("RCON_PASSWORD").unwrap_or_default(),
-        minecraft_geyser_service_name: var("MINECRAFT_MODDED_SERVICE_NAME")
+        minecraft_geyser_service_name: var("MINECRAFT_GEYSER_SERVICE_NAME")
             .unwrap_or(String::from("arion-minecraft-geyser.service")),
         #[cfg(feature = "watchers")]
         minecraft_modded_connection: Default::default(),
+        minecraft_modded_data_dir: var("MINECRAFT_MODDED_DATA_DIR")
+            .unwrap_or(String::from("/minecraft-modded-data")),
         minecraft_modded_rcon_address: var("MINECRAFT_RCON_ADDRESS")
             .unwrap_or(String::from("localhost:25575")),
         minecraft_modded_rcon_password: var("RCON_PASSWORD").unwrap_or_default(),
         minecraft_modded_service_name: var("MINECRAFT_MODDED_SERVICE_NAME")
             .unwrap_or(String::from("arion-minecraft-modded.service")),
         public_key: var("DISCORD_PUBLIC_KEY").unwrap_or_default(),
+        #[cfg(feature = "backups")]
+        rclone_remote: var("RCLONE_REMOTE").unwrap_or(String::from("protondrive")),
         terraria_service_name: var("TERRARIA_SERVICE_NAME")
             .unwrap_or(String::from("arion-terraria.service")),
         tshock_base_url: var("TSHOCK_REST_BASE_URL")
@@ -149,6 +153,10 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
             }
             if let Err(e) = minecraft::track_players(&interval_state).await {
                 tracing::error!("Failed to get status from minecraft: {e}");
+            }
+            #[cfg(feature = "backups")]
+            if let Err(e) = minecraft::backup_world(&interval_state).await {
+                tracing::error!("Failed to backup minecraft: {e}");
             }
         }
     });

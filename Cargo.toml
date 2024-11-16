@@ -8,6 +8,7 @@ repository = "https://github.com/toyvo/discord_bot"
 [features]
 db = []
 watchers = ["db"]
+backups = ["watchers"]
 
 
 [dependencies]

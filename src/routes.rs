@@ -13,10 +13,6 @@ use dioxus::prelude::*;
 use rcon::Connection;
 use std::ops::Deref;
 use std::sync::Arc;
-#[cfg(feature = "db")]
-use surrealdb::engine::remote::ws::Client;
-#[cfg(feature = "db")]
-use surrealdb::Surreal;
 #[cfg(feature = "watchers")]
 use tokio::net::TcpStream;
 #[cfg(feature = "watchers")]
@@ -49,8 +45,6 @@ pub struct InnerState {
     pub base_url: String,
     pub client_id: String,
     pub client_secret: String,
-    #[cfg(feature = "db")]
-    pub db: Surreal<Client>,
     pub discord_bot_spam_channel_id: String,
     pub discord_minecraft_geyser_channel_id: String,
     pub discord_minecraft_modded_channel_id: String,
@@ -60,15 +54,19 @@ pub struct InnerState {
     pub key: Key,
     #[cfg(feature = "watchers")]
     pub minecraft_geyser_connection: RwLock<Option<Connection<TcpStream>>>,
+    pub minecraft_geyser_data_dir: String,
     pub minecraft_geyser_rcon_address: String,
     pub minecraft_geyser_rcon_password: String,
     pub minecraft_geyser_service_name: String,
     #[cfg(feature = "watchers")]
     pub minecraft_modded_connection: RwLock<Option<Connection<TcpStream>>>,
+    pub minecraft_modded_data_dir: String,
     pub minecraft_modded_rcon_address: String,
     pub minecraft_modded_rcon_password: String,
     pub minecraft_modded_service_name: String,
     pub public_key: String,
+    #[cfg(feature = "backups")]
+    pub rclone_remote: String,
     pub terraria_service_name: String,
     pub tshock_base_url: String,
     pub tshock_token: String,

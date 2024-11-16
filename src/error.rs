@@ -64,72 +64,72 @@ impl std::error::Error for AppError {}
 
 impl From<anyhow::Error> for AppError {
     fn from(err: anyhow::Error) -> Self {
-        AppError::Anyhow(err)
+        Self::Anyhow(err)
     }
 }
 
 impl From<croner::errors::CronError> for AppError {
     fn from(err: croner::errors::CronError) -> Self {
-        AppError::Cron(err)
+        Self::Cron(err)
     }
 }
 
 impl From<std::env::VarError> for AppError {
     fn from(err: std::env::VarError) -> Self {
-        AppError::EnvVar(err)
+        Self::EnvVar(err)
     }
 }
 
 impl From<std::io::Error> for AppError {
     fn from(err: std::io::Error) -> Self {
-        AppError::Io(err)
+        Self::Io(err)
     }
 }
 
 impl From<serde_json::Error> for AppError {
     fn from(err: serde_json::Error) -> Self {
-        AppError::Json(err)
+        Self::Json(err)
     }
 }
 
 impl From<url::ParseError> for AppError {
     fn from(err: url::ParseError) -> Self {
-        AppError::Parse(err)
+        Self::Parse(err)
     }
 }
 
 impl From<rcon::Error> for AppError {
     fn from(err: rcon::Error) -> Self {
-        AppError::Rcon(err)
+        Self::Rcon(err)
     }
 }
 
 impl From<reqwest::Error> for AppError {
     fn from(err: reqwest::Error) -> Self {
-        AppError::Request(err)
+        Self::Request(err)
     }
 }
 
 impl From<serenity::Error> for AppError {
     fn from(err: serenity::Error) -> Self {
-        AppError::Serenity(err)
+        Self::Serenity(err)
     }
 }
 
 impl From<surrealdb::Error> for AppError {
     fn from(err: surrealdb::Error) -> Self {
-        AppError::Surreal(err)
+        Self::Surreal(err)
     }
 }
 
 impl From<toml::de::Error> for AppError {
     fn from(err: toml::de::Error) -> Self {
-        AppError::Toml(err)
+        Self::Toml(err)
     }
 }
 
 impl From<std::str::Utf8Error> for AppError {
     fn from(err: std::str::Utf8Error) -> Self {
-        AppError::UTF8(err)
+        Self::UTF8(err)
     }
 }

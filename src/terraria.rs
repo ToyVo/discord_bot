@@ -6,12 +6,16 @@ use crate::routes::AppState;
 use crate::{discord_utils, systemctl_running};
 #[cfg(feature = "watchers")]
 use anyhow::Context;
+#[cfg(feature = "watchers")]
+use chrono::Utc;
 use oxford_join::OxfordJoin;
 use serde_json::Value;
 #[cfg(feature = "watchers")]
 use serenity::all::MessageFlags;
 #[cfg(feature = "watchers")]
 use serenity::builder::CreateMessage;
+#[cfg(feature = "db")]
+use crate::DB;
 
 /// expected structure:
 /// not returning anything parsed just in case
@@ -146,7 +150,7 @@ pub async fn track_players(state: &AppState) -> Result<(), AppError> {
         .collect();
 
     let last_player_nicknames: Option<GamePlayers> =
-        state.db.select(("players", "terraria")).await?;
+        DB.select(("players", "terraria")).await?;
     let last_player_nicknames = if let Some(data) = last_player_nicknames {
         data.players
     } else {
@@ -164,7 +168,7 @@ pub async fn track_players(state: &AppState) -> Result<(), AppError> {
         )
         .await?;
 
-        match state.db.select(("status", "terraria")).await {
+        match DB.select(("status", "terraria")).await {
             Ok(Some(data)) => {
                 let data: GameStatus = data;
                 discord_utils::delete_message(
@@ -178,8 +182,7 @@ pub async fn track_players(state: &AppState) -> Result<(), AppError> {
             _ => Ok(()),
         }?;
 
-        let _upserted: Option<GameStatus> = state
-            .db
+        let _upserted: Option<GameStatus> = DB
             .upsert(("status", "terraria"))
             .content(GameStatus {
                 game: String::from("terraria"),
@@ -193,12 +196,12 @@ pub async fn track_players(state: &AppState) -> Result<(), AppError> {
             .await?;
     }
 
-    let _upserted: Option<GamePlayers> = state
-        .db
+    let _upserted: Option<GamePlayers> = DB
         .upsert(("players", "terraria"))
         .content(GamePlayers {
             game: String::from("terraria"),
             players: player_nicknames,
+            time: Utc::now(),
         })
         .await?;
 

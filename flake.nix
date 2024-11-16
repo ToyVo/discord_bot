@@ -314,6 +314,9 @@
                       openssl
                       pkg-config
                       rustPlatform.bindgenHook
+                      rclone
+                      gnutar
+                      zstd
                     ];
                     OPENSSL_NO_VENDOR = 1;
                     OPENSSL_LIB_DIR = "${lib.getLib pkgs.openssl}/lib";
