@@ -162,6 +162,7 @@
                   };
                   script = ''
                     export $(cat ${cfg.env_file} | xargs)
+                    export RUST_BACKTRACE=full
                     ${pkgs.discord_bot}/bin/discord_bot
                   '';
                 };

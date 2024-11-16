@@ -24,6 +24,8 @@ use discord_bot::routes::{app, AppState, InnerState};
 use discord_bot::{minecraft, terraria};
 #[cfg(feature = "db")]
 use discord_bot::DB;
+#[cfg(feature = "watchers")]
+use std::backtrace::Backtrace;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
@@ -156,7 +158,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
             }
             #[cfg(feature = "backups")]
             if let Err(e) = minecraft::backup_world(&interval_state).await {
-                tracing::error!("Failed to backup minecraft: {e}");
+                tracing::error!("Failed to backup minecraft: {e} {}", Backtrace::capture());
             }
         }
     });
