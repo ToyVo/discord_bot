@@ -353,14 +353,15 @@ pub async fn backup_data_dir<S: AsRef<str>>(
             if let Ok(entry) = entry {
                 if entry.path().is_file() {
                     let file_name = entry.file_name().into_string().unwrap();
-                    let file_time =
-                        NaiveDateTime::parse_from_str(&file_name, file_name_parse_string.as_str())
-                            .unwrap()
-                            .and_utc();
-                    if file_time > oldest_backup_time_to_keep {
-                        let source = format!("{local_backup_dir}/{}", &file_name);
-                        fs::remove_file(source).unwrap();
-                    }
+                    // let file_time =
+                    //     NaiveDateTime::parse_from_str(&file_name, file_name_parse_string.as_str())
+                    //         .unwrap()
+                    //         .and_utc();
+                    // TODO: sometimes uploads fail
+                    // if file_time < oldest_backup_time_to_keep {
+                    let source = format!("{local_backup_dir}/{}", &file_name);
+                    fs::remove_file(source).unwrap();
+                    // }
                 }
             }
         });

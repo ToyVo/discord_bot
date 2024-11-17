@@ -95,7 +95,7 @@ pub fn get_player_changes(before: &[String], after: &[String]) -> Option<String>
         [
             if !joined.is_empty() {
                 format!(
-                    "{} {} joined",
+                    "{} {} joined.",
                     joined.oxford_join(oxford_join::Conjunction::And),
                     if joined.len() != 1 { "have" } else { "has" }
                 )
@@ -104,7 +104,7 @@ pub fn get_player_changes(before: &[String], after: &[String]) -> Option<String>
             },
             if !disconnected.is_empty() {
                 format!(
-                    "{} {} disconnected",
+                    "{} {} disconnected.",
                     disconnected.oxford_join(oxford_join::Conjunction::And),
                     if disconnected.len() != 1 {
                         "have"
@@ -117,12 +117,12 @@ pub fn get_player_changes(before: &[String], after: &[String]) -> Option<String>
             },
             if !remaining.is_empty() {
                 format!(
-                    "{} {} online",
+                    "{} {} online.",
                     remaining.oxford_join(oxford_join::Conjunction::And),
                     if disconnected.len() != 1 { "are" } else { "is" }
                 )
             } else {
-                "No one is online".to_string()
+                "Nobody is online.".to_string()
             },
         ]
         .join(" "),
