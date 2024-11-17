@@ -329,7 +329,7 @@ pub async fn backup_data_dir<S: AsRef<str>>(
                     match NaiveDateTime::parse_from_str(file_name, file_name_parse_string.as_str())
                     {
                         Ok(file_time) => {
-                            if file_time.and_utc() > oldest_backup_time_to_keep {
+                            if file_time.and_utc() < oldest_backup_time_to_keep {
                                 return Some(format!(
                                     "{}:{surreal_id}/{file_name}",
                                     &state.rclone_remote
