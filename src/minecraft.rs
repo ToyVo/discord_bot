@@ -293,11 +293,11 @@ pub async fn backup_data_dir<S: AsRef<str>>(
 
         let rclone_destination = format!("{}:{surreal_id}", &state.rclone_remote);
         let output = Command::new("rclone")
-            .args(["copy", &backup_destination, &rclone_destination])
+            .args(["copy", &backup_destination, &rclone_destination, "--config", &state.rclone_conf_file])
             .output()
             .await?;
 
-        tracing::info!("Rclone {:?}", output.status);
+        tracing::info!("Rclone {}", output.status);
         tracing::info!(
             "Rclone copy output: {:?}",
             String::from_utf8(output.stdout).unwrap()
@@ -308,11 +308,11 @@ pub async fn backup_data_dir<S: AsRef<str>>(
         );
 
         let output = Command::new("rclone")
-            .args(["ls", &rclone_destination])
+            .args(["ls", &rclone_destination, "--config", &state.rclone_conf_file])
             .output()
             .await?;
 
-        tracing::info!("Rclone {:?}", output.status);
+        tracing::info!("Rclone {}", output.status);
         tracing::info!(
             "Backups in remote: {:?}",
             String::from_utf8(output.stdout).unwrap()

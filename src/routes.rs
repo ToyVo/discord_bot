@@ -66,6 +66,8 @@ pub struct InnerState {
     pub minecraft_modded_service_name: String,
     pub public_key: String,
     #[cfg(feature = "backups")]
+    pub rclone_conf_file: String,
+    #[cfg(feature = "backups")]
     pub rclone_remote: String,
     pub terraria_service_name: String,
     pub tshock_base_url: String,

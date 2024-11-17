@@ -88,6 +88,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
             .unwrap_or(String::from("arion-minecraft-modded.service")),
         public_key: var("DISCORD_PUBLIC_KEY").unwrap_or_default(),
         #[cfg(feature = "backups")]
+        rclone_conf_file: var("RCLONE_CONF_FILE").unwrap_or_default(),
+        #[cfg(feature = "backups")]
         rclone_remote: var("RCLONE_REMOTE").unwrap_or(String::from("protondrive")),
         terraria_service_name: var("TERRARIA_SERVICE_NAME")
             .unwrap_or(String::from("arion-terraria.service")),

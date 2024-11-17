@@ -84,7 +84,7 @@
                   DISCORD_TOKEN
                 '';
               };
-              rclone_dir = lib.mkOption {
+              rclone_conf_file = lib.mkOption {
                 type = lib.types.path;
                 description = "Path to the rclone config file";
               };
@@ -163,6 +163,7 @@
                   script = ''
                     export $(cat ${cfg.env_file} | xargs)
                     export RUST_BACKTRACE=full
+                    export RCLONE_CONF_FILE=${cfg.rclone_conf_file}
                     ${pkgs.discord_bot}/bin/discord_bot
                   '';
                 };
