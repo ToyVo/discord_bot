@@ -16,6 +16,8 @@ use crate::DB;
 use crate::{discord_utils, systemctl_running};
 #[cfg(feature = "watchers")]
 use anyhow::Context;
+#[cfg(feature = "backups")]
+use chrono::NaiveDateTime;
 #[cfg(feature = "watchers")]
 use chrono::Utc;
 #[cfg(feature = "watchers")]
@@ -24,6 +26,10 @@ use rcon::Connection;
 use serenity::all::MessageFlags;
 #[cfg(feature = "watchers")]
 use serenity::builder::CreateMessage;
+#[cfg(feature = "backups")]
+use std::fs;
+#[cfg(feature = "backups")]
+use std::time::Duration;
 #[cfg(feature = "watchers")]
 use tokio::net::TcpStream;
 #[cfg(feature = "backups")]
@@ -197,7 +203,7 @@ pub async fn backup_data_dir<S: AsRef<str>>(
     state: &AppState,
 ) -> Result<(), AppError> {
     let now = Utc::now();
-    let backup_interval = std::time::Duration::from_secs(7200);
+    let backup_interval = Duration::from_secs(state.backup_interval);
 
     let last_backup_time = match DB.select(("last_backup", surreal_id)).await {
         Ok(Some(data)) => data,
@@ -265,7 +271,8 @@ pub async fn backup_data_dir<S: AsRef<str>>(
         }
         tar_args.push(String::from("."));
 
-        std::fs::create_dir_all(format!("{}/backups", minecraft_data_dir))?;
+        let local_backup_dir = format!("{}/backups", minecraft_data_dir);
+        fs::create_dir_all(&local_backup_dir)?;
 
         tracing::debug!("Creating backup: tar {}", &tar_args.join(" "));
         let output = Command::new("tar")
@@ -293,35 +300,71 @@ pub async fn backup_data_dir<S: AsRef<str>>(
 
         let rclone_destination = format!("{}:{surreal_id}", &state.rclone_remote);
         let output = Command::new("rclone")
-            .args(["copy", &backup_destination, &rclone_destination, "--config", &state.rclone_conf_file])
+            .args([
+                "copy",
+                &backup_destination,
+                &rclone_destination,
+                "--config",
+                &state.rclone_conf_file,
+            ])
             .output()
             .await?;
 
-        tracing::info!("Rclone {}", output.status);
-        tracing::info!(
-            "Rclone copy output: {:?}",
-            String::from_utf8(output.stdout).unwrap()
-        );
-        tracing::info!(
-            "Rclone copy error: {:?}",
-            String::from_utf8(output.stderr).unwrap()
-        );
+        tracing::debug!("rclone copy {}", output.status);
 
         let output = Command::new("rclone")
-            .args(["ls", &rclone_destination, "--config", &state.rclone_conf_file])
+            .args([
+                "ls",
+                &rclone_destination,
+                "--config",
+                &state.rclone_conf_file,
+            ])
             .output()
             .await?;
 
-        tracing::info!("Rclone {}", output.status);
-        tracing::info!(
-            "Backups in remote: {:?}",
-            String::from_utf8(output.stdout).unwrap()
-        );
-        tracing::info!(
-            "Rclone ls error: {:?}",
-            String::from_utf8(output.stderr).unwrap()
-        );
-        // TODO: prune old backups
+        let oldest_backup_time_to_keep = now - Duration::from_secs(state.max_backup_age);
+        let file_name_parse_string = format!("{surreal_id}-%Y-%m-%d_%H-%M-%S.tar.zst");
+
+        let remote_files_to_delete = String::from_utf8(output.stdout)
+            .unwrap()
+            .lines()
+            .filter_map(|file_name| {
+                if !file_name.trim().is_empty() {
+                    let file_time =
+                        NaiveDateTime::parse_from_str(file_name, file_name_parse_string.as_str())
+                            .unwrap()
+                            .and_utc();
+                    if file_time > oldest_backup_time_to_keep {
+                        return Some(format!("{}:{surreal_id}/{file_name}", &state.rclone_remote));
+                    }
+                }
+                None
+            })
+            .collect::<Vec<String>>();
+
+        for file in remote_files_to_delete {
+            let output = Command::new("rclone")
+                .args(["deletefile", &file, "--config", &state.rclone_conf_file])
+                .output()
+                .await?;
+            tracing::debug!("rclone deletefile {}", output.status);
+        }
+
+        fs::read_dir(&local_backup_dir)?.for_each(|entry| {
+            if let Ok(entry) = entry {
+                if entry.path().is_file() {
+                    let file_name = entry.file_name().into_string().unwrap();
+                    let file_time =
+                        NaiveDateTime::parse_from_str(&file_name, file_name_parse_string.as_str())
+                            .unwrap()
+                            .and_utc();
+                    if file_time > oldest_backup_time_to_keep {
+                        let source = format!("{local_backup_dir}/{}", &file_name);
+                        fs::remove_file(source).unwrap();
+                    }
+                }
+            }
+        });
     }
     Ok(())
 }

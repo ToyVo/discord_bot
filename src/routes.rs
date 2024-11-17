@@ -42,6 +42,8 @@ impl FromRef<AppState> for Key {
 }
 
 pub struct InnerState {
+    #[cfg(feature = "backups")]
+    pub backup_interval: u64,
     pub base_url: String,
     pub client_id: String,
     pub client_secret: String,
@@ -52,6 +54,8 @@ pub struct InnerState {
     pub discord_token: String,
     pub forge_api_key: String,
     pub key: Key,
+    #[cfg(feature = "backups")]
+    pub max_backup_age: u64,
     #[cfg(feature = "watchers")]
     pub minecraft_geyser_connection: RwLock<Option<Connection<TcpStream>>>,
     pub minecraft_geyser_data_dir: String,

@@ -56,6 +56,11 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
         .await?;
 
     let state = AppState(Arc::new(InnerState {
+        #[cfg(feature = "backups")]
+        backup_interval: var("BACKUP_INTERVAL")
+            .unwrap_or((60 * 2).to_string())
+            .parse::<u64>()
+            .unwrap_or(60 * 2),
         base_url: var("BASE_URL").unwrap_or_default(),
         client_id: var("DISCORD_CLIENT_ID").unwrap_or_default(),
         client_secret: var("DISCORD_CLIENT_SECRET").unwrap_or_default(),
@@ -68,6 +73,11 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
         discord_token: var("DISCORD_TOKEN").unwrap_or_default(),
         forge_api_key: var("FORGE_API_KEY").unwrap_or_default(),
         key: Key::generate(),
+        #[cfg(feature = "backups")]
+        max_backup_age: var("MAX_BACKUP_AGE")
+            .unwrap_or((60 * 24 * 7).to_string())
+            .parse::<u64>()
+            .unwrap_or(60 * 24 * 7),
         #[cfg(feature = "watchers")]
         minecraft_geyser_connection: Default::default(),
         minecraft_geyser_data_dir: var("MINECRAFT_GEYSER_DATA_DIR")
