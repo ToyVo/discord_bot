@@ -63,28 +63,30 @@ pub async fn broadcast<T: AsRef<str>>(state: &AppState, message: T) -> Result<()
 
 /// take two lists of player names and return the difference between them.
 /// the first tuple is the list of players who have disconnected. the second tuple is of players who have joined.
-pub fn get_player_diff(before: &[String], after: &[String]) -> (Vec<String>, Vec<String>) {
+pub fn get_player_diff(
+    before: &[String],
+    after: &[String],
+) -> (Vec<String>, Vec<String>, Vec<String>) {
     let disconnected = before
         .iter()
         .filter(|&player| !after.contains(player))
         .cloned()
         .collect();
-    let joined = after
-        .iter()
-        .filter_map(|player| {
-            if !before.contains(player) {
-                Some(player.clone())
-            } else {
-                None
-            }
-        })
-        .collect();
+    let mut joined = vec![];
+    let mut remaining_online = vec![];
+    for player in after {
+        if !before.contains(player) {
+            joined.push(player.clone());
+        } else {
+            remaining_online.push(player.clone());
+        }
+    }
 
-    (disconnected, joined)
+    (disconnected, joined, remaining_online)
 }
 
 pub fn get_player_changes(before: &[String], after: &[String]) -> Option<String> {
-    let (disconnected, joined) = get_player_diff(before, after);
+    let (disconnected, joined, remaining) = get_player_diff(before, after);
     if disconnected.is_empty() && joined.is_empty() {
         return None;
     }
@@ -113,12 +115,15 @@ pub fn get_player_changes(before: &[String], after: &[String]) -> Option<String>
             } else {
                 "".to_string()
             },
-            format!(
-                "There {} {} player{} online",
-                if after.len() != 1 { "are" } else { "is" },
-                after.len(),
-                if after.len() != 1 { "s" } else { "" }
-            ),
+            if !remaining.is_empty() {
+                format!(
+                    "{} {} online",
+                    remaining.oxford_join(oxford_join::Conjunction::And),
+                    if disconnected.len() != 1 { "are" } else { "is" }
+                )
+            } else {
+                "No one is online".to_string()
+            },
         ]
         .join(" "),
     )
