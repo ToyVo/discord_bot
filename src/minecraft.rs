@@ -276,7 +276,6 @@ pub async fn backup_data_dir<S: AsRef<str>>(
         let local_backup_dir = format!("{}/backups", minecraft_data_dir);
         fs::create_dir_all(&local_backup_dir)?;
 
-        tracing::debug!("Creating backup: tar {}", &tar_args.join(" "));
         let output = Command::new("tar")
             // add --exclude PATTERN as many times as needed
             .args(&tar_args)
@@ -305,6 +304,7 @@ pub async fn backup_data_dir<S: AsRef<str>>(
             "copy",
             &backup_destination,
             &rclone_destination,
+            "--protondrive-replace-existing-draft=true",
             "--config",
             &state.rclone_conf_file,
         ])

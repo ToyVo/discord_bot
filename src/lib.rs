@@ -46,7 +46,7 @@ pub async fn fs_sync() -> Result<(), AppError> {
 pub async fn rclone(args: &[&str]) -> Result<String, AppError> {
     match Command::new("rclone").args(args).output().await {
         Ok(output) => {
-            tracing::debug! {"rclone {}", output.status}
+            tracing::debug! {"rclone {} {}", args[0], output.status}
             let err = std::str::from_utf8(&output.stderr)?.trim();
             if !err.is_empty() {
                 tracing::error!("rclone {}: {err}", args[0])
