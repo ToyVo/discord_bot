@@ -331,12 +331,19 @@ pub async fn backup_data_dir<S: AsRef<str>>(
             .filter_map(|line| {
                 if !line.trim().is_empty() {
                     let (_size_in_bytes, file_name) = line.split_once(" ").unwrap();
-                    let file_time =
-                        NaiveDateTime::parse_from_str(file_name, file_name_parse_string.as_str())
-                            .unwrap()
-                            .and_utc();
-                    if file_time > oldest_backup_time_to_keep {
-                        return Some(format!("{}:{surreal_id}/{file_name}", &state.rclone_remote));
+                    match NaiveDateTime::parse_from_str(file_name, file_name_parse_string.as_str())
+                    {
+                        Ok(file_time) => {
+                            if file_time.and_utc() > oldest_backup_time_to_keep {
+                                return Some(format!(
+                                    "{}:{surreal_id}/{file_name}",
+                                    &state.rclone_remote
+                                ));
+                            }
+                        }
+                        Err(e) => {
+                            tracing::error!("Cleanup error: {line}: {e}");
+                        }
                     }
                 }
                 None
