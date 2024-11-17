@@ -121,7 +121,7 @@ pub fn get_player_changes(before: &[String], after: &[String]) -> Option<String>
                     remaining.oxford_join(oxford_join::Conjunction::And),
                     if remaining.len() != 1 { "are" } else { "is" }
                 )
-            } else if !disconnected.is_empty() {
+            } else if !disconnected.is_empty() && joined.is_empty() {
                 "Nobody is online.".to_string()
             } else {
                 "".to_string()
