@@ -6,6 +6,8 @@ use crate::fs_sync;
 use crate::models::GameBackup;
 #[cfg(feature = "watchers")]
 use crate::models::{GamePlayers, GameStatus};
+#[cfg(feature = "backups")]
+use crate::rclone;
 #[cfg(feature = "watchers")]
 use crate::routes::AppState;
 #[cfg(feature = "watchers")]
@@ -299,34 +301,27 @@ pub async fn backup_data_dir<S: AsRef<str>>(
             .await?;
 
         let rclone_destination = format!("{}:{surreal_id}", &state.rclone_remote);
-        let output = Command::new("rclone")
-            .args([
-                "copy",
-                &backup_destination,
-                &rclone_destination,
-                "--config",
-                &state.rclone_conf_file,
-            ])
-            .output()
-            .await?;
+        let _ = rclone(&[
+            "copy",
+            &backup_destination,
+            &rclone_destination,
+            "--config",
+            &state.rclone_conf_file,
+        ])
+        .await?;
 
-        tracing::debug!("rclone copy {}", output.status);
-
-        let output = Command::new("rclone")
-            .args([
-                "ls",
-                &rclone_destination,
-                "--config",
-                &state.rclone_conf_file,
-            ])
-            .output()
-            .await?;
+        let output = rclone(&[
+            "ls",
+            &rclone_destination,
+            "--config",
+            &state.rclone_conf_file,
+        ])
+        .await?;
 
         let oldest_backup_time_to_keep = now - Duration::from_secs(state.max_backup_age);
         let file_name_parse_string = format!("{surreal_id}-%Y-%m-%d_%H-%M-%S.tar.zst");
 
-        let remote_files_to_delete = String::from_utf8(output.stdout)
-            .unwrap()
+        let remote_files_to_delete = output
             .lines()
             .filter_map(|line| {
                 if !line.trim().is_empty() {
@@ -351,11 +346,7 @@ pub async fn backup_data_dir<S: AsRef<str>>(
             .collect::<Vec<String>>();
 
         for file in remote_files_to_delete {
-            let output = Command::new("rclone")
-                .args(["deletefile", &file, "--config", &state.rclone_conf_file])
-                .output()
-                .await?;
-            tracing::debug!("rclone deletefile {}", output.status);
+            let _ = rclone(&["deletefile", &file, "--config", &state.rclone_conf_file]).await?;
         }
 
         fs::read_dir(&local_backup_dir)?.for_each(|entry| {
