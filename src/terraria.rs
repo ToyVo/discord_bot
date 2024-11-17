@@ -119,9 +119,9 @@ pub fn get_player_changes(before: &[String], after: &[String]) -> Option<String>
                 format!(
                     "{} {} online.",
                     remaining.oxford_join(oxford_join::Conjunction::And),
-                    if disconnected.len() != 1 { "are" } else { "is" }
+                    if remaining.len() != 1 { "are" } else { "is" }
                 )
-            } else if !joined.is_empty() {
+            } else if !disconnected.is_empty() {
                 "Nobody is online.".to_string()
             } else {
                 "".to_string()
