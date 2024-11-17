@@ -328,8 +328,9 @@ pub async fn backup_data_dir<S: AsRef<str>>(
         let remote_files_to_delete = String::from_utf8(output.stdout)
             .unwrap()
             .lines()
-            .filter_map(|file_name| {
-                if !file_name.trim().is_empty() {
+            .filter_map(|line| {
+                if !line.trim().is_empty() {
+                    let (_size_in_bytes, file_name) = line.split_once(" ").unwrap();
                     let file_time =
                         NaiveDateTime::parse_from_str(file_name, file_name_parse_string.as_str())
                             .unwrap()
