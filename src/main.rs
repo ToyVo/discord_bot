@@ -24,8 +24,6 @@ use discord_bot::routes::{app, AppState, InnerState};
 use discord_bot::DB;
 #[cfg(feature = "watchers")]
 use discord_bot::{minecraft, terraria};
-#[cfg(feature = "watchers")]
-use std::backtrace::Backtrace;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {

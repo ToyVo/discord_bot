@@ -274,7 +274,7 @@ pub async fn backup_data_dir<S: AsRef<str>>(
             .output()
             .await?;
 
-        tracing::debug!("tar output: {}", output.status);
+        tracing::debug!("tar {}", output.status);
 
         if server_running {
             let server = con.as_mut().unwrap();
@@ -297,15 +297,30 @@ pub async fn backup_data_dir<S: AsRef<str>>(
             .output()
             .await?;
 
+        tracing::info!("Rclone {:?}", output.status);
+        tracing::info!(
+            "Rclone copy output: {:?}",
+            String::from_utf8(output.stdout).unwrap()
+        );
+        tracing::info!(
+            "Rclone copy error: {:?}",
+            String::from_utf8(output.stderr).unwrap()
+        );
+
         let output = Command::new("rclone")
             .args(["ls", &rclone_destination])
             .output()
             .await?;
 
+        tracing::info!("Rclone {:?}", output.status);
         tracing::info!(
             "Backups in remote: {:?}",
             String::from_utf8(output.stdout).unwrap()
-        )
+        );
+        tracing::info!(
+            "Rclone ls error: {:?}",
+            String::from_utf8(output.stderr).unwrap()
+        );
         // TODO: prune old backups
     }
     Ok(())
