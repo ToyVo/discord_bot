@@ -78,6 +78,13 @@ async fn track_generic<S: AsRef<str>>(
     connection: &RwLock<Option<Connection<TcpStream>>>,
     state: &AppState,
 ) -> Result<(), AppError> {
+    let last_player_names: Option<GamePlayers> = DB.select(("players", surreal_id)).await?;
+    let last_player_names = if let Some(data) = last_player_names {
+        data.players
+    } else {
+        vec![]
+    };
+
     if !initiate_connection(
         minecraft_rcon_address,
         minecraft_rcon_password,
@@ -86,14 +93,16 @@ async fn track_generic<S: AsRef<str>>(
     )
     .await?
     {
-        let _upserted: Option<GamePlayers> = DB
-            .upsert(("players", surreal_id))
-            .content(GamePlayers {
-                game: surreal_id.to_string(),
-                players: vec![],
-                time: Utc::now(),
-            })
-            .await?;
+        if !last_player_names.is_empty() {
+            let _upserted: Option<GamePlayers> = DB
+                .upsert(("players", surreal_id))
+                .content(GamePlayers {
+                    game: surreal_id.to_string(),
+                    players: vec![],
+                    time: Utc::now(),
+                })
+                .await?;
+        }
         return Ok(());
     }
 
@@ -111,13 +120,6 @@ async fn track_generic<S: AsRef<str>>(
         .map(|s| s.trim().to_string())
         .filter(|s| !s.is_empty())
         .collect::<Vec<String>>();
-
-    let last_player_names: Option<GamePlayers> = DB.select(("players", surreal_id)).await?;
-    let last_player_names = if let Some(data) = last_player_names {
-        data.players
-    } else {
-        vec![]
-    };
 
     if let Some(message) = get_player_changes(&last_player_names, &players) {
         tracing::info!("{}", message);
