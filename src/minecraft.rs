@@ -56,16 +56,45 @@ async fn initiate_connection<S: AsRef<str>>(
     }
 
     if con.is_none() {
-        let server = <Connection<TcpStream>>::builder()
-            .enable_minecraft_quirks(true)
-            .connect(
-                minecraft_rcon_address.as_ref(),
-                minecraft_rcon_password.as_ref(),
-            )
-            .await?;
+        connect_rcon(
+            minecraft_rcon_address.as_ref(),
+            minecraft_rcon_password.as_ref(),
+            connection,
+        )
+        .await;
+    }
+
+    let server = con.as_mut().unwrap();
+
+    // if an error occurs, like a broken pipe, we want to reset the connection
+    if (server.cmd("help").await).is_err() {
+        connect_rcon(
+            minecraft_rcon_address.as_ref(),
+            minecraft_rcon_password.as_ref(),
+            connection,
+        )
+        .await;
+    }
+
+    Ok(true)
+}
+
+async fn connect_rcon<S: AsRef<str>>(
+    minecraft_rcon_address: S,
+    minecraft_rcon_password: S,
+    connection: &RwLock<Option<Connection<TcpStream>>>,
+) {
+    let mut con = connection.write().await;
+    if let Ok(server) = <Connection<TcpStream>>::builder()
+        .enable_minecraft_quirks(true)
+        .connect(
+            minecraft_rcon_address.as_ref(),
+            minecraft_rcon_password.as_ref(),
+        )
+        .await
+    {
         *con = Some(server);
     }
-    Ok(true)
 }
 
 #[cfg(feature = "watchers")]
@@ -327,19 +356,23 @@ pub async fn backup_data_dir<S: AsRef<str>>(
             .lines()
             .filter_map(|line| {
                 if !line.trim().is_empty() {
-                    let (_size_in_bytes, file_name) = line.split_once(" ").unwrap();
-                    match NaiveDateTime::parse_from_str(file_name, file_name_parse_string.as_str())
-                    {
-                        Ok(file_time) => {
-                            if file_time.and_utc() < oldest_backup_time_to_keep {
-                                return Some(format!(
-                                    "{}:{surreal_id}/{file_name}",
-                                    &state.rclone_remote
-                                ));
+                    if let Some(i) = line.find(surreal_id) {
+                        let (_size_in_bytes, file_name) = line.split_at(i);
+                        match NaiveDateTime::parse_from_str(
+                            file_name,
+                            file_name_parse_string.as_str(),
+                        ) {
+                            Ok(file_time) => {
+                                if file_time.and_utc() < oldest_backup_time_to_keep {
+                                    return Some(format!(
+                                        "{}:{surreal_id}/{file_name}",
+                                        &state.rclone_remote
+                                    ));
+                                }
                             }
-                        }
-                        Err(e) => {
-                            tracing::error!("Cleanup error: {line}: {e}");
+                            Err(e) => {
+                                tracing::error!("Cleanup error: {line}: {e}");
+                            }
                         }
                     }
                 }
