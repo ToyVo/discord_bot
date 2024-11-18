@@ -56,45 +56,35 @@ async fn initiate_connection<S: AsRef<str>>(
     }
 
     if con.is_none() {
-        connect_rcon(
-            minecraft_rcon_address.as_ref(),
-            minecraft_rcon_password.as_ref(),
-            connection,
-        )
-        .await;
+        if let Ok(server) = <Connection<TcpStream>>::builder()
+            .enable_minecraft_quirks(true)
+            .connect(
+                minecraft_rcon_address.as_ref(),
+                minecraft_rcon_password.as_ref(),
+            )
+            .await
+        {
+            *con = Some(server);
+        }
     }
 
     let server = con.as_mut().unwrap();
 
     // if an error occurs, like a broken pipe, we want to reset the connection
     if (server.cmd("help").await).is_err() {
-        connect_rcon(
-            minecraft_rcon_address.as_ref(),
-            minecraft_rcon_password.as_ref(),
-            connection,
-        )
-        .await;
+        if let Ok(server) = <Connection<TcpStream>>::builder()
+            .enable_minecraft_quirks(true)
+            .connect(
+                minecraft_rcon_address.as_ref(),
+                minecraft_rcon_password.as_ref(),
+            )
+            .await
+        {
+            *con = Some(server);
+        }
     }
 
     Ok(true)
-}
-
-async fn connect_rcon<S: AsRef<str>>(
-    minecraft_rcon_address: S,
-    minecraft_rcon_password: S,
-    connection: &RwLock<Option<Connection<TcpStream>>>,
-) {
-    let mut con = connection.write().await;
-    if let Ok(server) = <Connection<TcpStream>>::builder()
-        .enable_minecraft_quirks(true)
-        .connect(
-            minecraft_rcon_address.as_ref(),
-            minecraft_rcon_password.as_ref(),
-        )
-        .await
-    {
-        *con = Some(server);
-    }
 }
 
 #[cfg(feature = "watchers")]
