@@ -155,7 +155,10 @@
               services.surrealdb.enable = lib.mkDefault true;
               systemd.services = {
                 discord_bot = {
+                  before = [ "arion-minecraft-modded.service" ];
+                  requiredBy = [ "arion-minecraft-modded.service" ];
                   after = [ "surrealdb.service" ];
+                  requires = [ "surrealdb.service" ];
                   wantedBy = [ "multi-user.target" ];
                   serviceConfig = {
                     WorkingDirectory = ./.;
