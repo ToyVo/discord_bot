@@ -56,7 +56,7 @@ pub async fn get_modrinth_mods(mod_ids: Vec<String>) -> Result<Vec<ModpackInfo>,
                 (Some("unsupported"), Some("optional")) => "server".to_string(),
                 _ => "both".to_string(),
             };
-            let loaders = item
+            let mut loaders = item
                 .get("loaders")
                 .unwrap()
                 .as_array()
@@ -64,6 +64,7 @@ pub async fn get_modrinth_mods(mod_ids: Vec<String>) -> Result<Vec<ModpackInfo>,
                 .iter()
                 .map(|s| s.as_str().unwrap().to_string())
                 .collect::<Vec<String>>();
+            loaders.sort();
 
             let re = Regex::new(r"^1\.[0-9]+(\.[0-9]+)?$").unwrap();
             let mut game_versions = item
@@ -298,7 +299,7 @@ fn modlist_display(mods: &[ModpackInfo]) -> Result<Element, AppError> {
             display: "grid",
             width: "100%",
             grid_template_columns: "1fr 1fr auto auto",
-            gap: "4px",
+            gap: "12px",
             div {
                 "Mod Name"
             }
