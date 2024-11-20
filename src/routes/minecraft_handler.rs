@@ -158,7 +158,8 @@ pub async fn get_curseforge_mods(
             }
             let mut game_versions = game_versions.iter().cloned().collect::<Vec<String>>();
             sort_game_versions(&mut game_versions);
-            let loaders = mod_loaders.iter().cloned().collect::<Vec<String>>();
+            let mut loaders = mod_loaders.iter().cloned().collect::<Vec<String>>();
+            loaders.sort();
             let side = String::from("unknown");
             mods.push(ModpackInfo {
                 name,
