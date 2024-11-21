@@ -265,11 +265,11 @@ pub async fn backup_data_dir<S: AsRef<str>>(
         let mut con = connection.write().await;
 
         if server_running {
-            let server = con.as_mut().unwrap();
-
-            let _ = server.cmd("save-off").await;
-            let _ = server.cmd("save-all flush").await;
-            fs_sync().await?;
+            if let Some(server) = con.as_mut() {
+                let _ = server.cmd("save-off").await;
+                let _ = server.cmd("save-all flush").await;
+                fs_sync().await?;
+            }
         }
 
         let mut tar_args = vec![
@@ -307,9 +307,9 @@ pub async fn backup_data_dir<S: AsRef<str>>(
         tracing::debug!("tar {}", output.status);
 
         if server_running {
-            let server = con.as_mut().unwrap();
-
-            let _ = server.cmd("save-on").await;
+            if let Some(server) = con.as_mut() {
+                let _ = server.cmd("save-on").await;
+            }
         }
 
         let _upserted: Option<GameBackup> = DB
