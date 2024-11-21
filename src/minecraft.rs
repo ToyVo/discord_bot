@@ -127,67 +127,67 @@ async fn track_generic<S: AsRef<str>>(
     }
 
     let mut con = connection.write().await;
-    let server = con.as_mut().unwrap();
+    if let Some(server) = con.as_mut() {
+        // list response "There are n of a max of m players online: <player1>"
+        let res = server.cmd("list").await?;
 
-    // list response "There are n of a max of m players online: <player1>"
-    let res = server.cmd("list").await?;
+        // Parse response to get list of player names in a vector
+        let start_index = res.find(':').context("Could not find ':' in response")?;
+        let players = res[start_index + 1..]
+            .trim()
+            .split(',')
+            .map(|s| s.trim().to_string())
+            .filter(|s| !s.is_empty())
+            .collect::<Vec<String>>();
 
-    // Parse response to get list of player names in a vector
-    let start_index = res.find(':').context("Could not find ':' in response")?;
-    let players = res[start_index + 1..]
-        .trim()
-        .split(',')
-        .map(|s| s.trim().to_string())
-        .filter(|s| !s.is_empty())
-        .collect::<Vec<String>>();
+        if let Some(message) = get_player_changes(&last_player_names, &players) {
+            tracing::info!("{}", message);
+            let message = discord_utils::create_message(
+                CreateMessage::new()
+                    .content(message)
+                    .flags(MessageFlags::SUPPRESS_NOTIFICATIONS),
+                &discord_minecraft_channel_id,
+                state,
+            )
+            .await?;
 
-    if let Some(message) = get_player_changes(&last_player_names, &players) {
-        tracing::info!("{}", message);
-        let message = discord_utils::create_message(
-            CreateMessage::new()
-                .content(message)
-                .flags(MessageFlags::SUPPRESS_NOTIFICATIONS),
-            &discord_minecraft_channel_id,
-            state,
-        )
-        .await?;
+            match DB.select(("status", surreal_id)).await {
+                Ok(Some(data)) => {
+                    let data: GameStatus = data;
+                    discord_utils::delete_message(
+                        data.discord_message_id.as_str(),
+                        discord_minecraft_channel_id.as_ref(),
+                        state,
+                    )
+                    .await
+                }
+                Err(e) => Ok(tracing::error!("Error getting GameStatus from DB: {}", e)),
+                _ => Ok(()),
+            }?;
 
-        match DB.select(("status", surreal_id)).await {
-            Ok(Some(data)) => {
-                let data: GameStatus = data;
-                discord_utils::delete_message(
-                    data.discord_message_id.as_str(),
-                    discord_minecraft_channel_id.as_ref(),
-                    state,
-                )
-                .await
-            }
-            Err(e) => Ok(tracing::error!("Error getting GameStatus from DB: {}", e)),
-            _ => Ok(()),
-        }?;
+            let _upserted: Option<GameStatus> = DB
+                .upsert(("status", surreal_id))
+                .content(GameStatus {
+                    game: surreal_id.to_string(),
+                    discord_message_id: message
+                        .get("id")
+                        .context("Could not find id in response")?
+                        .as_str()
+                        .context("could not parse as str")?
+                        .to_string(),
+                })
+                .await?;
+        }
 
-        let _upserted: Option<GameStatus> = DB
-            .upsert(("status", surreal_id))
-            .content(GameStatus {
+        let _upserted: Option<GamePlayers> = DB
+            .upsert(("players", surreal_id))
+            .content(GamePlayers {
                 game: surreal_id.to_string(),
-                discord_message_id: message
-                    .get("id")
-                    .context("Could not find id in response")?
-                    .as_str()
-                    .context("could not parse as str")?
-                    .to_string(),
+                players,
+                time: Utc::now(),
             })
             .await?;
     }
-
-    let _upserted: Option<GamePlayers> = DB
-        .upsert(("players", surreal_id))
-        .content(GamePlayers {
-            game: surreal_id.to_string(),
-            players,
-            time: Utc::now(),
-        })
-        .await?;
     Ok(())
 }
 
