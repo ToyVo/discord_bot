@@ -68,21 +68,22 @@ async fn initiate_connection<S: AsRef<str>>(
         }
     }
 
-    let server = con.as_mut().unwrap();
-
-    // if an error occurs, like a broken pipe, we want to reset the connection
-    if (server.cmd("help").await).is_err() {
-        if let Ok(server) = <Connection<TcpStream>>::builder()
-            .enable_minecraft_quirks(true)
-            .connect(
-                minecraft_rcon_address.as_ref(),
-                minecraft_rcon_password.as_ref(),
-            )
-            .await
-        {
-            *con = Some(server);
+    if let Some(server) = con.as_mut() {
+        if (server.cmd("help").await).is_err() {
+            if let Ok(server) = <Connection<TcpStream>>::builder()
+                .enable_minecraft_quirks(true)
+                .connect(
+                    minecraft_rcon_address.as_ref(),
+                    minecraft_rcon_password.as_ref(),
+                )
+                .await
+            {
+                *con = Some(server);
+            }
         }
     }
+
+    // if an error occurs, like a broken pipe, we want to reset the connection
 
     Ok(true)
 }
