@@ -3,7 +3,7 @@ mod log_viewer;
 mod minecraft_handler;
 
 use axum::extract::FromRef;
-use axum::http::StatusCode;
+use axum::http::{StatusCode, Uri};
 use axum::response::{Html, IntoResponse};
 use axum::routing::{get, post};
 use axum::Router;
@@ -166,6 +166,18 @@ async fn terms_of_service_endpoint() -> Html<String> {
 async fn not_found_endpoint() -> impl IntoResponse {
     (
         StatusCode::NOT_FOUND,
+        html_app(
+            rsx! {
+                div { "404" }
+            },
+            "404",
+        ),
+    )
+}
+
+async fn redirect(uri: Uri) -> impl IntoResponse {
+    (
+        StatusCode::PERMANENT_REDIRECT,
         html_app(
             rsx! {
                 div { "404" }

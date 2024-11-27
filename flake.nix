@@ -217,7 +217,7 @@
                       EXISTING_WHITELIST_FILE = "MERGE";
                       MOTD = "ToyVo Modded Server";
                       MAX_TICK_TIME = "-1";
-                      PACKWIZ_URL = "https://mc.toyvo.dev/modpack/pack.toml";
+                      PACKWIZ_URL = "https://packwiz.toyvo.dev/pack.toml";
                       SPAWN_PROTECTION = "0";
                       MAX_PLAYERS = "10";
                       CREATE_CONSOLE_IN_PIPE = "true";
