@@ -174,7 +174,15 @@ pub async fn get_curseforge_mods(
 }
 
 pub async fn read_modpack(state: &AppState) -> Result<Vec<ModpackInfo>, AppError> {
-    let mod_files = std::fs::read_to_string("./modpack/index.toml")?
+    let client = reqwest::Client::new();
+    let response = client
+        .get("https://packwiz.toyvo.dev/index.toml")
+        .send()
+        .await?
+        .error_for_status()?;
+    let mod_files = response
+        .text()
+        .await?
         .parse::<Table>()?
         .get("files")
         .context("couldn't find files array")?
@@ -198,7 +206,12 @@ pub async fn read_modpack(state: &AppState) -> Result<Vec<ModpackInfo>, AppError
     let mut mr_mods = Vec::new();
     let mut cf_mods = Vec::new();
     for file in mod_files {
-        let mod_file = std::fs::read_to_string(format!("./modpack/{}", file))?.parse::<Table>()?;
+        let response = client
+            .get(format!("https://packwiz.toyvo.dev/{file}"))
+            .send()
+            .await?
+            .error_for_status()?;
+        let mod_file = response.text().await?.parse::<Table>()?;
 
         if let Some(update_section) = mod_file.get("update") {
             match (
@@ -266,32 +279,6 @@ pub async fn read_modpack(state: &AppState) -> Result<Vec<ModpackInfo>, AppError
 
     mods.sort_by(|a, b| a.name.cmp(&b.name).then(a.side.cmp(&b.side)));
     Ok(mods)
-}
-
-pub fn get_prism_zips() -> Result<Vec<String>, AppError> {
-    Ok(std::fs::read_dir("./modpack")?
-        .filter_map(|e| {
-            let name = e.unwrap().file_name().into_string().unwrap();
-            if name.starts_with("prism") && name.ends_with(".zip") {
-                Some(name)
-            } else {
-                None
-            }
-        })
-        .collect::<Vec<String>>())
-}
-
-fn zip_display() -> Result<Element, AppError> {
-    let prism_zips = get_prism_zips()?;
-    Ok(rsx! {
-        ul {
-            for zip in prism_zips {
-                li {
-                    "{zip}"
-                }
-            }
-        }
-    })
 }
 
 fn modlist_display(mods: &[ModpackInfo]) -> Result<Element, AppError> {
@@ -367,7 +354,6 @@ pub async fn modpack_info_endpoint(
                 margin: "20px",
                 div { "Modpack info" }
                 div { "Import the appropriate zip file into prism and packwiz will take care of the rest" }
-                div { "Files Hosted: " {zip_display()?} }
                 img {
                     max_height: "512px",
                     max_width: "100%",
@@ -389,7 +375,7 @@ pub async fn modpack_info_endpoint(
                     font_size: "14px",
                     background:"#666",
                     padding:"10px",
-                    "\"$INST_JAVA\" -jar packwiz-installer-bootstrap.jar https://mc.toyvo.dev/modpack/pack.toml"
+                    "\"$INST_JAVA\" -jar packwiz-installer-bootstrap.jar https://packwiz.toyvo.dev/pack.toml"
                 }
                 div { "Mods included: " {modlist_display(&mods)?} }
             }
