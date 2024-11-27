@@ -89,7 +89,6 @@ pub fn app() -> Router<AppState> {
         .route("/minecraft", get(modpack_info_endpoint))
         .route("/logs", get(log_viewer_endpoint))
         .route("/", get(app_endpoint))
-        .route("/modpack", get(redirect))
         .nest_service(
             "/public",
             ServeDir::new("public").not_found_service(get(not_found_endpoint)),
@@ -170,11 +169,4 @@ async fn not_found_endpoint() -> impl IntoResponse {
             "404",
         ),
     )
-}
-
-async fn redirect(uri: Uri) -> impl IntoResponse {
-    let new_uri = uri
-        .path()
-        .replace("mc.toyvo.dev/modpack", "packwiz.toyvo.dev");
-    (StatusCode::PERMANENT_REDIRECT, new_uri)
 }
