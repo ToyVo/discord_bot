@@ -1,6 +1,5 @@
 mod discord_handlers;
 mod log_viewer;
-mod minecraft_handler;
 
 use axum::extract::FromRef;
 use axum::http::{StatusCode, Uri};
@@ -21,7 +20,6 @@ use tower_http::services::ServeDir;
 
 use crate::routes::discord_handlers::{discord_oauth_callback, interactions, verify_user};
 use crate::routes::log_viewer::log_viewer_endpoint;
-use crate::routes::minecraft_handler::modpack_info_endpoint;
 
 #[derive(Clone)]
 pub struct AppState(pub Arc<InnerState>);
@@ -86,7 +84,6 @@ pub fn app() -> Router<AppState> {
         .route("/discord-oauth-callback", get(discord_oauth_callback))
         .route("/terms-of-service", get(terms_of_service_endpoint))
         .route("/privacy-policy", get(privacy_policy_endpoint))
-        .route("/minecraft", get(modpack_info_endpoint))
         .route("/logs", get(log_viewer_endpoint))
         .route("/", get(app_endpoint))
         .nest_service(
