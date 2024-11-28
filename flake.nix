@@ -1,6 +1,4 @@
 {
-  description = "discord_bot, A Rust web server including a NixOS module";
-
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     flake-parts = {
@@ -8,14 +6,10 @@
       inputs.nixpkgs-lib.follows = "nixpkgs";
     };
     crate2nix.url = "github:nix-community/crate2nix";
-
-    # Development
-
     devshell = {
       url = "github:numtide/devshell";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
     arion = {
       url = "github:hercules-ci/arion";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -56,7 +50,7 @@
       ];
 
       imports = [
-        #        devshell.flakeModule
+        devshell.flakeModule
         flake-parts.flakeModules.easyOverlay
       ];
 
@@ -88,67 +82,6 @@
                 type = lib.types.path;
                 description = "Path to the rclone config file";
               };
-              minecraft = {
-                MCport = lib.mkOption {
-                  type = lib.types.int;
-                  default = 25565;
-                  description = "Port to expose minecraft server on";
-                };
-                RCONPort = lib.mkOption {
-                  type = lib.types.int;
-                  default = 25575;
-                  description = "Port to expose minecraft rcon on";
-                };
-                voicePort = lib.mkOption {
-                  type = lib.types.int;
-                  default = 24454;
-                  description = "Port to expose minecraft simple voice chat on";
-                };
-                datadir = lib.mkOption {
-                  type = lib.types.path;
-                  description = "Path to store minecraft data";
-                };
-                openFirewall = lib.mkEnableOption "Open firewall for minecraft";
-              };
-              minecraft_geyser = {
-                MCport = lib.mkOption {
-                  type = lib.types.int;
-                  default = 25566;
-                  description = "Port to expose minecraft server on";
-                };
-                BedrockPort = lib.mkOption {
-                  type = lib.types.int;
-                  default = 19132;
-                  description = "Port to expose minecraft server on";
-                };
-                RCONPort = lib.mkOption {
-                  type = lib.types.int;
-                  default = 25576;
-                  description = "Port to expose minecraft rcon on";
-                };
-                datadir = lib.mkOption {
-                  type = lib.types.path;
-                  description = "Path to store minecraft data";
-                };
-                openFirewall = lib.mkEnableOption "Open firewall for minecraft";
-              };
-              terraria = {
-                port = lib.mkOption {
-                  type = lib.types.int;
-                  default = 7777;
-                  description = "Port to expose terraria server on";
-                };
-                RestPort = lib.mkOption {
-                  type = lib.types.int;
-                  default = 7878;
-                  description = "Port to expose terarria rest api on";
-                };
-                datadir = lib.mkOption {
-                  type = lib.types.path;
-                  description = "Path to store terraria data";
-                };
-                openFirewall = lib.mkEnableOption "Open firewall for terraria";
-              };
             };
             config = lib.mkIf cfg.enable {
               nixpkgs.overlays = [ self.overlays.default ];
@@ -169,115 +102,6 @@
                     export RCLONE_CONF_FILE=${cfg.rclone_conf_file}
                     ${pkgs.discord_bot}/bin/discord_bot
                   '';
-                };
-                arion-terraria.wantedBy = lib.mkForce [ ];
-                arion-minecraft-geyser.wantedBy = lib.mkForce [ ];
-              };
-              networking.firewall = {
-                allowedTCPPorts =
-                  lib.optionals cfg.minecraft.openFirewall [
-                    cfg.minecraft.MCport
-                  ]
-                  ++ lib.optionals cfg.minecraft_geyser.openFirewall [
-                    cfg.minecraft_geyser.MCport
-                  ]
-                  ++ lib.optionals cfg.terraria.openFirewall [
-                    cfg.terraria.port
-                  ];
-                allowedUDPPorts =
-                  lib.optionals cfg.terraria.openFirewall [
-                    cfg.terraria.port
-                  ]
-                  ++ lib.optionals cfg.minecraft.openFirewall [
-                    cfg.minecraft.voicePort
-                  ]
-                  ++ lib.optionals cfg.minecraft_geyser.openFirewall [
-                    cfg.minecraft_geyser.BedrockPort
-                  ];
-              };
-              virtualisation.arion.projects = {
-                minecraft-modded.settings.services = {
-                  mc.service = {
-                    image = "docker.io/itzg/minecraft-server:java17";
-                    # I plan to make a web interface that I want to be able to use RCON to get information but keep it internal
-                    ports = [
-                      "${toString cfg.minecraft.MCport}:25565"
-                      "${toString cfg.minecraft.RCONPort}:25575"
-                      "${toString cfg.minecraft.voicePort}:24454/udp"
-                    ];
-                    env_file = [ cfg.env_file ];
-                    environment = {
-                      EULA = "TRUE";
-                      TYPE = "FORGE";
-                      FORGE_VERSION = "47.3.10";
-                      VERSION = "1.20.1";
-                      MEMORY = "20g";
-                      OPS = "4cb4aff4-a0ed-4eaf-b912-47825b2ed30d";
-                      EXISTING_OPS_FILE = "MERGE";
-                      EXISTING_WHITELIST_FILE = "MERGE";
-                      MOTD = "ToyVo Modded Server";
-                      MAX_TICK_TIME = "-1";
-                      PACKWIZ_URL = "https://packwiz.toyvo.dev/pack.toml";
-                      SPAWN_PROTECTION = "0";
-                      MAX_PLAYERS = "10";
-                      CREATE_CONSOLE_IN_PIPE = "true";
-                      JVM_DD_OPTS = "fml.queryResult=confirm";
-                      ALLOW_FLIGHT = "TRUE";
-                      DIFFICULTY = "hard";
-                      VIEW_DISTANCE = "8";
-                      SIMULATION_DISTANCE = "8";
-                      MAX_CHAINED_NEIGHBOR_UPDATES = "10000";
-                      MAX_WORLD_SIZE = "12500";
-                      RATE_LIMIT = "100";
-                      RCON_CMDS_STARTUP = "gamerule playersSleepingPercentage 0\ngamerule mobGriefing false\ngamerule doFireTick false\ngamerule doInsomnia false";
-                    };
-                    volumes = [
-                      "${cfg.minecraft.datadir}:/data"
-                    ];
-                  };
-                };
-                minecraft-geyser.settings.services = {
-                  mc.service = {
-                    image = "docker.io/itzg/minecraft-server:java17";
-                    ports = [
-                      "${toString cfg.minecraft_geyser.MCport}:25565"
-                      "${toString cfg.minecraft_geyser.RCONPort}:25575"
-                      "${toString cfg.minecraft_geyser.BedrockPort}:19132/udp"
-                    ];
-                    env_file = [ cfg.env_file ];
-                    environment = {
-                      EULA = "TRUE";
-                      TYPE = "PAPER";
-                      VERSION = "1.20.1";
-                      MEMORY = "4g";
-                      OPS = "4cb4aff4-a0ed-4eaf-b912-47825b2ed30d";
-                      EXISTING_OPS_FILE = "MERGE";
-                      EXISTING_WHITELIST_FILE = "MERGE";
-                      MOTD = "ToyVo Geyser Server";
-                      MAX_TICK_TIME = "-1";
-                      SPAWN_PROTECTION = "0";
-                      MAX_PLAYERS = "10";
-                      CREATE_CONSOLE_IN_PIPE = "true";
-                      ALLOW_FLIGHT = "TRUE";
-                      DIFFICULTY = "hard";
-                    };
-                    volumes = [
-                      "${cfg.minecraft_geyser.datadir}:/data"
-                    ];
-                  };
-                };
-                terraria.settings.services.terraria.service = {
-                  image = "docker.io/ryshe/terraria:tshock-1.4.4.9-5.2.0-3";
-                  ports = [
-                    "${toString cfg.terraria.port}:7777"
-                    "${toString cfg.terraria.RestPort}:7878"
-                  ];
-                  volumes = [
-                    "${cfg.terraria.datadir}:/root/.local/share/Terraria/Worlds"
-                  ];
-                  environment = {
-                    WORLD_FILENAME = "large_master_crimson.wld";
-                  };
                 };
               };
             };
@@ -383,52 +207,6 @@
                 dev_start
               ];
             };
-          # devshells.default = {
-          #   imports = [
-          #     "${devshell}/extra/language/c.nix"
-          #     # "${devshell}/extra/language/rust.nix"
-          #   ];
-          #
-          #   env = [
-          #     {
-          #       name = "RUST_LOG";
-          #       value = "discord_bot=trace";
-          #     }
-          #     {
-          #       name = "RUST_SRC_PATH";
-          #       value = "${pkgs.rustPlatform.rustLibSrc}";
-          #     }
-          #   ];
-          #
-          #   packages =
-          #     with pkgs;
-          #     [
-          #       cargo
-          #       cargo-watch
-          #       clippy
-          #       pkg-config
-          #       rust-analyzer-unwrapped
-          #       rustPlatform.bindgenHook
-          #       rustc
-          #       rustfmt
-          #       systemfd
-          #     ]
-          #     ++ lib.optionals stdenv.isDarwin [ darwin.apple_sdk.frameworks.SystemConfiguration ];
-          #
-          #   commands = [
-          #     {
-          #       name = "start_dev";
-          #       help = "Start axum server with listener to restart on code changes.";
-          #       command = ''
-          #         systemfd --no-pid -s http::8080 -- cargo watch -x run
-          #       '';
-          #     }
-          #   ];
-          #
-          #   language.c = {
-          #     libraries = lib.optional pkgs.stdenv.isDarwin pkgs.libiconv;
-          #   };
-          # };
         };
     };
 }
