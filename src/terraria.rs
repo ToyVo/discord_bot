@@ -151,6 +151,7 @@ pub async fn track_players(state: &AppState) -> Result<(), AppError> {
             })
             .collect()
     } else {
+        tracing::debug!("terraria not running");
         // set players to empty if it isn't already
         vec![]
     };

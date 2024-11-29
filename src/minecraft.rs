@@ -94,9 +94,11 @@ async fn track_generic<S: AsRef<str>>(
                 .filter(|s| !s.is_empty())
                 .collect::<Vec<String>>()
         } else {
+            tracing::debug!("mc other player error");
             vec![]
         }
     } else {
+        tracing::debug!("mc not running");
         vec![]
     };
 
