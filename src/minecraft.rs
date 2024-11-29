@@ -15,7 +15,7 @@ use crate::terraria::get_player_changes;
 #[cfg(feature = "db")]
 use crate::DB;
 #[cfg(feature = "watchers")]
-use crate::{discord_utils, systemctl_running};
+use crate::discord_utils;
 #[cfg(feature = "watchers")]
 use anyhow::Context;
 #[cfg(feature = "backups")]
@@ -43,20 +43,18 @@ use tokio::sync::RwLock;
 async fn initiate_connection<S: AsRef<str>>(
     minecraft_rcon_address: S,
     minecraft_rcon_password: S,
-    service_name: &str,
     connection: &RwLock<Option<Connection<TcpStream>>>,
-) -> Result<bool, AppError> {
+) -> bool {
     let mut con = connection.write().await;
-
-    if !systemctl_running(service_name).await? {
-        if con.is_some() {
-            *con = None;
+    match con.as_mut() {
+        Some(server) => {
+            let success = server.cmd("help").await.is_err();
+            if !success {
+                *con = None;
+            }
+            !success
         }
-        return Ok(false);
-    }
-
-    if con.is_none() {
-        if let Ok(server) = <Connection<TcpStream>>::builder()
+        None => match <Connection<TcpStream>>::builder()
             .enable_minecraft_quirks(true)
             .connect(
                 minecraft_rcon_address.as_ref(),
@@ -64,28 +62,16 @@ async fn initiate_connection<S: AsRef<str>>(
             )
             .await
         {
-            *con = Some(server);
-        }
-    }
-
-    if let Some(server) = con.as_mut() {
-        if (server.cmd("help").await).is_err() {
-            if let Ok(server) = <Connection<TcpStream>>::builder()
-                .enable_minecraft_quirks(true)
-                .connect(
-                    minecraft_rcon_address.as_ref(),
-                    minecraft_rcon_password.as_ref(),
-                )
-                .await
-            {
-                *con = Some(server);
+            Ok(mut server) => {
+                let success = server.cmd("help").await.is_err();
+                if success {
+                    *con = Some(server);
+                }
+                !success
             }
-        }
+            Err(_) => false,
+        },
     }
-
-    // if an error occurs, like a broken pipe, we want to reset the connection
-
-    Ok(true)
 }
 
 #[cfg(feature = "watchers")]
@@ -94,7 +80,6 @@ async fn track_generic<S: AsRef<str>>(
     minecraft_rcon_password: S,
     discord_minecraft_channel_id: S,
     surreal_id: &str,
-    service_name: &str,
     connection: &RwLock<Option<Connection<TcpStream>>>,
     state: &AppState,
 ) -> Result<(), AppError> {
@@ -105,89 +90,78 @@ async fn track_generic<S: AsRef<str>>(
         vec![]
     };
 
-    if !initiate_connection(
-        minecraft_rcon_address,
-        minecraft_rcon_password,
-        service_name,
-        connection,
-    )
-    .await?
-    {
-        if !last_player_names.is_empty() {
-            let _upserted: Option<GamePlayers> = DB
-                .upsert(("players", surreal_id))
-                .content(GamePlayers {
-                    game: surreal_id.to_string(),
-                    players: vec![],
-                    time: Utc::now(),
-                })
-                .await?;
+    let connection_successful =
+        initiate_connection(minecraft_rcon_address, minecraft_rcon_password, connection).await;
+
+    let players = if connection_successful {
+        let mut con = connection.write().await;
+        if let Some(server) = con.as_mut() {
+            // list response "There are n of a max of m players online: <player1>"
+            let res = server.cmd("list").await?;
+
+            // Parse response to get list of player names in a vector
+            let start_index = res.find(':').context("Could not find ':' in response")?;
+            res[start_index + 1..]
+                .trim()
+                .split(',')
+                .map(|s| s.trim().to_string())
+                .filter(|s| !s.is_empty())
+                .collect::<Vec<String>>()
+        } else {
+            vec![]
         }
-        return Ok(());
-    }
+    } else {
+        vec![]
+    };
 
-    let mut con = connection.write().await;
-    if let Some(server) = con.as_mut() {
-        // list response "There are n of a max of m players online: <player1>"
-        let res = server.cmd("list").await?;
+    if let Some(message) = get_player_changes(&last_player_names, &players) {
+        tracing::info!("{}", message);
+        let message = discord_utils::create_message(
+            CreateMessage::new()
+                .content(message)
+                .flags(MessageFlags::SUPPRESS_NOTIFICATIONS),
+            &discord_minecraft_channel_id,
+            state,
+        )
+        .await?;
 
-        // Parse response to get list of player names in a vector
-        let start_index = res.find(':').context("Could not find ':' in response")?;
-        let players = res[start_index + 1..]
-            .trim()
-            .split(',')
-            .map(|s| s.trim().to_string())
-            .filter(|s| !s.is_empty())
-            .collect::<Vec<String>>();
+        match DB.select(("status", surreal_id)).await {
+            Ok(Some(data)) => {
+                let data: GameStatus = data;
+                discord_utils::delete_message(
+                    data.discord_message_id.as_str(),
+                    discord_minecraft_channel_id.as_ref(),
+                    state,
+                )
+                .await
+            }
+            Err(e) => Ok(tracing::error!("Error getting GameStatus from DB: {}", e)),
+            _ => Ok(()),
+        }?;
 
-        if let Some(message) = get_player_changes(&last_player_names, &players) {
-            tracing::info!("{}", message);
-            let message = discord_utils::create_message(
-                CreateMessage::new()
-                    .content(message)
-                    .flags(MessageFlags::SUPPRESS_NOTIFICATIONS),
-                &discord_minecraft_channel_id,
-                state,
-            )
-            .await?;
-
-            match DB.select(("status", surreal_id)).await {
-                Ok(Some(data)) => {
-                    let data: GameStatus = data;
-                    discord_utils::delete_message(
-                        data.discord_message_id.as_str(),
-                        discord_minecraft_channel_id.as_ref(),
-                        state,
-                    )
-                    .await
-                }
-                Err(e) => Ok(tracing::error!("Error getting GameStatus from DB: {}", e)),
-                _ => Ok(()),
-            }?;
-
-            let _upserted: Option<GameStatus> = DB
-                .upsert(("status", surreal_id))
-                .content(GameStatus {
-                    game: surreal_id.to_string(),
-                    discord_message_id: message
-                        .get("id")
-                        .context("Could not find id in response")?
-                        .as_str()
-                        .context("could not parse as str")?
-                        .to_string(),
-                })
-                .await?;
-        }
-
-        let _upserted: Option<GamePlayers> = DB
-            .upsert(("players", surreal_id))
-            .content(GamePlayers {
+        let _upserted: Option<GameStatus> = DB
+            .upsert(("status", surreal_id))
+            .content(GameStatus {
                 game: surreal_id.to_string(),
-                players,
-                time: Utc::now(),
+                discord_message_id: message
+                    .get("id")
+                    .context("Could not find id in response")?
+                    .as_str()
+                    .context("could not parse as str")?
+                    .to_string(),
             })
             .await?;
     }
+
+    let _upserted: Option<GamePlayers> = DB
+        .upsert(("players", surreal_id))
+        .content(GamePlayers {
+            game: surreal_id.to_string(),
+            players,
+            time: Utc::now(),
+        })
+        .await?;
+
     Ok(())
 }
 
@@ -198,7 +172,6 @@ pub async fn track_players(state: &AppState) -> Result<(), AppError> {
         &state.minecraft_modded_rcon_password,
         &state.discord_minecraft_modded_channel_id,
         "minecraft_modded",
-        &state.minecraft_modded_service_name,
         &state.minecraft_modded_connection,
         state,
     )
@@ -208,7 +181,6 @@ pub async fn track_players(state: &AppState) -> Result<(), AppError> {
         &state.minecraft_geyser_rcon_password,
         &state.discord_minecraft_geyser_channel_id,
         "minecraft_geyser",
-        &state.minecraft_geyser_service_name,
         &state.minecraft_geyser_connection,
         state,
     )
@@ -222,7 +194,6 @@ pub async fn backup_data_dir<S: AsRef<str>>(
     minecraft_rcon_password: S,
     minecraft_data_dir: String,
     surreal_id: &str,
-    service_name: &str,
     connection: &RwLock<Option<Connection<TcpStream>>>,
     state: &AppState,
 ) -> Result<(), AppError> {
@@ -254,17 +225,13 @@ pub async fn backup_data_dir<S: AsRef<str>>(
     if last_backup_time.time + backup_interval <= now
         && (!last_player_names.players.is_empty() || should_backup_if_no_players)
     {
-        let server_running = initiate_connection(
-            minecraft_rcon_address,
-            minecraft_rcon_password,
-            service_name,
-            connection,
-        )
-        .await?;
+        let connection_successful =
+            initiate_connection(minecraft_rcon_address, minecraft_rcon_password, connection)
+                .await;
 
         let mut con = connection.write().await;
 
-        if server_running {
+        if connection_successful {
             if let Some(server) = con.as_mut() {
                 let _ = server.cmd("save-off").await;
                 let _ = server.cmd("save-all flush").await;
@@ -306,7 +273,7 @@ pub async fn backup_data_dir<S: AsRef<str>>(
 
         tracing::debug!("tar {}", output.status);
 
-        if server_running {
+        if connection_successful {
             if let Some(server) = con.as_mut() {
                 let _ = server.cmd("save-on").await;
             }
@@ -402,7 +369,6 @@ pub async fn backup_world(state: &AppState) -> Result<(), AppError> {
         &state.minecraft_modded_rcon_password,
         state.minecraft_modded_data_dir.clone(),
         "minecraft_modded",
-        &state.minecraft_modded_service_name,
         &state.minecraft_modded_connection,
         state,
     )
@@ -412,7 +378,6 @@ pub async fn backup_world(state: &AppState) -> Result<(), AppError> {
         &state.minecraft_geyser_rcon_password,
         state.minecraft_geyser_data_dir.clone(),
         "minecraft_geyser",
-        &state.minecraft_geyser_service_name,
         &state.minecraft_geyser_connection,
         state,
     )

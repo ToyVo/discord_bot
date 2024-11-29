@@ -133,28 +133,27 @@ pub fn get_player_changes(before: &[String], after: &[String]) -> Option<String>
 
 #[cfg(feature = "watchers")]
 pub async fn track_players(state: &AppState) -> Result<(), AppError> {
-    if !systemctl_running(&state.terraria_service_name).await? {
-        return Ok(());
-    }
-
-    // get nicknames
-    let status = get_status(state).await?;
-    let players = status
-        .get("players")
-        .expect("players not found")
-        .as_array()
-        .expect("failed to parse players into array");
-    let player_nicknames: Vec<String> = players
-        .iter()
-        .map(|player| {
-            player
-                .get("nickname")
-                .expect("Could not get nickname")
-                .as_str()
-                .expect("failed to parse nickname as str")
-                .to_string()
-        })
-        .collect();
+    let player_nicknames = if let Ok(status) = get_status(state).await {
+        let players = status
+            .get("players")
+            .expect("players not found")
+            .as_array()
+            .expect("failed to parse players into array");
+        players
+            .iter()
+            .map(|player| {
+                player
+                    .get("nickname")
+                    .expect("Could not get nickname")
+                    .as_str()
+                    .expect("failed to parse nickname as str")
+                    .to_string()
+            })
+            .collect()
+    } else {
+        // set players to empty if it isn't already
+        vec![]
+    };
 
     let last_player_nicknames: Option<GamePlayers> = DB.select(("players", "terraria")).await?;
     let last_player_nicknames = if let Some(data) = last_player_nicknames {

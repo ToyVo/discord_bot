@@ -2,7 +2,7 @@ mod discord_handlers;
 mod log_viewer;
 
 use axum::extract::FromRef;
-use axum::http::{StatusCode, Uri};
+use axum::http::StatusCode;
 use axum::response::{Html, IntoResponse};
 use axum::routing::{get, post};
 use axum::Router;
@@ -130,7 +130,7 @@ async fn app_endpoint() -> Html<String> {
     html_app(
         rsx! {
             a {
-                href: "/minecraft",
+                href: "https://packwiz.toyvo.dev",
                 "Minecraft Modpack"
             }
         },
