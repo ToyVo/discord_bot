@@ -56,11 +56,6 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
         .await?;
 
     let state = AppState(Arc::new(InnerState {
-        #[cfg(feature = "backups")]
-        backup_interval: var("BACKUP_INTERVAL")
-            .unwrap_or((60 * 60 * 2).to_string())
-            .parse::<u64>()
-            .unwrap_or(60 * 60 * 2),
         base_url: var("BASE_URL").unwrap_or_default(),
         client_id: var("DISCORD_CLIENT_ID").unwrap_or_default(),
         client_secret: var("DISCORD_CLIENT_SECRET").unwrap_or_default(),
@@ -73,11 +68,6 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
         discord_token: var("DISCORD_TOKEN").unwrap_or_default(),
         forge_api_key: var("FORGE_API_KEY").unwrap_or_default(),
         key: Key::generate(),
-        #[cfg(feature = "backups")]
-        max_backup_age: var("MAX_BACKUP_AGE")
-            .unwrap_or((60 * 60 * 24 * 7).to_string())
-            .parse::<u64>()
-            .unwrap_or(60 * 60 * 24 * 7),
         #[cfg(feature = "watchers")]
         minecraft_geyser_connection: Default::default(),
         minecraft_geyser_data_dir: var("MINECRAFT_GEYSER_DATA_DIR")
@@ -97,10 +87,6 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
         minecraft_modded_service_name: var("MINECRAFT_MODDED_SERVICE_NAME")
             .unwrap_or(String::from("arion-minecraft-modded.service")),
         public_key: var("DISCORD_PUBLIC_KEY").unwrap_or_default(),
-        #[cfg(feature = "backups")]
-        rclone_conf_file: var("RCLONE_CONF_FILE").unwrap_or_default(),
-        #[cfg(feature = "backups")]
-        rclone_remote: var("RCLONE_REMOTE").unwrap_or(String::from("protondrive")),
         terraria_service_name: var("TERRARIA_SERVICE_NAME")
             .unwrap_or(String::from("arion-terraria.service")),
         tshock_base_url: var("TSHOCK_REST_BASE_URL")
@@ -165,10 +151,6 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
             }
             if let Err(e) = minecraft::track_players(&interval_state).await {
                 tracing::error!("Failed to get status from minecraft: {e}");
-            }
-            #[cfg(feature = "backups")]
-            if let Err(e) = minecraft::backup_world(&interval_state).await {
-                tracing::error!("Failed to backup minecraft: {e}");
             }
         }
     });

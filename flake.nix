@@ -128,7 +128,6 @@
             rootFeatures = [
               "db"
               "watchers"
-              "backups"
             ];
             buildRustCrateForPkgs =
               pkgs:

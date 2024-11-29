@@ -6,10 +6,9 @@ edition = "2021"
 repository = "https://github.com/toyvo/discord_bot"
 
 [features]
-default = ["db", "watchers", "backups"]
+default = ["db", "watchers"]
 db = []
 watchers = ["db"]
-backups = ["watchers"]
 
 
 [dependencies]

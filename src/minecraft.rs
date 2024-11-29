@@ -1,13 +1,7 @@
 #[cfg(feature = "watchers")]
 use crate::error::AppError;
-#[cfg(feature = "backups")]
-use crate::fs_sync;
-#[cfg(feature = "backups")]
-use crate::models::GameBackup;
 #[cfg(feature = "watchers")]
 use crate::models::{GamePlayers, GameStatus};
-#[cfg(feature = "backups")]
-use crate::rclone;
 #[cfg(feature = "watchers")]
 use crate::routes::AppState;
 #[cfg(feature = "watchers")]
@@ -18,8 +12,6 @@ use crate::DB;
 use crate::discord_utils;
 #[cfg(feature = "watchers")]
 use anyhow::Context;
-#[cfg(feature = "backups")]
-use chrono::NaiveDateTime;
 #[cfg(feature = "watchers")]
 use chrono::Utc;
 #[cfg(feature = "watchers")]
@@ -28,14 +20,8 @@ use rcon::Connection;
 use serenity::all::MessageFlags;
 #[cfg(feature = "watchers")]
 use serenity::builder::CreateMessage;
-#[cfg(feature = "backups")]
-use std::fs;
-#[cfg(feature = "backups")]
-use std::time::Duration;
 #[cfg(feature = "watchers")]
 use tokio::net::TcpStream;
-#[cfg(feature = "backups")]
-use tokio::process::Command;
 #[cfg(feature = "watchers")]
 use tokio::sync::RwLock;
 
@@ -180,203 +166,6 @@ pub async fn track_players(state: &AppState) -> Result<(), AppError> {
         &state.minecraft_geyser_rcon_address,
         &state.minecraft_geyser_rcon_password,
         &state.discord_minecraft_geyser_channel_id,
-        "minecraft_geyser",
-        &state.minecraft_geyser_connection,
-        state,
-    )
-    .await?;
-    Ok(())
-}
-
-#[cfg(feature = "backups")]
-pub async fn backup_data_dir<S: AsRef<str>>(
-    minecraft_rcon_address: S,
-    minecraft_rcon_password: S,
-    minecraft_data_dir: String,
-    surreal_id: &str,
-    connection: &RwLock<Option<Connection<TcpStream>>>,
-    state: &AppState,
-) -> Result<(), AppError> {
-    let now = Utc::now();
-    let backup_interval = Duration::from_secs(state.backup_interval);
-
-    let last_backup_time = match DB.select(("last_backup", surreal_id)).await {
-        Ok(Some(data)) => data,
-        _ => GameBackup {
-            game: surreal_id.to_string(),
-            // ensure a backup is created
-            time: now - backup_interval,
-            filename: "".to_string(),
-        },
-    };
-
-    let last_player_names = match DB.select(("players", surreal_id)).await {
-        Ok(Some(data)) => data,
-        _ => GamePlayers {
-            game: surreal_id.to_string(),
-            // ensure a backup is created
-            time: now - backup_interval,
-            players: vec![],
-        },
-    };
-
-    let should_backup_if_no_players = last_backup_time.time <= last_player_names.time;
-
-    if last_backup_time.time + backup_interval <= now
-        && (!last_player_names.players.is_empty() || should_backup_if_no_players)
-    {
-        let connection_successful =
-            initiate_connection(minecraft_rcon_address, minecraft_rcon_password, connection)
-                .await;
-
-        let mut con = connection.write().await;
-
-        if connection_successful {
-            if let Some(server) = con.as_mut() {
-                let _ = server.cmd("save-off").await;
-                let _ = server.cmd("save-all flush").await;
-                fs_sync().await?;
-            }
-        }
-
-        let mut tar_args = vec![
-            String::from("-C"),
-            minecraft_data_dir.clone(),
-            String::from("--zstd"),
-            String::from("-cf"),
-        ];
-        let backup_name = format!("{surreal_id}-{}.tar.zst", now.format("%Y-%m-%d_%H-%M-%S"));
-        let backup_destination = format!("{}/backups/{backup_name}", minecraft_data_dir.clone());
-        tar_args.push(backup_destination.clone());
-        let exclude_patterns = vec![
-            "*.jar",
-            "cache",
-            "logs",
-            "*.tmp",
-            "backups",
-            "server.properties",
-        ];
-        for pattern in exclude_patterns {
-            let arg = format!("--exclude={pattern}");
-            tar_args.push(arg);
-        }
-        tar_args.push(String::from("."));
-
-        let local_backup_dir = format!("{}/backups", minecraft_data_dir);
-        fs::create_dir_all(&local_backup_dir)?;
-
-        let output = Command::new("tar")
-            // add --exclude PATTERN as many times as needed
-            .args(&tar_args)
-            .output()
-            .await?;
-
-        tracing::debug!("tar {}", output.status);
-
-        if connection_successful {
-            if let Some(server) = con.as_mut() {
-                let _ = server.cmd("save-on").await;
-            }
-        }
-
-        let _upserted: Option<GameBackup> = DB
-            .upsert(("last_backup", surreal_id))
-            .content(GameBackup {
-                game: surreal_id.to_string(),
-                filename: backup_name,
-                time: now,
-            })
-            .await?;
-
-        let rclone_destination = format!("{}:{surreal_id}", &state.rclone_remote);
-        let _ = rclone(&[
-            "copy",
-            &backup_destination,
-            &rclone_destination,
-            "--protondrive-replace-existing-draft=true",
-            "--config",
-            &state.rclone_conf_file,
-        ])
-        .await?;
-
-        let output = rclone(&[
-            "ls",
-            &rclone_destination,
-            "--config",
-            &state.rclone_conf_file,
-        ])
-        .await?;
-
-        let oldest_backup_time_to_keep = now - Duration::from_secs(state.max_backup_age);
-        let file_name_parse_string = format!("{surreal_id}-%Y-%m-%d_%H-%M-%S.tar.zst");
-
-        let remote_files_to_delete = output
-            .lines()
-            .filter_map(|line| {
-                if !line.trim().is_empty() {
-                    if let Some(i) = line.find(surreal_id) {
-                        let (_size_in_bytes, file_name) = line.split_at(i);
-                        match NaiveDateTime::parse_from_str(
-                            file_name,
-                            file_name_parse_string.as_str(),
-                        ) {
-                            Ok(file_time) => {
-                                if file_time.and_utc() < oldest_backup_time_to_keep {
-                                    return Some(format!(
-                                        "{}:{surreal_id}/{file_name}",
-                                        &state.rclone_remote
-                                    ));
-                                }
-                            }
-                            Err(e) => {
-                                tracing::error!("Cleanup error: {line}: {e}");
-                            }
-                        }
-                    }
-                }
-                None
-            })
-            .collect::<Vec<String>>();
-
-        for file in remote_files_to_delete {
-            let _ = rclone(&["deletefile", &file, "--config", &state.rclone_conf_file]).await?;
-        }
-
-        fs::read_dir(&local_backup_dir)?.for_each(|entry| {
-            if let Ok(entry) = entry {
-                if entry.path().is_file() {
-                    let file_name = entry.file_name().into_string().unwrap();
-                    // let file_time =
-                    //     NaiveDateTime::parse_from_str(&file_name, file_name_parse_string.as_str())
-                    //         .unwrap()
-                    //         .and_utc();
-                    // TODO: sometimes uploads fail
-                    // if file_time < oldest_backup_time_to_keep {
-                    let source = format!("{local_backup_dir}/{}", &file_name);
-                    fs::remove_file(source).unwrap();
-                    // }
-                }
-            }
-        });
-    }
-    Ok(())
-}
-
-#[cfg(feature = "backups")]
-pub async fn backup_world(state: &AppState) -> Result<(), AppError> {
-    backup_data_dir(
-        &state.minecraft_modded_rcon_address,
-        &state.minecraft_modded_rcon_password,
-        state.minecraft_modded_data_dir.clone(),
-        "minecraft_modded",
-        &state.minecraft_modded_connection,
-        state,
-    )
-    .await?;
-    backup_data_dir(
-        &state.minecraft_geyser_rcon_address,
-        &state.minecraft_geyser_rcon_password,
-        state.minecraft_geyser_data_dir.clone(),
         "minecraft_geyser",
         &state.minecraft_geyser_connection,
         state,
