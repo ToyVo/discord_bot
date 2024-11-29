@@ -68,8 +68,6 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
         discord_token: var("DISCORD_TOKEN").unwrap_or_default(),
         forge_api_key: var("FORGE_API_KEY").unwrap_or_default(),
         key: Key::generate(),
-        #[cfg(feature = "watchers")]
-        minecraft_geyser_connection: Default::default(),
         minecraft_geyser_data_dir: var("MINECRAFT_GEYSER_DATA_DIR")
             .unwrap_or(String::from("/minecraft-geyser-data")),
         minecraft_geyser_rcon_address: var("MINECRAFT_RCON_ADDRESS")
@@ -77,8 +75,6 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
         minecraft_geyser_rcon_password: var("RCON_PASSWORD").unwrap_or_default(),
         minecraft_geyser_service_name: var("MINECRAFT_GEYSER_SERVICE_NAME")
             .unwrap_or(String::from("arion-minecraft-geyser.service")),
-        #[cfg(feature = "watchers")]
-        minecraft_modded_connection: Default::default(),
         minecraft_modded_data_dir: var("MINECRAFT_MODDED_DATA_DIR")
             .unwrap_or(String::from("/minecraft-modded-data")),
         minecraft_modded_rcon_address: var("MINECRAFT_RCON_ADDRESS")

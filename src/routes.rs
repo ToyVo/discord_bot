@@ -50,14 +50,10 @@ pub struct InnerState {
     pub discord_token: String,
     pub forge_api_key: String,
     pub key: Key,
-    #[cfg(feature = "watchers")]
-    pub minecraft_geyser_connection: RwLock<Option<Connection<TcpStream>>>,
     pub minecraft_geyser_data_dir: String,
     pub minecraft_geyser_rcon_address: String,
     pub minecraft_geyser_rcon_password: String,
     pub minecraft_geyser_service_name: String,
-    #[cfg(feature = "watchers")]
-    pub minecraft_modded_connection: RwLock<Option<Connection<TcpStream>>>,
     pub minecraft_modded_data_dir: String,
     pub minecraft_modded_rcon_address: String,
     pub minecraft_modded_rcon_password: String,

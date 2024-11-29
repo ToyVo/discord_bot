@@ -1,4 +1,6 @@
 #[cfg(feature = "watchers")]
+use crate::discord_utils;
+#[cfg(feature = "watchers")]
 use crate::error::AppError;
 #[cfg(feature = "watchers")]
 use crate::models::{GamePlayers, GameStatus};
@@ -8,8 +10,6 @@ use crate::routes::AppState;
 use crate::terraria::get_player_changes;
 #[cfg(feature = "db")]
 use crate::DB;
-#[cfg(feature = "watchers")]
-use crate::discord_utils;
 #[cfg(feature = "watchers")]
 use anyhow::Context;
 #[cfg(feature = "watchers")]
@@ -26,47 +26,11 @@ use tokio::net::TcpStream;
 use tokio::sync::RwLock;
 
 #[cfg(feature = "watchers")]
-async fn initiate_connection<S: AsRef<str>>(
-    minecraft_rcon_address: S,
-    minecraft_rcon_password: S,
-    connection: &RwLock<Option<Connection<TcpStream>>>,
-) -> bool {
-    let mut con = connection.write().await;
-    match con.as_mut() {
-        Some(server) => {
-            let success = server.cmd("help").await.is_err();
-            if !success {
-                *con = None;
-            }
-            !success
-        }
-        None => match <Connection<TcpStream>>::builder()
-            .enable_minecraft_quirks(true)
-            .connect(
-                minecraft_rcon_address.as_ref(),
-                minecraft_rcon_password.as_ref(),
-            )
-            .await
-        {
-            Ok(mut server) => {
-                let success = server.cmd("help").await.is_err();
-                if success {
-                    *con = Some(server);
-                }
-                !success
-            }
-            Err(_) => false,
-        },
-    }
-}
-
-#[cfg(feature = "watchers")]
 async fn track_generic<S: AsRef<str>>(
     minecraft_rcon_address: S,
     minecraft_rcon_password: S,
     discord_minecraft_channel_id: S,
     surreal_id: &str,
-    connection: &RwLock<Option<Connection<TcpStream>>>,
     state: &AppState,
 ) -> Result<(), AppError> {
     let last_player_names: Option<GamePlayers> = DB.select(("players", surreal_id)).await?;
@@ -76,27 +40,25 @@ async fn track_generic<S: AsRef<str>>(
         vec![]
     };
 
-    let connection_successful =
-        initiate_connection(minecraft_rcon_address, minecraft_rcon_password, connection).await;
+    let players = if let Ok(mut connection) = <Connection<TcpStream>>::builder()
+        .enable_minecraft_quirks(true)
+        .connect(
+            minecraft_rcon_address.as_ref(),
+            minecraft_rcon_password.as_ref(),
+        )
+        .await
+    {
+        // list response "There are n of a max of m players online: <player1>"
+        let res = connection.cmd("list").await?;
 
-    let players = if connection_successful {
-        let mut con = connection.write().await;
-        if let Some(server) = con.as_mut() {
-            // list response "There are n of a max of m players online: <player1>"
-            let res = server.cmd("list").await?;
-
-            // Parse response to get list of player names in a vector
-            let start_index = res.find(':').context("Could not find ':' in response")?;
-            res[start_index + 1..]
-                .trim()
-                .split(',')
-                .map(|s| s.trim().to_string())
-                .filter(|s| !s.is_empty())
-                .collect::<Vec<String>>()
-        } else {
-            tracing::debug!("mc other player error");
-            vec![]
-        }
+        // Parse response to get list of player names in a vector
+        let start_index = res.find(':').context("Could not find ':' in response")?;
+        res[start_index + 1..]
+            .trim()
+            .split(',')
+            .map(|s| s.trim().to_string())
+            .filter(|s| !s.is_empty())
+            .collect::<Vec<String>>()
     } else {
         tracing::debug!("mc not running");
         vec![]
@@ -160,7 +122,6 @@ pub async fn track_players(state: &AppState) -> Result<(), AppError> {
         &state.minecraft_modded_rcon_password,
         &state.discord_minecraft_modded_channel_id,
         "minecraft_modded",
-        &state.minecraft_modded_connection,
         state,
     )
     .await?;
@@ -169,7 +130,6 @@ pub async fn track_players(state: &AppState) -> Result<(), AppError> {
         &state.minecraft_geyser_rcon_password,
         &state.discord_minecraft_geyser_channel_id,
         "minecraft_geyser",
-        &state.minecraft_geyser_connection,
         state,
     )
     .await?;
