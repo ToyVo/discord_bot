@@ -1,6 +1,6 @@
 use crate::error::AppError;
 #[cfg(feature = "watchers")]
-use crate::models::{GamePlayers, GameStatus};
+use crate::models::{GamePlayers, DiscordMessage};
 use crate::routes::AppState;
 #[cfg(feature = "db")]
 use crate::DB;
@@ -174,9 +174,9 @@ pub async fn track_players(state: &AppState) -> Result<(), AppError> {
         )
         .await?;
 
-        match DB.select(("status", "terraria")).await {
+        match DB.select(("discord_messages", "terraria")).await {
             Ok(Some(data)) => {
-                let data: GameStatus = data;
+                let data: DiscordMessage = data;
                 discord_utils::delete_message(
                     &data.discord_message_id,
                     &state.discord_terraria_channel_id,
@@ -184,13 +184,13 @@ pub async fn track_players(state: &AppState) -> Result<(), AppError> {
                 )
                 .await
             }
-            Err(e) => Ok(tracing::error!("Error getting GameStatus from DB: {}", e)),
+            Err(e) => Ok(tracing::error!("Error getting DiscordMessage from DB: {}", e)),
             _ => Ok(()),
         }?;
 
-        let _upserted: Option<GameStatus> = DB
-            .upsert(("status", "terraria"))
-            .content(GameStatus {
+        let _upserted: Option<DiscordMessage> = DB
+            .upsert(("discord_messages", "terraria"))
+            .content(DiscordMessage {
                 game: String::from("terraria"),
                 discord_message_id: message
                     .get("id")

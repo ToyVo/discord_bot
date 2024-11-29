@@ -8,14 +8,8 @@ use axum::routing::{get, post};
 use axum::Router;
 use axum_extra::extract::cookie::Key;
 use dioxus::prelude::*;
-#[cfg(feature = "watchers")]
-use rcon::Connection;
 use std::ops::Deref;
 use std::sync::Arc;
-#[cfg(feature = "watchers")]
-use tokio::net::TcpStream;
-#[cfg(feature = "watchers")]
-use tokio::sync::RwLock;
 use tower_http::services::ServeDir;
 
 use crate::routes::discord_handlers::{discord_oauth_callback, interactions, verify_user};

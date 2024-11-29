@@ -3,7 +3,7 @@ use crate::discord_utils;
 #[cfg(feature = "watchers")]
 use crate::error::AppError;
 #[cfg(feature = "watchers")]
-use crate::models::{GamePlayers, GameStatus};
+use crate::models::{GamePlayers, DiscordMessage};
 #[cfg(feature = "watchers")]
 use crate::routes::AppState;
 #[cfg(feature = "watchers")]
@@ -22,8 +22,6 @@ use serenity::all::MessageFlags;
 use serenity::builder::CreateMessage;
 #[cfg(feature = "watchers")]
 use tokio::net::TcpStream;
-#[cfg(feature = "watchers")]
-use tokio::sync::RwLock;
 
 #[cfg(feature = "watchers")]
 async fn track_generic<S: AsRef<str>>(
@@ -75,9 +73,9 @@ async fn track_generic<S: AsRef<str>>(
         )
         .await?;
 
-        match DB.select(("status", surreal_id)).await {
+        match DB.select(("discord_messages", surreal_id)).await {
             Ok(Some(data)) => {
-                let data: GameStatus = data;
+                let data: DiscordMessage = data;
                 discord_utils::delete_message(
                     data.discord_message_id.as_str(),
                     discord_minecraft_channel_id.as_ref(),
@@ -85,13 +83,15 @@ async fn track_generic<S: AsRef<str>>(
                 )
                 .await
             }
-            Err(e) => Ok(tracing::error!("Error getting GameStatus from DB: {}", e)),
+            Err(e) => Ok(tracing::error!("Error getting DiscordMessage from DB: {}", e)),
             _ => Ok(()),
         }?;
 
-        let _upserted: Option<GameStatus> = DB
-            .upsert(("status", surreal_id))
-            .content(GameStatus {
+        // TODO: if the last message was sent within the last 5 minutes, just update the message instead of creating a new one
+        // if t
+        let _upserted: Option<DiscordMessage> = DB
+            .upsert(("discord_messages", surreal_id))
+            .content(DiscordMessage {
                 game: surreal_id.to_string(),
                 discord_message_id: message
                     .get("id")

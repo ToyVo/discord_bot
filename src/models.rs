@@ -16,7 +16,7 @@ pub struct GamePlayers {
 }
 
 #[derive(Serialize, Deserialize)]
-pub struct GameStatus {
+pub struct DiscordMessage {
     pub game: String,
     pub discord_message_id: String,
 }
