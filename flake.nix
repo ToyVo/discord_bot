@@ -5,7 +5,6 @@
       url = "github:hercules-ci/flake-parts";
       inputs.nixpkgs-lib.follows = "nixpkgs";
     };
-    crate2nix.url = "github:nix-community/crate2nix";
     devshell = {
       url = "github:numtide/devshell";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -37,7 +36,6 @@
       self,
       nixpkgs,
       flake-parts,
-      crate2nix,
       devshell,
       ...
     }:
@@ -85,7 +83,6 @@
             };
             config = lib.mkIf cfg.enable {
               nixpkgs.overlays = [ self.overlays.default ];
-              services.surrealdb.enable = lib.mkDefault true;
               systemd.services = {
                 discord_bot = {
                   before = [ "arion-minecraft-modded.service" ];
@@ -120,63 +117,23 @@
         let
           cargoToml = builtins.fromTOML (builtins.readFile ./Cargo.toml);
           rev = self.shortRev or self.dirtyShortRev or "dirty";
-          generatedCargoNix = crate2nix.tools.${system}.generatedCargoNix {
-            name = "discord_bot";
-            src = ./.;
-          };
-          cargoNix = pkgs.callPackage "${generatedCargoNix}/default.nix" {
-            rootFeatures = [
-              "db"
-              "watchers"
-            ];
-            buildRustCrateForPkgs =
-              pkgs:
-              pkgs.buildRustCrate.override {
-                defaultCrateOverrides = pkgs.defaultCrateOverrides // {
-                  discord_bot =
-                    attrs:
-                    let
-                      runtimeDeps = with pkgs; [
-                        gnutar
-                        rclone
-                        zstd
-                        uutils-coreutils-noprefix
-                      ];
-                    in
-                    {
-                      version = "${cargoToml.package.version}-${rev}";
-                      postInstall = ''
-                        wrapProgram $out/bin/discord_bot \
-                          --prefix PATH : ${lib.makeBinPath runtimeDeps}
-                      '';
-                      buildInputs =
-                        with pkgs.darwin.apple_sdk.frameworks;
-                        lib.optionals pkgs.stdenv.isDarwin [
-                          CoreServices
-                          SystemConfiguration
-                        ];
-                      nativeBuildInputs =
-                        with pkgs;
-                        [
-                          installShellFiles
-                          makeBinaryWrapper
-                          libiconv
-                          openssl
-                          pkg-config
-                          rustPlatform.bindgenHook
-                        ]
-                        ++ runtimeDeps;
-                      OPENSSL_NO_VENDOR = 1;
-                      OPENSSL_LIB_DIR = "${lib.getLib pkgs.openssl}/lib";
-                      OPENSSL_DIR = "${lib.getDev pkgs.openssl}";
-                    };
-                };
-              };
-          };
         in
         {
           packages = {
-            discord_bot = cargoNix.rootCrate.build;
+            discord_bot = pkgs.rustPlatform.buildRustPackage {
+              pname = "discord_bot";
+              version = "${cargoToml.package.version}-${rev}";
+              src = ./.;
+              strictDeps = true;
+              nativeBuildInputs = with pkgs; [
+                dioxus-cli
+              ];
+              buildInputs = lib.optionals pkgs.stdenv.isDarwin [ pkgs.darwin.apple_sdk.frameworks.SystemConfiguration ];
+              buildPhase = ''
+                dx build --release --platform web
+              '';
+              cargoLock.lockFile = ./Cargo.lock;
+            };
             default = self'.packages.discord_bot;
           };
           overlayAttrs = {

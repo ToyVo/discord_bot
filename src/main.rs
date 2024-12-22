@@ -1,32 +1,26 @@
-use axum::{
-    body::Bytes,
-    http::{header, HeaderValue},
-};
-use axum_extra::extract::cookie::Key;
-use serenity::all::{CommandOptionType, CommandType, CreateCommand, CreateCommandOption};
-use std::{env::var, net::SocketAddr, sync::Arc, time::Duration};
-#[cfg(feature = "db")]
-use surrealdb::engine::remote::ws::Ws;
-#[cfg(feature = "db")]
-use surrealdb::opt::auth::Root;
-use tokio::{net::TcpListener, signal};
-use tower::ServiceBuilder;
-use tower_http::{
-    timeout::TimeoutLayer,
-    trace::{DefaultMakeSpan, DefaultOnResponse, TraceLayer},
-    LatencyUnit, ServiceBuilderExt,
-};
-use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
+use discord_bot::app::App;
 
-use discord_bot::discord_utils::install_global_commands;
-use discord_bot::routes::{app, AppState, InnerState};
-#[cfg(feature = "db")]
-use discord_bot::DB;
-#[cfg(feature = "watchers")]
-use discord_bot::{minecraft, terraria};
+#[cfg(not(feature = "server"))]
+fn main() {
+    dioxus::launch(App);
+}
 
+#[cfg(feature = "server")]
 #[tokio::main]
-async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
+async fn main() {
+    use axum::http::{header, HeaderValue};
+    use axum_extra::extract::cookie::Key;
+    use dioxus::prelude::{DioxusRouterExt, ServeConfigBuilder};
+    use discord_bot::server::{terraria, minecraft, discord, shutdown_signal, AppState, InnerState};
+    use serenity::all::{CreateCommand, CommandType, CreateCommandOption, CommandOptionType};
+    use std::env::var;
+    use tower_http::{
+        timeout::TimeoutLayer,
+        trace::{DefaultMakeSpan, DefaultOnResponse, TraceLayer},
+        LatencyUnit, ServiceBuilderExt,
+    };
+    use tracing_subscriber::{layer::SubscriberExt,util::SubscriberInitExt};
+
     tracing_subscriber::registry()
         .with(
             tracing_subscriber::EnvFilter::try_from_default_env()
@@ -35,30 +29,18 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
         .with(tracing_subscriber::fmt::layer().without_time())
         .init();
 
-    #[cfg(feature = "db")]
-    let surreal_bind = var("SURREAL_BIND").unwrap_or(String::from("127.0.0.1:8000"));
-    #[cfg(feature = "db")]
-    let surreal_pass = var("SURREAL_PASS").unwrap_or_default();
-    #[cfg(feature = "db")]
-    DB.connect::<Ws>(surreal_bind).await?;
-
-    #[cfg(feature = "db")]
-    DB.signin(Root {
-        username: "root",
-        password: surreal_pass.as_str(),
-    })
-    .await?;
-
+    let surrealdb_path = var("SURREALDB_PATH").unwrap_or(String::from("./surrealdb"));
+    let db = surrealdb::Surreal::new::<surrealdb::engine::local::RocksDb>(surrealdb_path).await.unwrap();
     // Select a specific namespace / database
-    #[cfg(feature = "db")]
-    DB.use_ns(env!("CARGO_PKG_NAME"))
+    db.use_ns(env!("CARGO_PKG_NAME"))
         .use_db(env!("CARGO_PKG_NAME"))
-        .await?;
+        .await.unwrap();
 
-    let state = AppState(Arc::new(InnerState {
+    let state = AppState(std::sync::Arc::new(InnerState {
         base_url: var("BASE_URL").unwrap_or_default(),
         client_id: var("DISCORD_CLIENT_ID").unwrap_or_default(),
         client_secret: var("DISCORD_CLIENT_SECRET").unwrap_or_default(),
+        db,
         discord_bot_spam_channel_id: var("DISCORD_BOT_SPAM_CHANNEL_ID").unwrap_or_default(),
         discord_minecraft_geyser_channel_id: var("DISCORD_MINECRAFT_GEYSER_CHANNEL_ID")
             .unwrap_or_default(),
@@ -73,18 +55,12 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
         minecraft_geyser_rcon_address: var("MINECRAFT_RCON_ADDRESS")
             .unwrap_or(String::from("localhost:25576")),
         minecraft_geyser_rcon_password: var("RCON_PASSWORD").unwrap_or_default(),
-        minecraft_geyser_service_name: var("MINECRAFT_GEYSER_SERVICE_NAME")
-            .unwrap_or(String::from("arion-minecraft-geyser.service")),
         minecraft_modded_data_dir: var("MINECRAFT_MODDED_DATA_DIR")
             .unwrap_or(String::from("/minecraft-modded-data")),
         minecraft_modded_rcon_address: var("MINECRAFT_RCON_ADDRESS")
             .unwrap_or(String::from("localhost:25575")),
         minecraft_modded_rcon_password: var("RCON_PASSWORD").unwrap_or_default(),
-        minecraft_modded_service_name: var("MINECRAFT_MODDED_SERVICE_NAME")
-            .unwrap_or(String::from("arion-minecraft-modded.service")),
         public_key: var("DISCORD_PUBLIC_KEY").unwrap_or_default(),
-        terraria_service_name: var("TERRARIA_SERVICE_NAME")
-            .unwrap_or(String::from("arion-terraria.service")),
         tshock_base_url: var("TSHOCK_REST_BASE_URL")
             .unwrap_or(String::from("http://localhost:7878")),
         tshock_token: var("TSHOCK_APPLICATION_TOKEN").unwrap_or_default(),
@@ -95,7 +71,6 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
         ),
     }));
 
-    #[cfg(feature = "watchers")]
     let interval_state = state.clone();
 
     let commands = [
@@ -125,7 +100,6 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
                     .required(true)
                     .add_string_choice("Stop", "stop")
                     .add_string_choice("Restart", "restart")
-                    .add_string_choice("Broadcast", "broadcast")
                     .add_sub_option(
                         CreateCommandOption::new(CommandOptionType::String, "message", "message")
                             .required(true),
@@ -133,13 +107,14 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
             ),
     ];
 
-    if let Err(e) = install_global_commands(&commands, &state).await {
-        tracing::error!("Failed to update slash commands: {e}");
+    if !state.discord_token.is_empty() {
+        if let Err(e) = discord::install_global_commands(&commands, &state).await {
+            tracing::error!("Failed to update slash commands: {e}");
+        }
     }
 
-    #[cfg(feature = "watchers")]
     tokio::spawn(async move {
-        let mut interval = tokio::time::interval(Duration::from_secs(5));
+        let mut interval = tokio::time::interval(std::time::Duration::from_secs(5));
         loop {
             interval.tick().await;
             tracing::debug!("Tracking Tick");
@@ -152,76 +127,39 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
         }
     });
 
-    let host = var("HOST").unwrap_or_else(|_| String::from("0.0.0.0"));
-    let port = var("PORT").unwrap_or_else(|_| String::from("8080"));
-    let addr = format!("{}:{}", host, port);
+    let sensitive_headers: std::sync::Arc<[_]> = vec![header::AUTHORIZATION, header::COOKIE].into();
+    // Build our middleware stack
+    let middleware = tower::ServiceBuilder::new()
+        // Mark the `Authorization` and `Cookie` headers as sensitive so it doesn't show in logs
+        .sensitive_request_headers(sensitive_headers.clone())
+        // Add high level tracing/logging to all requests
+        .layer(
+            TraceLayer::new_for_http()
+                .on_body_chunk(|chunk: &axum::body::Bytes, latency: std::time::Duration, _: &tracing::Span| {
+                    tracing::trace!(size_bytes = chunk.len(), latency = ?latency, "sending body chunk")
+                })
+                .make_span_with(DefaultMakeSpan::new().include_headers(true))
+                .on_response(DefaultOnResponse::new().include_headers(true).latency_unit(LatencyUnit::Micros)),
+        )
+        .sensitive_response_headers(sensitive_headers)
+        // Set a timeout
+        .layer(TimeoutLayer::new(std::time::Duration::from_secs(10)))
+        // Compress responses
+        .compression()
+        // Set a `Content-Type` if there isn't one already.
+        .insert_response_header_if_not_present(
+            header::CONTENT_TYPE,
+            HeaderValue::from_static("application/octet-stream"),
+        );
 
-    match TcpListener::bind(format!("{host}:{port}")).await {
-        Ok(listener) => {
-            tracing::info!("Listening on http://{addr}");
-            let sensitive_headers: Arc<[_]> = vec![header::AUTHORIZATION, header::COOKIE].into();
-            // Build our middleware stack
-            let middleware = ServiceBuilder::new()
-                // Mark the `Authorization` and `Cookie` headers as sensitive so it doesn't show in logs
-                .sensitive_request_headers(sensitive_headers.clone())
-                // Add high level tracing/logging to all requests
-                .layer(
-                    TraceLayer::new_for_http()
-                        .on_body_chunk(|chunk: &Bytes, latency: Duration, _: &tracing::Span| {
-                            tracing::trace!(size_bytes = chunk.len(), latency = ?latency, "sending body chunk")
-                        })
-                        .make_span_with(DefaultMakeSpan::new().include_headers(true))
-                        .on_response(DefaultOnResponse::new().include_headers(true).latency_unit(LatencyUnit::Micros)),
-                )
-                .sensitive_response_headers(sensitive_headers)
-                // Set a timeout
-                .layer(TimeoutLayer::new(Duration::from_secs(10)))
-                // Compress responses
-                .compression()
-                // Set a `Content-Type` if there isn't one already.
-                .insert_response_header_if_not_present(
-                    header::CONTENT_TYPE,
-                    HeaderValue::from_static("application/octet-stream"),
-                );
-            if let Err(e) = axum::serve(
-                listener,
-                app()
-                    .layer(middleware)
-                    .with_state(state)
-                    .into_make_service_with_connect_info::<SocketAddr>(),
-            )
-            .with_graceful_shutdown(shutdown_signal())
-            .await
-            {
-                tracing::error!("Failed to start service: {e}");
-            }
-        }
-        Err(e) => tracing::error!("Failed to bind listener: {e}"),
-    }
+    let address = dioxus_cli_config::fullstack_address_or_localhost();
+    let router = axum::Router::new()
+        .route("/api/interactions", axum::routing::post(discord::interactions))
+        .route("/verify-user", axum::routing::get(discord::verify_user))
+        .route("/discord-oauth-callback", axum::routing::get(discord::discord_oauth_callback))
+        .serve_dioxus_application(ServeConfigBuilder::default(), App);
+    let router = router.layer(middleware).with_state(state).into_make_service();
+    let listener = tokio::net::TcpListener::bind(address).await.unwrap();
 
-    Ok(())
-}
-
-async fn shutdown_signal() {
-    let ctrl_c = async {
-        signal::ctrl_c()
-            .await
-            .expect("failed to install Ctrl+C handler");
-    };
-
-    #[cfg(unix)]
-    let terminate = async {
-        signal::unix::signal(signal::unix::SignalKind::terminate())
-            .expect("failed to install signal handler")
-            .recv()
-            .await;
-    };
-
-    #[cfg(not(unix))]
-    let terminate = std::future::pending::<()>();
-
-    tokio::select! {
-        _ = ctrl_c => {},
-        _ = terminate => {},
-    }
+    axum::serve(listener, router).with_graceful_shutdown(shutdown_signal()).await.unwrap();
 }

@@ -1,29 +1,16 @@
-#[cfg(feature = "watchers")]
-use crate::discord_utils;
-#[cfg(feature = "watchers")]
 use crate::error::AppError;
-#[cfg(feature = "watchers")]
-use crate::models::{GamePlayers, DiscordMessage};
-#[cfg(feature = "watchers")]
-use crate::routes::AppState;
-#[cfg(feature = "watchers")]
-use crate::terraria::get_player_changes;
-#[cfg(feature = "db")]
-use crate::DB;
-#[cfg(feature = "watchers")]
+use crate::server::{
+    discord,
+    models::{DiscordMessage, GamePlayers},
+    players, AppState,
+};
 use anyhow::Context;
-#[cfg(feature = "watchers")]
 use chrono::Utc;
-#[cfg(feature = "watchers")]
 use rcon::Connection;
-#[cfg(feature = "watchers")]
 use serenity::all::MessageFlags;
-#[cfg(feature = "watchers")]
 use serenity::builder::CreateMessage;
-#[cfg(feature = "watchers")]
 use tokio::net::TcpStream;
 
-#[cfg(feature = "watchers")]
 async fn track_generic<S: AsRef<str>>(
     minecraft_rcon_address: S,
     minecraft_rcon_password: S,
@@ -31,7 +18,7 @@ async fn track_generic<S: AsRef<str>>(
     surreal_id: &str,
     state: &AppState,
 ) -> Result<(), AppError> {
-    let last_player_names: Option<GamePlayers> = DB.select(("players", surreal_id)).await?;
+    let last_player_names: Option<GamePlayers> = state.db.select(("players", surreal_id)).await?;
     let last_player_names = if let Some(data) = last_player_names {
         data.players
     } else {
@@ -62,9 +49,9 @@ async fn track_generic<S: AsRef<str>>(
         vec![]
     };
 
-    if let Some(message) = get_player_changes(&last_player_names, &players) {
+    if let Some(message) = players::get_player_changes(&last_player_names, &players) {
         tracing::info!("{}", message);
-        let message = discord_utils::create_message(
+        let message = discord::create_message(
             CreateMessage::new()
                 .content(message)
                 .flags(MessageFlags::SUPPRESS_NOTIFICATIONS),
@@ -73,23 +60,27 @@ async fn track_generic<S: AsRef<str>>(
         )
         .await?;
 
-        match DB.select(("discord_messages", surreal_id)).await {
+        match state.db.select(("discord_messages", surreal_id)).await {
             Ok(Some(data)) => {
                 let data: DiscordMessage = data;
-                discord_utils::delete_message(
+                discord::delete_message(
                     data.discord_message_id.as_str(),
                     discord_minecraft_channel_id.as_ref(),
                     state,
                 )
                 .await
             }
-            Err(e) => Ok(tracing::error!("Error getting DiscordMessage from DB: {}", e)),
+            Err(e) => Ok(tracing::error!(
+                "Error getting DiscordMessage from DB: {}",
+                e
+            )),
             _ => Ok(()),
         }?;
 
         // TODO: if the last message was sent within the last 5 minutes, just update the message instead of creating a new one
         // if t
-        let _upserted: Option<DiscordMessage> = DB
+        let _upserted: Option<DiscordMessage> = state
+            .db
             .upsert(("discord_messages", surreal_id))
             .content(DiscordMessage {
                 game: surreal_id.to_string(),
@@ -103,7 +94,8 @@ async fn track_generic<S: AsRef<str>>(
             .await?;
     }
 
-    let _upserted: Option<GamePlayers> = DB
+    let _upserted: Option<GamePlayers> = state
+        .db
         .upsert(("players", surreal_id))
         .content(GamePlayers {
             game: surreal_id.to_string(),
@@ -115,7 +107,6 @@ async fn track_generic<S: AsRef<str>>(
     Ok(())
 }
 
-#[cfg(feature = "watchers")]
 pub async fn track_players(state: &AppState) -> Result<(), AppError> {
     track_generic(
         &state.minecraft_modded_rcon_address,

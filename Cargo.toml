@@ -1,45 +1,51 @@
 [package]
 name = "discord_bot"
 version = "0.1.0"
-authors = ["Collin Diekvoss <collin@diekvoss.com>"]
+authors = ["Collin Diekvoss <Collin@Diekvoss.com>"]
 edition = "2021"
 repository = "https://github.com/toyvo/discord_bot"
 
-[features]
-default = ["db", "watchers"]
-db = []
-watchers = ["db"]
-
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
 anyhow = "1"
-axum = "0"
-axum-extra = { version = "0", features = ["cookie-signed", "typed-header"] }
-bytes = "1"
-chrono = "0.4.38"
-croner = "2"
-dioxus = "0"
-dioxus-ssr = "0"
-ed25519-dalek = "2"
-http-body-util = "0"
-hyper = { version = "1", features = ["full"] }
-hyper-util = { version = "0", features = ["full"] }
-mime = "0"
-oxford_join = "0.2.10"
-rand = "0"
-rcon = { version = "0", features = ["rt-tokio"] }
-regex = "1"
+axum = { version = "0", optional = true }
+axum-extra = { version = "0", features = ["cookie", "cookie-signed", "typed-header"], optional = true }
+chrono = { version = "0", features = ["rkyv"] }
+dioxus = { version = "0", features = ["router", "fullstack"] }
+dioxus-cli-config = { version = "*", optional = true }
+mime = { version = "0", optional = true }
+oxford_join = "0"
+rcon = { version = "0", features = ["rt-tokio"], optional = true }
 reqwest = { version = "0", features = ["json"] }
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
-serenity = { version = "0", features = ["interactions_endpoint"] }
-surrealdb = "2"
+serenity = { version = "0", features = ["interactions_endpoint"], optional = true }
+surrealdb = { version = "2", features = ["kv-rocksdb"], optional = true }
 time = { version = "0", features = ["macros", "serde"] }
-tokio = { version = "1", features = ["full"] }
-toml = "0"
-tower = { version = "0", features = ["full"] }
-tower-http = { version = "0", features = ["full"] }
-tracing = "0"
-tracing-subscriber = { version = "0", features = ["env-filter"] }
-url = "2"
-uuid = { version = "1", features = ["v4"] }
+tokio = { version = "1", features = ["full"], optional = true }
+tower = { version = "0", features = ["full"], optional = true }
+tower-http = { version = "0", features = ["full"], optional = true }
+tracing = { version = "0", optional = true }
+tracing-subscriber = { version = "0", features = ["env-filter"], optional = true }
+url = { version = "2", optional = true }
+uuid = { version = "1", features = ["v4"], optional = true }
+
+[features]
+default = []
+server = ["dioxus/server", "axum", "axum-extra", "dioxus-cli-config", "mime", "rcon", "serenity", "surrealdb", "tokio", "tower", "tower-http", "tracing", "tracing-subscriber", "url", "uuid"]
+web = ["dioxus/web"]
+desktop = ["dioxus/desktop"]
+mobile = ["dioxus/mobile"]
+
+[profile]
+
+[profile.wasm-dev]
+inherits = "dev"
+opt-level = 1
+
+[profile.server-dev]
+inherits = "dev"
+
+[profile.android-dev]
+inherits = "dev"

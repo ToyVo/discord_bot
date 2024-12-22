@@ -20,3 +20,11 @@ pub struct DiscordMessage {
     pub game: String,
     pub discord_message_id: String,
 }
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct DiscordTokens<S: AsRef<str>> {
+    pub access_token: S,
+    pub refresh_token: S,
+    pub expires_at: DateTime<Utc>,
+    pub expires_in: u64,
+}
