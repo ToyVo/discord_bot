@@ -13,6 +13,7 @@
       url = "github:hercules-ci/arion";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    rust-overlay.url = "github:oxalica/rust-overlay";
   };
 
   nixConfig = {
@@ -76,28 +77,16 @@
                   DISCORD_TOKEN
                 '';
               };
-              rclone_conf_file = lib.mkOption {
-                type = lib.types.path;
-                description = "Path to the rclone config file";
-              };
             };
             config = lib.mkIf cfg.enable {
               nixpkgs.overlays = [ self.overlays.default ];
               systemd.services = {
                 discord_bot = {
-                  before = [ "arion-minecraft-modded.service" ];
-                  requiredBy = [ "arion-minecraft-modded.service" ];
-                  after = [ "surrealdb.service" ];
-                  requires = [ "surrealdb.service" ];
                   wantedBy = [ "multi-user.target" ];
-                  serviceConfig = {
-                    WorkingDirectory = ./.;
-                  };
                   script = ''
                     export $(cat ${cfg.env_file} | xargs)
                     export RUST_BACKTRACE=full
-                    export RCLONE_CONF_FILE=${cfg.rclone_conf_file}
-                    ${pkgs.discord_bot}/bin/discord_bot
+                    ${pkgs.discord_bot}/bin/server
                   '';
                 };
               };
@@ -119,6 +108,13 @@
           rev = self.shortRev or self.dirtyShortRev or "dirty";
         in
         {
+          _module.args.pkgs = import inputs.nixpkgs {
+            inherit system;
+            overlays = [
+              inputs.rust-overlay.overlays.default
+            ];
+          };
+
           packages = {
             discord_bot = pkgs.rustPlatform.buildRustPackage {
               pname = "discord_bot";
@@ -127,11 +123,47 @@
               strictDeps = true;
               nativeBuildInputs = with pkgs; [
                 dioxus-cli
+                (pkgs.rust-bin.stable.latest.default.override {
+                  extensions = [
+                    "rust-src"
+                    "rust-analyzer"
+                    "clippy"
+                  ];
+                  targets = [ "wasm32-unknown-unknown" ];
+                })
               ];
-              buildInputs = lib.optionals pkgs.stdenv.isDarwin [ pkgs.darwin.apple_sdk.frameworks.SystemConfiguration ];
+              buildInputs =
+                [
+                  pkgs.openssl
+                  pkgs.libiconv
+                  pkgs.pkg-config
+                ]
+                ++ lib.optionals pkgs.stdenv.isLinux [
+                  pkgs.glib
+                  pkgs.gtk3
+                  pkgs.libsoup_3
+                  pkgs.webkitgtk_4_1
+                  pkgs.xdotool
+                ]
+                ++ lib.optionals pkgs.stdenv.isDarwin (
+                  with pkgs.darwin.apple_sdk.frameworks;
+                  [
+                    SystemConfiguration
+                    IOKit
+                    Carbon
+                    WebKit
+                    Security
+                    Cocoa
+                  ]
+                );
               buildPhase = ''
                 dx build --release --platform web
               '';
+              installPhase = ''
+                mkdir -p $out
+                cp -r target/dx/$pname/release/web $out/bin
+              '';
+              meta.mainProgram = "server";
               cargoLock.lockFile = ./Cargo.lock;
             };
             default = self'.packages.discord_bot;

@@ -29,7 +29,7 @@ async fn main() {
         .with(tracing_subscriber::fmt::layer().without_time())
         .init();
 
-    let surrealdb_path = var("SURREALDB_PATH").unwrap_or(String::from("./surrealdb"));
+    let surrealdb_path = var("SURREALDB_PATH").unwrap_or(String::from("/var/lib/discord_bot/surrealdb"));
     let db = surrealdb::Surreal::new::<surrealdb::engine::local::RocksDb>(surrealdb_path).await.unwrap();
     // Select a specific namespace / database
     db.use_ns(env!("CARGO_PKG_NAME"))
@@ -50,13 +50,9 @@ async fn main() {
         discord_token: var("DISCORD_TOKEN").unwrap_or_default(),
         forge_api_key: var("FORGE_API_KEY").unwrap_or_default(),
         key: Key::generate(),
-        minecraft_geyser_data_dir: var("MINECRAFT_GEYSER_DATA_DIR")
-            .unwrap_or(String::from("/minecraft-geyser-data")),
         minecraft_geyser_rcon_address: var("MINECRAFT_RCON_ADDRESS")
             .unwrap_or(String::from("localhost:25576")),
         minecraft_geyser_rcon_password: var("RCON_PASSWORD").unwrap_or_default(),
-        minecraft_modded_data_dir: var("MINECRAFT_MODDED_DATA_DIR")
-            .unwrap_or(String::from("/minecraft-modded-data")),
         minecraft_modded_rcon_address: var("MINECRAFT_RCON_ADDRESS")
             .unwrap_or(String::from("localhost:25575")),
         minecraft_modded_rcon_password: var("RCON_PASSWORD").unwrap_or_default(),
