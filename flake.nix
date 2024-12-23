@@ -105,7 +105,41 @@
         }:
         let
           cargoToml = builtins.fromTOML (builtins.readFile ./Cargo.toml);
-          rev = self.shortRev or self.dirtyShortRev or "dirty";
+          rev = self'.shortRev or self'.dirtyShortRev or "dirty";
+          rust_platform = (
+            pkgs.rust-bin.stable.latest.default.override {
+              extensions = [
+                "rust-src"
+                "rust-analyzer"
+                "clippy"
+              ];
+              targets = [ "wasm32-unknown-unknown" ];
+            }
+          );
+          rustBuildInputs =
+            [
+              pkgs.openssl
+              pkgs.libiconv
+              pkgs.pkg-config
+            ]
+            ++ lib.optionals pkgs.stdenv.isLinux [
+              pkgs.glib
+              pkgs.gtk3
+              pkgs.libsoup_3
+              pkgs.webkitgtk_4_1
+              pkgs.xdotool
+            ]
+            ++ lib.optionals pkgs.stdenv.isDarwin (
+              with pkgs.darwin.apple_sdk.frameworks;
+              [
+                SystemConfiguration
+                IOKit
+                Carbon
+                WebKit
+                Security
+                Cocoa
+              ]
+            );
         in
         {
           _module.args.pkgs = import inputs.nixpkgs {
@@ -114,6 +148,7 @@
               inputs.rust-overlay.overlays.default
             ];
           };
+          formatter = pkgs.nixfmt-rfc-style;
 
           packages = {
             discord_bot = pkgs.rustPlatform.buildRustPackage {
@@ -123,41 +158,11 @@
               strictDeps = true;
               nativeBuildInputs = with pkgs; [
                 dioxus-cli
-                (pkgs.rust-bin.stable.latest.default.override {
-                  extensions = [
-                    "rust-src"
-                    "rust-analyzer"
-                    "clippy"
-                  ];
-                  targets = [ "wasm32-unknown-unknown" ];
-                })
+                rust_platform
               ];
-              buildInputs =
-                [
-                  pkgs.openssl
-                  pkgs.libiconv
-                  pkgs.pkg-config
-                ]
-                ++ lib.optionals pkgs.stdenv.isLinux [
-                  pkgs.glib
-                  pkgs.gtk3
-                  pkgs.libsoup_3
-                  pkgs.webkitgtk_4_1
-                  pkgs.xdotool
-                ]
-                ++ lib.optionals pkgs.stdenv.isDarwin (
-                  with pkgs.darwin.apple_sdk.frameworks;
-                  [
-                    SystemConfiguration
-                    IOKit
-                    Carbon
-                    WebKit
-                    Security
-                    Cocoa
-                  ]
-                );
+              buildInputs = rustBuildInputs;
               buildPhase = ''
-                dx build --release --platform web
+                dx build --release --platform web --verbose --trace
               '';
               installPhase = ''
                 mkdir -p $out
@@ -182,10 +187,10 @@
                 export RUST_LOG="discord_bot=trace"
                 export RUST_SRC_PATH=${pkgs.rustPlatform.rustLibSrc}
               '';
-              buildInputs =
-                with pkgs.darwin.apple_sdk.frameworks;
-                lib.optionals pkgs.stdenv.isDarwin [ SystemConfiguration ];
+              buildInputs = rustBuildInputs;
               nativeBuildInputs = with pkgs; [
+                dioxus-cli
+                rust_platform
                 rustc
                 pkg-config
                 rustPlatform.bindgenHook
