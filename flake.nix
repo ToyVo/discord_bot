@@ -21,13 +21,11 @@
       "https://cache.nixos.org"
       "https://nix-community.cachix.org"
       "https://toyvo.cachix.org"
-      "https://eigenvalue.cachix.org"
     ];
     extra-trusted-public-keys = [
       "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
       "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
       "toyvo.cachix.org-1:s++CG1te6YaS9mjICre0Ybbya2o/S9fZIyDNGiD4UXs="
-      "eigenvalue.cachix.org-1:ykerQDDa55PGxU25CETy9wF6uVDpadGGXYrFNJA3TUs="
     ];
     allow-import-from-derivation = true;
   };
@@ -103,44 +101,6 @@
           config,
           ...
         }:
-        let
-          cargoToml = builtins.fromTOML (builtins.readFile ./Cargo.toml);
-          rev = self'.shortRev or self'.dirtyShortRev or "dirty";
-          rust_platform = (
-            pkgs.rust-bin.stable.latest.default.override {
-              extensions = [
-                "rust-src"
-                "rust-analyzer"
-                "clippy"
-              ];
-              targets = [ "wasm32-unknown-unknown" ];
-            }
-          );
-          rustBuildInputs =
-            [
-              pkgs.openssl
-              pkgs.libiconv
-              pkgs.pkg-config
-            ]
-            ++ lib.optionals pkgs.stdenv.isLinux [
-              pkgs.glib
-              pkgs.gtk3
-              pkgs.libsoup_3
-              pkgs.webkitgtk_4_1
-              pkgs.xdotool
-            ]
-            ++ lib.optionals pkgs.stdenv.isDarwin (
-              with pkgs.darwin.apple_sdk.frameworks;
-              [
-                SystemConfiguration
-                IOKit
-                Carbon
-                WebKit
-                Security
-                Cocoa
-              ]
-            );
-        in
         {
           _module.args.pkgs = import inputs.nixpkgs {
             inherit system;
@@ -151,6 +111,16 @@
           formatter = pkgs.nixfmt-rfc-style;
 
           packages = rec {
+            rustToolchain = (
+              pkgs.rust-bin.stable.latest.default.override {
+                extensions = [
+                  "rust-src"
+                  "rust-analyzer"
+                  "clippy"
+                ];
+                targets = [ "wasm32-unknown-unknown" ];
+              }
+            );
             wasm-bindgen-cli = pkgs.wasm-bindgen-cli.override {
               version = "0.2.99";
               hash = "sha256-1AN2E9t/lZhbXdVznhTcniy+7ZzlaEp/gwLEAucs6EA=";
@@ -188,55 +158,67 @@
               checkFlags = drv.checkFlags ++ [ "--skip=wasm_bindgen::test" ];
               nativeBuildInputs = drv.nativeBuildInputs ++ [ pkgs.makeBinaryWrapper ];
             });
-            discord_bot = pkgs.rustPlatform.buildRustPackage {
-              pname = "discord_bot";
-              version = "${cargoToml.package.version}-${rev}";
-              src = ./.;
-              strictDeps = true;
-              nativeBuildInputs = [
-                dioxus-cli
-                rust_platform
-              ];
-              buildInputs = rustBuildInputs;
-              buildPhase = ''
-                dx build --release --platform web --verbose --trace
-              '';
-              installPhase = ''
-                mkdir -p $out
-                cp -r target/dx/$pname/release/web $out/bin
-              '';
-              meta.mainProgram = "server";
-              cargoLock.lockFile = ./Cargo.lock;
-            };
+            discord_bot =
+              let
+                cargoToml = builtins.fromTOML (builtins.readFile ./Cargo.toml);
+                rev = self'.shortRev or self'.dirtyShortRev or "dirty";
+              in
+              pkgs.rustPlatform.buildRustPackage {
+                pname = "discord_bot";
+                version = "${cargoToml.package.version}-${rev}";
+                src = ./.;
+                strictDeps = true;
+                nativeBuildInputs = with pkgs; [
+                  dioxus-cli
+                  rustToolchain
+                  openssl
+                  libiconv
+                  pkg-config
+                  rustPlatform.bindgenHook
+                ];
+                buildInputs =
+                  with pkgs;
+                  [
+                    openssl
+                    libiconv
+                    pkg-config
+                  ]
+                  ++ lib.optionals pkgs.stdenv.isDarwin [
+                    pkgs.darwin.apple_sdk.frameworks.SystemConfiguration
+                  ];
+                buildPhase = ''
+                  dx build --release --platform web --verbose --trace
+                '';
+                installPhase = ''
+                  mkdir -p $out
+                  cp -r target/dx/$pname/release/web $out/bin
+                '';
+                meta.mainProgram = "server";
+                cargoLock.lockFile = ./Cargo.lock;
+              };
             default = self'.packages.discord_bot;
           };
           overlayAttrs = {
             inherit (self'.packages) discord_bot;
           };
-          devShells.default =
-            let
-              dev_start = pkgs.writeShellScriptBin "dev_start" ''
-                systemfd --no-pid -s http::8080 -- cargo watch -x run
-              '';
-            in
-            pkgs.mkShell {
-              shellHook = ''
-                export RUST_LOG="discord_bot=trace"
-                export RUST_SRC_PATH=${pkgs.rustPlatform.rustLibSrc}
-              '';
-              buildInputs = rustBuildInputs;
-              nativeBuildInputs = with pkgs; [
-                dioxus-cli
-                rust_platform
-                rustc
-                pkg-config
-                rustPlatform.bindgenHook
-                libiconv
-                cargo-watch
-                systemfd
-                dev_start
-              ];
-            };
+          devShells.default = pkgs.mkShell {
+            shellHook = ''
+              export RUST_LOG="discord_bot=trace"
+              export RUST_SRC_PATH=${pkgs.rustPlatform.rustLibSrc}
+            '';
+            buildInputs = lib.optionals pkgs.stdenv.isDarwin [
+              pkgs.darwin.apple_sdk.frameworks.SystemConfiguration
+            ];
+            nativeBuildInputs = with pkgs; [
+              dioxus-cli
+              rustToolchain
+              pkg-config
+              rustPlatform.bindgenHook
+              libiconv
+              cargo-watch
+              systemfd
+            ];
+          };
         };
     };
 }
