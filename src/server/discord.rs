@@ -262,7 +262,7 @@ pub async fn get_oauth_url(state: &AppState) -> Result<(String, String), AppErro
             ("client_id", state.client_id.as_str()),
             (
                 "redirect_url",
-                &format!("{}/discord-oauth-callback", state.base_url),
+                &format!("{}/api/discord/oauth-callback", state.base_url),
             ),
             ("response_type", "code"),
             ("state", user_state.as_str()),
