@@ -9,10 +9,6 @@
       url = "github:numtide/devshell";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    arion = {
-      url = "github:hercules-ci/arion";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
     rust-overlay.url = "github:oxalica/rust-overlay";
   };
 
@@ -75,6 +71,13 @@
                   DISCORD_TOKEN
                 '';
               };
+              env = lib.mkOption {
+                type = lib.types.attrs;
+                default = { };
+                description = ''
+                  Public Environment variables to be passed to the server on startup
+                '';
+              };
             };
             config = lib.mkIf cfg.enable {
               nixpkgs.overlays = [ self.overlays.default ];
@@ -84,6 +87,11 @@
                   script = ''
                     export $(cat ${cfg.env_file} | xargs)
                     export RUST_BACKTRACE=full
+                    ${lib.concatStringsSep "\n" (
+                      lib.mapAttrsToList (
+                        name: value: "export ${name}=${toString value}"
+                      ) cfg.env
+                    )}
                     ${pkgs.discord_bot}/bin/server
                   '';
                 };

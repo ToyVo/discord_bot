@@ -50,10 +50,10 @@ async fn main() {
         discord_token: var("DISCORD_TOKEN").unwrap_or_default(),
         forge_api_key: var("FORGE_API_KEY").unwrap_or_default(),
         key: Key::generate(),
-        minecraft_geyser_rcon_address: var("MINECRAFT_RCON_ADDRESS")
+        minecraft_geyser_rcon_address: var("MINECRAFT_GEYSER_RCON_ADDRESS")
             .unwrap_or(String::from("localhost:25576")),
         minecraft_geyser_rcon_password: var("RCON_PASSWORD").unwrap_or_default(),
-        minecraft_modded_rcon_address: var("MINECRAFT_RCON_ADDRESS")
+        minecraft_modded_rcon_address: var("MINECRAFT_MODDED_RCON_ADDRESS")
             .unwrap_or(String::from("localhost:25575")),
         minecraft_modded_rcon_password: var("RCON_PASSWORD").unwrap_or_default(),
         public_key: var("DISCORD_PUBLIC_KEY").unwrap_or_default(),
@@ -150,9 +150,9 @@ async fn main() {
 
     let address = dioxus_cli_config::fullstack_address_or_localhost();
     let router = axum::Router::new()
-        .route("/api/interactions", axum::routing::post(discord::interactions))
-        .route("/verify-user", axum::routing::get(discord::verify_user))
-        .route("/discord-oauth-callback", axum::routing::get(discord::discord_oauth_callback))
+        .route("/api/discord/interactions", axum::routing::post(discord::interactions))
+        .route("/api/discord/verify-user", axum::routing::get(discord::verify_user))
+        .route("/api/discord/oauth-callback", axum::routing::get(discord::oauth_callback))
         .serve_dioxus_application(ServeConfigBuilder::default(), App);
     let router = router.layer(middleware).with_state(state).into_make_service();
     let listener = tokio::net::TcpListener::bind(address).await.unwrap();

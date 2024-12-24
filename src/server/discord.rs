@@ -81,7 +81,7 @@ pub async fn verify_user(
     ))
 }
 
-pub async fn discord_oauth_callback(
+pub async fn oauth_callback(
     Query(query): Query<HashMap<String, String>>,
     jar: SignedCookieJar,
     State(state): State<AppState>,
