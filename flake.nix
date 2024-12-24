@@ -140,28 +140,12 @@
                   outputHash = "sha256-QiGnBoZV4GZb5MQ3K/PJxCfw0p/7qDmoE607hlGKOns=";
                 }
               );
-              postFixup =
-                if pkgs.stdenv.isDarwin then
-                  ''
-                    mkdir -p "$out/home/Library/Application Support/dioxus/wasm-bindgen"
-                    ln -s ${lib.getExe wasm-bindgen-cli} "$out/home/Library/Application Support/dioxus/wasm-bindgen/wasm-bindgen-${wasm-bindgen-cli.version}"
-                    wrapProgram $out/bin/dx \
-                      --set HOME $out/home
-                  ''
-                else
-                  ''
-                    mkdir -p $out/share/dioxus/wasm-bindgen
-                    ln -s ${lib.getExe wasm-bindgen-cli} $out/share/dioxus/wasm-bindgen/wasm-bindgen-${wasm-bindgen-cli.version}
-                    wrapProgram $out/bin/dx \
-                      --set XDG_DATA_HOME $out/share
-                  '';
               checkFlags = drv.checkFlags ++ [ "--skip=wasm_bindgen::test" ];
-              nativeBuildInputs = drv.nativeBuildInputs ++ [ pkgs.makeBinaryWrapper ];
             });
             discord_bot =
               let
                 cargoToml = builtins.fromTOML (builtins.readFile ./Cargo.toml);
-                rev = self'.shortRev or self'.dirtyShortRev or "dirty";
+                rev = toString (self.shortRev or self.dirtyShortRev or self.lastModified or "unknown");
               in
               pkgs.rustPlatform.buildRustPackage {
                 pname = "discord_bot";
@@ -187,6 +171,20 @@
                     pkgs.darwin.apple_sdk.frameworks.SystemConfiguration
                   ];
                 buildPhase = ''
+                  ${
+                    if pkgs.stdenv.isDarwin then
+                      ''
+                        export HOME="$PWD/.home"
+                        mkdir -p ".home/Library/Application Support/dioxus/wasm-bindgen"
+                        ln -s ${lib.getExe wasm-bindgen-cli} ".home/Library/Application Support/dioxus/wasm-bindgen/wasm-bindgen-${wasm-bindgen-cli.version}"
+                      ''
+                    else
+                      ''
+                        export XDG_DATA_HOME="$PWD/.share"
+                        mkdir -p .share/dioxus/wasm-bindgen
+                        ln -s ${lib.getExe wasm-bindgen-cli} .share/dioxus/wasm-bindgen/wasm-bindgen-${wasm-bindgen-cli.version}
+                      ''
+                  }
                   dx build --release --platform web --verbose --trace
                 '';
                 installPhase = ''
