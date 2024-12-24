@@ -70,37 +70,37 @@ async fn main() {
     let interval_state = state.clone();
 
     let commands = [
-        CreateCommand::new("minecraft-geyser")
-            .kind(CommandType::ChatInput)
-            .description("Minecraft slash commands")
-            .add_option(
-                CreateCommandOption::new(CommandOptionType::String, "action", "available actions")
-                    .required(true)
-                    .add_string_choice("Stop", "stop")
-                    .add_string_choice("Restart", "restart"),
-            ),
-        CreateCommand::new("minecraft-modded")
-            .kind(CommandType::ChatInput)
-            .description("Minecraft slash commands")
-            .add_option(
-                CreateCommandOption::new(CommandOptionType::String, "action", "available actions")
-                    .required(true)
-                    .add_string_choice("Stop", "stop")
-                    .add_string_choice("Restart", "restart"),
-            ),
-        CreateCommand::new("terraria")
-            .kind(CommandType::ChatInput)
-            .description("Terraria slash commands")
-            .add_option(
-                CreateCommandOption::new(CommandOptionType::String, "action", "available actions")
-                    .required(true)
-                    .add_string_choice("Stop", "stop")
-                    .add_string_choice("Restart", "restart")
-                    .add_sub_option(
-                        CreateCommandOption::new(CommandOptionType::String, "message", "message")
-                            .required(true),
-                    ),
-            ),
+        // CreateCommand::new("minecraft-geyser")
+        //     .kind(CommandType::ChatInput)
+        //     .description("Minecraft slash commands")
+        //     .add_option(
+        //         CreateCommandOption::new(CommandOptionType::String, "action", "available actions")
+        //             .required(true)
+        //             .add_string_choice("Stop", "stop")
+        //             .add_string_choice("Restart", "restart"),
+        //     ),
+        // CreateCommand::new("minecraft-modded")
+        //     .kind(CommandType::ChatInput)
+        //     .description("Minecraft slash commands")
+        //     .add_option(
+        //         CreateCommandOption::new(CommandOptionType::String, "action", "available actions")
+        //             .required(true)
+        //             .add_string_choice("Stop", "stop")
+        //             .add_string_choice("Restart", "restart"),
+        //     ),
+        // CreateCommand::new("terraria")
+        //     .kind(CommandType::ChatInput)
+        //     .description("Terraria slash commands")
+        //     .add_option(
+        //         CreateCommandOption::new(CommandOptionType::String, "action", "available actions")
+        //             .required(true)
+        //             .add_string_choice("Stop", "stop")
+        //             .add_string_choice("Restart", "restart")
+        //             .add_sub_option(
+        //                 CreateCommandOption::new(CommandOptionType::String, "message", "message")
+        //                     .required(true),
+        //             ),
+        //     ),
     ];
 
     if !state.discord_token.is_empty() {
