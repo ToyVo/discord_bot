@@ -150,13 +150,50 @@
           };
           formatter = pkgs.nixfmt-rfc-style;
 
-          packages = {
+          packages = rec {
+            wasm-bindgen-cli = pkgs.wasm-bindgen-cli.override {
+              version = "0.2.99";
+              hash = "sha256-1AN2E9t/lZhbXdVznhTcniy+7ZzlaEp/gwLEAucs6EA=";
+              cargoHash = "sha256-DbwAh8RJtW38LJp+J9Ht8fAROK9OabaJ85D9C/Vkve4=";
+            };
+            dioxus-cli = pkgs.dioxus-cli.overrideAttrs (drv: rec {
+              version = "0.6.1";
+              src = pkgs.fetchCrate {
+                inherit version;
+                pname = drv.pname;
+                hash = "sha256-mQnSduf8SHYyUs6gHfI+JAvpRxYQA1DiMlvNofImElU=";
+              };
+              cargoDeps = drv.cargoDeps.overrideAttrs (
+                lib.const {
+                  name = "${drv.cargoDeps.name}-vendor";
+                  inherit src;
+                  outputHash = "sha256-QiGnBoZV4GZb5MQ3K/PJxCfw0p/7qDmoE607hlGKOns=";
+                }
+              );
+              postFixup =
+                if pkgs.stdenv.isDarwin then
+                  ''
+                    mkdir -p "$out/home/Library/Application Support/dioxus/wasm-bindgen"
+                    ln -s ${lib.getExe wasm-bindgen-cli} "$out/home/Library/Application Support/dioxus/wasm-bindgen/wasm-bindgen-${wasm-bindgen-cli.version}"
+                    wrapProgram $out/bin/dx \
+                      --set HOME $out/home
+                  ''
+                else
+                  ''
+                    mkdir -p $out/share/dioxus/wasm-bindgen
+                    ln -s ${lib.getExe wasm-bindgen-cli} $out/share/dioxus/wasm-bindgen/wasm-bindgen-${wasm-bindgen-cli.version}
+                    wrapProgram $out/bin/dx \
+                      --set XDG_DATA_HOME $out/share
+                  '';
+              checkFlags = drv.checkFlags ++ [ "--skip=wasm_bindgen::test" ];
+              nativeBuildInputs = drv.nativeBuildInputs ++ [ pkgs.makeBinaryWrapper ];
+            });
             discord_bot = pkgs.rustPlatform.buildRustPackage {
               pname = "discord_bot";
               version = "${cargoToml.package.version}-${rev}";
               src = ./.;
               strictDeps = true;
-              nativeBuildInputs = with pkgs; [
+              nativeBuildInputs = [
                 dioxus-cli
                 rust_platform
               ];
