@@ -1,10 +1,14 @@
+use crate::error::AppError;
+use crate::server::{
+    discord,
+    models::{DiscordMessage, GamePlayers},
+    players, AppState,
+};
 use anyhow::Context;
 use chrono::Utc;
 use serde_json::Value;
 use serenity::all::MessageFlags;
 use serenity::builder::CreateMessage;
-use crate::error::AppError;
-use crate::server::{AppState, discord, players, models::{DiscordMessage, GamePlayers}};
 
 /// ref: https://tshock.readme.io/reference/v2status
 pub async fn get_status(state: &AppState) -> Result<Value, AppError> {
@@ -38,7 +42,8 @@ pub async fn track_players(state: &AppState) -> Result<(), AppError> {
         vec![]
     };
 
-    let last_player_nicknames: Option<GamePlayers> = state.db.select(("players", "terraria")).await?;
+    let last_player_nicknames: Option<GamePlayers> =
+        state.db.select(("players", "terraria")).await?;
     let last_player_nicknames = if let Some(data) = last_player_nicknames {
         data.players
     } else {
@@ -66,11 +71,15 @@ pub async fn track_players(state: &AppState) -> Result<(), AppError> {
                 )
                 .await
             }
-            Err(e) => Ok(tracing::error!("Error getting DiscordMessage from DB: {}", e)),
+            Err(e) => Ok(tracing::error!(
+                "Error getting DiscordMessage from DB: {}",
+                e
+            )),
             _ => Ok(()),
         }?;
 
-        let _upserted: Option<DiscordMessage> = state.db
+        let _upserted: Option<DiscordMessage> = state
+            .db
             .upsert(("discord_messages", "terraria"))
             .content(DiscordMessage {
                 game: String::from("terraria"),
@@ -84,7 +93,8 @@ pub async fn track_players(state: &AppState) -> Result<(), AppError> {
             .await?;
     }
 
-    let _upserted: Option<GamePlayers> = state.db
+    let _upserted: Option<GamePlayers> = state
+        .db
         .upsert(("players", "terraria"))
         .content(GamePlayers {
             game: String::from("terraria"),

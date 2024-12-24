@@ -66,6 +66,6 @@ pub fn get_player_changes(before: &[String], after: &[String]) -> Option<String>
                 "".to_string()
             },
         ]
-            .join(" "),
+        .join(" "),
     )
 }

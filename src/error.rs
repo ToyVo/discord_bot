@@ -34,7 +34,11 @@ impl axum::response::IntoResponse for AppError {
             AppError::UTF8(e) => tracing::error!("UTF-8 error: {e:}"),
         }
 
-        (axum::http::StatusCode::INTERNAL_SERVER_ERROR, "Something went wrong").into_response()
+        (
+            axum::http::StatusCode::INTERNAL_SERVER_ERROR,
+            "Something went wrong",
+        )
+            .into_response()
     }
 }
 

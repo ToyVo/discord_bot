@@ -76,19 +76,35 @@ pub fn Logs() -> Element {
 
 #[server]
 async fn fetch_logs(unit: String, since: String, until: String) -> Result<String, ServerFnError> {
+    let FromContext(state): FromContext<crate::server::AppState> = extract().await?;
     if !VALID_SERVICES.contains(&unit.as_str()) {
         return Err(ServerFnError::Args(String::from("invalid unit")));
     }
-    let journalctl_args = ["--utc",
+    let journalctl_args = [
+        "--utc",
         "-u",
         unit.as_str(),
         "-S",
         since.as_str(),
         "-U",
-        until.as_str()];
-    #[cfg(target_os = "linux")]
-    let logs = std::str::from_utf8(&tokio::process::Command::new("journalctl").args(journalctl_args).output().await?.stdout)?.to_string();
-    #[cfg(not(target_os = "linux"))]
-    let logs = format!("No logs available on this platform. {journalctl_args:?}");
+        until.as_str(),
+    ];
+    let logs = match &state.cloud_ssh_host {
+        Some(host) => host.clone(),
+        None => {
+            #[cfg(target_os = "linux")]
+            let logs = std::str::from_utf8(
+                &tokio::process::Command::new("journalctl")
+                    .args(journalctl_args)
+                    .output()
+                    .await?
+                    .stdout,
+            )?
+            .to_string();
+            #[cfg(not(target_os = "linux"))]
+            let logs = format!("No logs available on this platform. {journalctl_args:?}");
+            logs
+        }
+    };
     Ok(logs)
 }

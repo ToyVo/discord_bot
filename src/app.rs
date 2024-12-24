@@ -1,6 +1,6 @@
-use dioxus::prelude::*;
-use crate::views::*;
 use crate::components::*;
+use crate::views::*;
+use dioxus::prelude::*;
 
 const FAVICON: Asset = asset!("/assets/favicon.ico");
 const MAIN_CSS: Asset = asset!("/assets/styling/main.css");

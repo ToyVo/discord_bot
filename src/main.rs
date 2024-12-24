@@ -10,16 +10,18 @@ fn main() {
 async fn main() {
     use axum::http::{header, HeaderValue};
     use axum_extra::extract::cookie::Key;
-    use dioxus::prelude::{DioxusRouterExt, ServeConfigBuilder};
-    use discord_bot::server::{terraria, minecraft, discord, shutdown_signal, AppState, InnerState};
-    use serenity::all::{CreateCommand, CommandType, CreateCommandOption, CommandOptionType};
+    use dioxus::prelude::{DioxusRouterExt, LaunchBuilder};
+    use discord_bot::server::{
+        discord, minecraft, shutdown_signal, terraria, AppState, InnerState,
+    };
+    use serenity::all::{CommandOptionType, CommandType, CreateCommand, CreateCommandOption};
     use std::env::var;
     use tower_http::{
         timeout::TimeoutLayer,
         trace::{DefaultMakeSpan, DefaultOnResponse, TraceLayer},
         LatencyUnit, ServiceBuilderExt,
     };
-    use tracing_subscriber::{layer::SubscriberExt,util::SubscriberInitExt};
+    use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
 
     tracing_subscriber::registry()
         .with(
@@ -29,17 +31,22 @@ async fn main() {
         .with(tracing_subscriber::fmt::layer().without_time())
         .init();
 
-    let surrealdb_path = var("SURREALDB_PATH").unwrap_or(String::from("/var/lib/discord_bot/surrealdb"));
-    let db = surrealdb::Surreal::new::<surrealdb::engine::local::RocksDb>(surrealdb_path).await.unwrap();
+    let surrealdb_path =
+        var("SURREALDB_PATH").unwrap_or(String::from("/var/lib/discord_bot/surrealdb"));
+    let db = surrealdb::Surreal::new::<surrealdb::engine::local::RocksDb>(surrealdb_path)
+        .await
+        .unwrap();
     // Select a specific namespace / database
     db.use_ns(env!("CARGO_PKG_NAME"))
         .use_db(env!("CARGO_PKG_NAME"))
-        .await.unwrap();
+        .await
+        .unwrap();
 
     let state = AppState(std::sync::Arc::new(InnerState {
         base_url: var("BASE_URL").unwrap_or_default(),
         client_id: var("DISCORD_CLIENT_ID").unwrap_or_default(),
         client_secret: var("DISCORD_CLIENT_SECRET").unwrap_or_default(),
+        cloud_ssh_host: var("CLOUD_SSH_HOST").ok(),
         db,
         discord_bot_spam_channel_id: var("DISCORD_BOT_SPAM_CHANNEL_ID").unwrap_or_default(),
         discord_minecraft_geyser_channel_id: var("DISCORD_MINECRAFT_GEYSER_CHANNEL_ID")
@@ -70,37 +77,37 @@ async fn main() {
     let interval_state = state.clone();
 
     let commands = [
-        // CreateCommand::new("minecraft-geyser")
-        //     .kind(CommandType::ChatInput)
-        //     .description("Minecraft slash commands")
-        //     .add_option(
-        //         CreateCommandOption::new(CommandOptionType::String, "action", "available actions")
-        //             .required(true)
-        //             .add_string_choice("Stop", "stop")
-        //             .add_string_choice("Restart", "restart"),
-        //     ),
-        // CreateCommand::new("minecraft-modded")
-        //     .kind(CommandType::ChatInput)
-        //     .description("Minecraft slash commands")
-        //     .add_option(
-        //         CreateCommandOption::new(CommandOptionType::String, "action", "available actions")
-        //             .required(true)
-        //             .add_string_choice("Stop", "stop")
-        //             .add_string_choice("Restart", "restart"),
-        //     ),
-        // CreateCommand::new("terraria")
-        //     .kind(CommandType::ChatInput)
-        //     .description("Terraria slash commands")
-        //     .add_option(
-        //         CreateCommandOption::new(CommandOptionType::String, "action", "available actions")
-        //             .required(true)
-        //             .add_string_choice("Stop", "stop")
-        //             .add_string_choice("Restart", "restart")
-        //             .add_sub_option(
-        //                 CreateCommandOption::new(CommandOptionType::String, "message", "message")
-        //                     .required(true),
-        //             ),
-        //     ),
+        CreateCommand::new("minecraft-geyser")
+            .kind(CommandType::ChatInput)
+            .description("Minecraft slash commands")
+            .add_option(
+                CreateCommandOption::new(CommandOptionType::String, "action", "available actions")
+                    .required(true)
+                    .add_string_choice("Stop", "stop")
+                    .add_string_choice("Restart", "restart"),
+            ),
+        CreateCommand::new("minecraft-modded")
+            .kind(CommandType::ChatInput)
+            .description("Minecraft slash commands")
+            .add_option(
+                CreateCommandOption::new(CommandOptionType::String, "action", "available actions")
+                    .required(true)
+                    .add_string_choice("Stop", "stop")
+                    .add_string_choice("Restart", "restart"),
+            ),
+        CreateCommand::new("terraria")
+            .kind(CommandType::ChatInput)
+            .description("Terraria slash commands")
+            .add_option(
+                CreateCommandOption::new(CommandOptionType::String, "action", "available actions")
+                    .required(true)
+                    .add_string_choice("Stop", "stop")
+                    .add_string_choice("Restart", "restart")
+                    .add_sub_option(
+                        CreateCommandOption::new(CommandOptionType::String, "message", "message")
+                            .required(true),
+                    ),
+            ),
     ];
 
     if !state.discord_token.is_empty() {
@@ -148,14 +155,29 @@ async fn main() {
             HeaderValue::from_static("application/octet-stream"),
         );
 
-    let address = dioxus_cli_config::fullstack_address_or_localhost();
     let router = axum::Router::new()
-        .route("/api/discord/interactions", axum::routing::post(discord::interactions))
-        .route("/api/discord/verify-user", axum::routing::get(discord::verify_user))
-        .route("/api/discord/oauth-callback", axum::routing::get(discord::oauth_callback))
-        .serve_dioxus_application(ServeConfigBuilder::default(), App);
-    let router = router.layer(middleware).with_state(state).into_make_service();
+        .route(
+            "/api/discord/interactions",
+            axum::routing::post(discord::interactions),
+        )
+        .route(
+            "/api/discord/verify-user",
+            axum::routing::get(discord::verify_user),
+        )
+        .route(
+            "/api/discord/oauth-callback",
+            axum::routing::get(discord::oauth_callback),
+        )
+        .serve_dioxus_application(LaunchBuilder::new().with_context(state), App)
+        .layer(middleware)
+        .with_state(state)
+        .into_make_service();
+
+    let address = dioxus_cli_config::fullstack_address_or_localhost();
     let listener = tokio::net::TcpListener::bind(address).await.unwrap();
 
-    axum::serve(listener, router).with_graceful_shutdown(shutdown_signal()).await.unwrap();
+    axum::serve(listener, router)
+        .with_graceful_shutdown(shutdown_signal())
+        .await
+        .unwrap();
 }

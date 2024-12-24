@@ -1,8 +1,8 @@
 pub mod discord;
 pub mod minecraft;
-pub mod terraria;
 pub mod players;
 mod state;
+pub mod terraria;
 pub use state::*;
 pub mod models;
 

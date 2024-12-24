@@ -25,6 +25,7 @@ pub struct InnerState {
     pub base_url: String,
     pub client_id: String,
     pub client_secret: String,
+    pub cloud_ssh_host: Option<String>,
     pub discord_bot_spam_channel_id: String,
     pub discord_minecraft_geyser_channel_id: String,
     pub discord_minecraft_modded_channel_id: String,

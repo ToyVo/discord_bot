@@ -1,5 +1,5 @@
 use crate::error::AppError;
-use crate::server::{AppState, models::DiscordTokens};
+use crate::server::{models::DiscordTokens, AppState};
 use anyhow::Context;
 use axum::{
     extract::{Query, State},
@@ -14,7 +14,7 @@ use serde_json::{json, Value};
 use serenity::{
     all::{
         CommandDataOptionValue, CommandInteraction, CreateInteractionResponseFollowup, Interaction,
-        InteractionResponseFlags, User
+        InteractionResponseFlags, User,
     },
     builder::{
         CreateCommand, CreateInteractionResponse, CreateInteractionResponseMessage, CreateMessage,
@@ -132,8 +132,13 @@ pub async fn handle_slash_command(
                     let server = payload.data.name;
                     let action = s.as_str();
                     let service_name = format!("arion-{server}.service");
+                    let systemctl_args = if let Some(host) = &state.cloud_ssh_host {
+                        vec!["--host", host, action, service_name.as_str()]
+                    } else {
+                        vec![action, service_name.as_str()]
+                    };
                     let content = match Command::new("systemctl")
-                        .args([action, service_name.as_str()])
+                        .args([systemctl_args])
                         .output()
                         .await
                     {
