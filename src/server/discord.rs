@@ -1,5 +1,5 @@
 use crate::error::AppError;
-use crate::server::{models::DiscordTokens, AppState};
+use crate::server::{models::DiscordTokens, ssh_command, AppState};
 use anyhow::Context;
 use axum::{
     extract::{Query, State},
@@ -132,23 +132,18 @@ pub async fn handle_slash_command(
                     let server = payload.data.name;
                     let action = s.as_str();
                     let service_name = format!("arion-{server}.service");
-                    let content = match Command::new("systemctl")
-                        .args(if let Some(host) = &state.cloud_ssh_host {
-                            vec!["--host", host, action, service_name.as_str()]
-                        } else {
-                            vec![action, service_name.as_str()]
-                        })
-                        .output()
-                        .await
-                    {
-                        Ok(_) => {
-                            format!("Successfully {action}ed {server} server")
-                        }
-                        Err(e) => {
-                            tracing::error!("Could not {action} {server} server: {e}");
-                            format!("There was an issue {action}ing {server} server")
-                        }
-                    };
+                    let content =
+                        match ssh_command("systemctl", &[action, service_name.as_str()], &state)
+                            .await
+                        {
+                            Ok(_) => {
+                                format!("Successfully {action}ed {server} server")
+                            }
+                            Err(e) => {
+                                tracing::error!("Could not {action} {server} server: {e}");
+                                format!("There was an issue {action}ing {server} server")
+                            }
+                        };
                     if let Err(e) =
                         replace_initial_interaction_response(content, payload.token, &state).await
                     {

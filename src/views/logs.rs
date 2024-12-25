@@ -89,25 +89,6 @@ async fn fetch_logs(unit: String, since: String, until: String) -> Result<String
         until.as_str(),
     ];
     let FromContext(state): FromContext<crate::server::AppState> = extract().await?;
-    let logs = match (&state.cloud_ssh_host, &state.cloud_ssh_key) {
-        (Some(host), Some(key)) => {
-            let ssh_args = [host, "-i", key, &format!("'journalctl {}'", journalctl_args.join(" "))];
-            format!("ssh {}", ssh_args.join(" "))
-        },
-        _ => {
-            #[cfg(target_os = "linux")]
-            let logs = std::str::from_utf8(
-                &tokio::process::Command::new("journalctl")
-                    .args(journalctl_args)
-                    .output()
-                    .await?
-                    .stdout,
-            )?
-            .to_string();
-            #[cfg(not(target_os = "linux"))]
-            let logs = format!("No logs available on this platform. {journalctl_args:?}");
-            logs
-        }
-    };
+    let logs = crate::server::ssh_command("journalctl", &journalctl_args, &state).await?;
     Ok(logs)
 }
