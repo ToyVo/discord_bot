@@ -47,6 +47,7 @@ async fn main() {
         client_id: var("DISCORD_CLIENT_ID").unwrap_or_default(),
         client_secret: var("DISCORD_CLIENT_SECRET").unwrap_or_default(),
         cloud_ssh_host: var("CLOUD_SSH_HOST").ok(),
+        cloud_ssh_key: var("CLOUD_SSH_KEY").ok(),
         db,
         discord_bot_spam_channel_id: var("DISCORD_BOT_SPAM_CHANNEL_ID").unwrap_or_default(),
         discord_minecraft_geyser_channel_id: var("DISCORD_MINECRAFT_GEYSER_CHANNEL_ID")

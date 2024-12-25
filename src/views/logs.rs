@@ -63,7 +63,7 @@ pub fn Logs() -> Element {
                         logs.set(new_logs);
                     }
                 },
-                r#type: "submit",
+                r#type: "button",
                 "Fetch Logs"
             }
         }
@@ -76,7 +76,6 @@ pub fn Logs() -> Element {
 
 #[server]
 async fn fetch_logs(unit: String, since: String, until: String) -> Result<String, ServerFnError> {
-    let FromContext(state): FromContext<crate::server::AppState> = extract().await?;
     if !VALID_SERVICES.contains(&unit.as_str()) {
         return Err(ServerFnError::Args(String::from("invalid unit")));
     }
@@ -89,9 +88,13 @@ async fn fetch_logs(unit: String, since: String, until: String) -> Result<String
         "-U",
         until.as_str(),
     ];
-    let logs = match &state.cloud_ssh_host {
-        Some(host) => host.clone(),
-        None => {
+    let FromContext(state): FromContext<crate::server::AppState> = extract().await?;
+    let logs = match (&state.cloud_ssh_host, &state.cloud_ssh_key) {
+        (Some(host), Some(key)) => {
+            let ssh_args = [host, "-i", key, &format!("'journalctl {}'", journalctl_args.join(" "))];
+            format!("ssh {}", ssh_args.join(" "))
+        },
+        _ => {
             #[cfg(target_os = "linux")]
             let logs = std::str::from_utf8(
                 &tokio::process::Command::new("journalctl")
