@@ -10,7 +10,7 @@ fn main() {
 async fn main() {
     use axum::http::{header, HeaderValue};
     use axum_extra::extract::cookie::Key;
-    use dioxus::prelude::{DioxusRouterExt, LaunchBuilder};
+    use dioxus::prelude::{DioxusRouterExt, ServeConfigBuilder};
     use discord_bot::server::{
         discord, minecraft, shutdown_signal, terraria, AppState, InnerState,
     };
@@ -155,6 +155,16 @@ async fn main() {
             HeaderValue::from_static("application/octet-stream"),
         );
 
+    let dioxus_state = std::sync::Arc::new(vec![Box::new({
+        // Clone AppState so it's captured by move closure safely
+        let cloned_state = state.clone();
+        move || {
+            // Box the cloned AppState as `dyn std::any::Any`
+            Box::new(cloned_state.clone()) as Box<dyn std::any::Any>
+        }
+    })
+        as Box<dyn Fn() -> Box<dyn std::any::Any> + Send + Sync + 'static>]);
+
     let router = axum::Router::new()
         .route(
             "/api/discord/interactions",
@@ -168,7 +178,10 @@ async fn main() {
             "/api/discord/oauth-callback",
             axum::routing::get(discord::oauth_callback),
         )
-        .serve_dioxus_application(LaunchBuilder::new().with_context(state), App)
+        .serve_dioxus_application(
+            ServeConfigBuilder::default().context_providers(dioxus_state),
+            App,
+        )
         .layer(middleware)
         .with_state(state)
         .into_make_service();

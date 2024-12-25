@@ -132,13 +132,12 @@ pub async fn handle_slash_command(
                     let server = payload.data.name;
                     let action = s.as_str();
                     let service_name = format!("arion-{server}.service");
-                    let systemctl_args = if let Some(host) = &state.cloud_ssh_host {
-                        vec!["--host", host, action, service_name.as_str()]
-                    } else {
-                        vec![action, service_name.as_str()]
-                    };
                     let content = match Command::new("systemctl")
-                        .args([systemctl_args])
+                        .args(if let Some(host) = &state.cloud_ssh_host {
+                            vec!["--host", host, action, service_name.as_str()]
+                        } else {
+                            vec![action, service_name.as_str()]
+                        })
                         .output()
                         .await
                     {
