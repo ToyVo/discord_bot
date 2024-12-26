@@ -34,7 +34,7 @@ pub async fn ssh_command(
     args: &[&str],
     state: &AppState,
 ) -> Result<String, AppError> {
-    let logs = match (&state.cloud_ssh_host, &state.cloud_ssh_key) {
+    match (&state.cloud_ssh_host, &state.cloud_ssh_key) {
         (Some(host), Some(key)) => {
             let ssh_args = [host, "-i", key, &format!("'{command} {}'", args.join(" "))];
 
@@ -44,7 +44,7 @@ pub async fn ssh_command(
                 .args(ssh_args)
                 .output()
                 .await {
-                Some(execution) => {
+                Ok(execution) => {
                     if !&execution.stderr.is_empty() {
                         tracing::error!("{}", std::str::from_utf8(&execution.stderr,)?);
                     }
@@ -53,7 +53,7 @@ pub async fn ssh_command(
                 },
                 Err(e) => {
                     tracing::error!("{e}");
-                    Err(e)
+                    Err(AppError::Io(e))
                 }
             }
         }
@@ -69,8 +69,7 @@ pub async fn ssh_command(
                 tracing::error!("{}", std::str::from_utf8(&execution.stderr,)?);
             }
 
-            std::str::from_utf8(&execution.stdout)?.to_string()
+            Ok(std::str::from_utf8(&execution.stdout)?.to_string())
         }
-    };
-    Ok(logs)
+    }
 }
