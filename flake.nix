@@ -81,8 +81,13 @@
             };
             config = lib.mkIf cfg.enable {
               nixpkgs.overlays = [ self.overlays.default ];
+              users = {
+                users.discord_bot.isSystemUser = true;
+                groups.discord_bot.members = ["discord_bot"];
+              };
               systemd.services = {
                 discord_bot = {
+                  serviceConfig.User = "discord_bot";
                   wantedBy = [ "multi-user.target" ];
                   script = ''
                     export $(cat ${cfg.env_file} | xargs)
