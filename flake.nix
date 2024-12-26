@@ -82,8 +82,11 @@
             config = lib.mkIf cfg.enable {
               nixpkgs.overlays = [ self.overlays.default ];
               users = {
-                users.discord_bot.isSystemUser = true;
-                groups.discord_bot.members = ["discord_bot"];
+                users.discord_bot = {
+                  isSystemUser = true;
+                  group = "discord_bot";
+                };
+                groups.discord_bot = {};
               };
               systemd.services = {
                 discord_bot = {
