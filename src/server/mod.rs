@@ -38,22 +38,28 @@ pub async fn ssh_command(
         (Some(host), Some(key)) => {
             let ssh_args = [host, "-i", key, &format!("'{command} {}'", args.join(" "))];
 
-            tracing::trace!("executing: ssh {}", &ssh_args.join(" "));
+            tracing::info!("executing: ssh {}", &ssh_args.join(" "));
 
-            let execution = tokio::process::Command::new("ssh")
+            match tokio::process::Command::new("ssh")
                 .args(ssh_args)
                 .output()
-                .await?;
+                .await {
+                Some(execution) => {
+                    if !&execution.stderr.is_empty() {
+                        tracing::error!("{}", std::str::from_utf8(&execution.stderr,)?);
+                    }
 
-            if !&execution.stderr.is_empty() {
-                tracing::error!("{}", std::str::from_utf8(&execution.stderr,)?);
+                    Ok(std::str::from_utf8(&execution.stdout)?.to_string())
+                },
+                Err(e) => {
+                    tracing::error!("{e}");
+                    Err(e)
+                }
             }
-
-            std::str::from_utf8(&execution.stdout)?.to_string()
         }
         _ => {
-            tracing::trace!("executing: {command} {}", &args.join(" "));
-            
+            tracing::info!("executing: {command} {}", &args.join(" "));
+
             let execution = tokio::process::Command::new(command)
                 .args(args)
                 .output()
