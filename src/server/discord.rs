@@ -23,7 +23,6 @@ use serenity::{
     json,
 };
 use std::collections::HashMap;
-use tokio::process::Command;
 
 pub async fn interactions(
     headers: HeaderMap,

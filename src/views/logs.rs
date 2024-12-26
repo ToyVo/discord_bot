@@ -13,9 +13,7 @@ pub fn Logs() -> Element {
     let mut logs = use_signal(String::new);
     let unit = use_signal(|| String::from("arion-minecraft-modded.service"));
     let now = Utc::now();
-    // TODO: see if we can get this from query params
     let since = now - Duration::from_secs(3600);
-    // TODO: see if we can get this from query params
     let until = now;
     rsx! {
         form {
@@ -89,6 +87,7 @@ async fn fetch_logs(unit: String, since: String, until: String) -> Result<String
         until.as_str(),
     ];
     let FromContext(state): FromContext<crate::server::AppState> = extract().await?;
+    tracing::info!("fetching logs for unit: {unit}");
     let logs = crate::server::ssh_command("journalctl", &journalctl_args, &state).await?;
     Ok(logs)
 }
