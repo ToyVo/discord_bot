@@ -38,9 +38,9 @@ pub async fn ssh_command(
         (Some(host), Some(key)) => {
             let ssh_args = [host, "-i", key, &format!("'{command} {}'", args.join(" "))];
 
-            tracing::info!("executing: ssh {}", &ssh_args.join(" "));
+            tracing::info!("executing: {} {}", &state.ssh_path, &ssh_args.join(" "));
 
-            match tokio::process::Command::new("ssh")
+            match tokio::process::Command::new(&state.ssh_path)
                 .args(ssh_args)
                 .output()
                 .await {

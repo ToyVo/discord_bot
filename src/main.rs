@@ -65,6 +65,7 @@ async fn main() {
             .unwrap_or(String::from("localhost:25575")),
         minecraft_modded_rcon_password: var("RCON_PASSWORD").unwrap_or_default(),
         public_key: var("DISCORD_PUBLIC_KEY").unwrap_or_default(),
+        ssh_path: var("SSH_PATH").unwrap_or_default(),
         tshock_base_url: var("TSHOCK_REST_BASE_URL")
             .unwrap_or(String::from("http://localhost:7878")),
         tshock_token: var("TSHOCK_APPLICATION_TOKEN").unwrap_or_default(),

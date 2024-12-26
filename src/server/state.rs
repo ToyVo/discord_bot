@@ -39,6 +39,7 @@ pub struct InnerState {
     pub minecraft_modded_rcon_address: String,
     pub minecraft_modded_rcon_password: String,
     pub public_key: String,
+    pub ssh_path: String,
     pub tshock_base_url: String,
     pub tshock_token: String,
     pub user_agent: String,

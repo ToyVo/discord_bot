@@ -95,6 +95,7 @@
                   script = ''
                     export $(cat ${cfg.env_file} | xargs)
                     export RUST_BACKTRACE=full
+                    export SSH_PATH=${lib.getExe pkgs.openssh}
                     ${lib.concatStringsSep "\n" (
                       lib.mapAttrsToList (
                         name: value: "export ${name}=${toString value}"
