@@ -8,7 +8,7 @@ ADD . ./
 RUN nix --extra-experimental-features "nix-command flakes" build .#discord_bot
 
 EXPOSE 8080
-CMD ["./result/bin/discord_bot"]
+CMD ["./result/bin/server"]
 
 ## Create fresh binary project, add toml and lock file and compile dependencies to cache the image build steps
 #RUN mkdir /rust

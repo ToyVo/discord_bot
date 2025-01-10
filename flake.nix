@@ -101,7 +101,7 @@
                         name: value: "export ${name}=${toString value}"
                       ) cfg.env
                     )}
-                    ${pkgs.discord_bot}/bin/server
+                    ${lib.getExe pkgs.discord_bot}
                   '';
                 };
               };
