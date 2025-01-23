@@ -59,15 +59,15 @@ async fn main() {
         forge_api_key: var("FORGE_API_KEY").unwrap_or_default(),
         key: Key::generate(),
         minecraft_geyser_rcon_address: var("MINECRAFT_GEYSER_RCON_ADDRESS")
-            .unwrap_or(String::from("localhost:25576")),
+            .unwrap_or(String::from("127.0.0.1:25576")),
         minecraft_geyser_rcon_password: var("RCON_PASSWORD").unwrap_or_default(),
         minecraft_modded_rcon_address: var("MINECRAFT_MODDED_RCON_ADDRESS")
-            .unwrap_or(String::from("localhost:25575")),
+            .unwrap_or(String::from("127.0.0.1:25575")),
         minecraft_modded_rcon_password: var("RCON_PASSWORD").unwrap_or_default(),
         public_key: var("DISCORD_PUBLIC_KEY").unwrap_or_default(),
         ssh_path: var("SSH_PATH").unwrap_or_default(),
         tshock_base_url: var("TSHOCK_REST_BASE_URL")
-            .unwrap_or(String::from("http://localhost:7878")),
+            .unwrap_or(String::from("http://127.0.0.1:7878")),
         tshock_token: var("TSHOCK_APPLICATION_TOKEN").unwrap_or_default(),
         user_agent: format!(
             "DiscordBot ({}, {})",

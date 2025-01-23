@@ -25,6 +25,11 @@ async fn track_generic<S: AsRef<str>>(
         vec![]
     };
 
+    if let Err(e) = TcpStream::connect(minecraft_rcon_address.as_ref()).await {
+        tracing::debug!("{surreal_id} unreachable {e}");
+        return Ok(());
+    }
+
     let players = if let Ok(mut connection) = <Connection<TcpStream>>::builder()
         .enable_minecraft_quirks(true)
         .connect(
@@ -45,7 +50,7 @@ async fn track_generic<S: AsRef<str>>(
             .filter(|s| !s.is_empty())
             .collect::<Vec<String>>()
     } else {
-        tracing::debug!("mc not running");
+        tracing::debug!("{surreal_id} not running");
         vec![]
     };
 
@@ -70,10 +75,10 @@ async fn track_generic<S: AsRef<str>>(
                 )
                 .await
             }
-            Err(e) => Ok(tracing::error!(
-                "Error getting DiscordMessage from DB: {}",
-                e
-            )),
+            Err(e) => {
+                tracing::error!("Error getting DiscordMessage from DB: {}", e);
+                Ok(())
+            }
             _ => Ok(()),
         }?;
 

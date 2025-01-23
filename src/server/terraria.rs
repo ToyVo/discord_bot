@@ -9,6 +9,7 @@ use chrono::Utc;
 use serde_json::Value;
 use serenity::all::MessageFlags;
 use serenity::builder::CreateMessage;
+use tokio::net::TcpStream;
 
 /// ref: https://tshock.readme.io/reference/v2status
 pub async fn get_status(state: &AppState) -> Result<Value, AppError> {
@@ -19,6 +20,18 @@ pub async fn get_status(state: &AppState) -> Result<Value, AppError> {
 }
 
 pub async fn track_players(state: &AppState) -> Result<(), AppError> {
+    let scheme_start_index = &state.tshock_base_url.find("://");
+    let address = if let Some(i) = scheme_start_index {
+        state.tshock_base_url.chars().skip(i + 2).collect::<String>()
+    } else {
+        state.tshock_base_url.clone()
+    };
+    
+    if let Err(e) = TcpStream::connect(address).await {
+        tracing::debug!("terraria unreachable {e}");
+        return Ok(());
+    }
+    
     let player_nicknames = if let Ok(status) = get_status(state).await {
         let players = status
             .get("players")
