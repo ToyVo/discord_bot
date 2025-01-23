@@ -132,7 +132,7 @@ pub async fn handle_slash_command(
                     let action = s.as_str();
                     let service_name = format!("arion-{server}.service");
                     let content =
-                        match ssh_command("systemctl", &[action, service_name.as_str()], &state)
+                        match ssh_command("sudo systemctl", &[action, service_name.as_str()], &state)
                             .await
                         {
                             Ok(_) => {
