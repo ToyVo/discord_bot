@@ -6,14 +6,12 @@ use crate::server::{
 };
 use anyhow::Context;
 use chrono::Utc;
-use rcon::Connection;
 use serenity::all::MessageFlags;
 use serenity::builder::CreateMessage;
 use tokio::net::TcpStream;
 
 async fn track_generic<S: AsRef<str>>(
-    minecraft_rcon_address: S,
-    minecraft_rcon_password: S,
+    minecraft_address: S,
     discord_minecraft_channel_id: S,
     surreal_id: &str,
     state: &AppState,
@@ -25,33 +23,21 @@ async fn track_generic<S: AsRef<str>>(
         vec![]
     };
 
-    if let Err(e) = TcpStream::connect(minecraft_rcon_address.as_ref()).await {
+    if let Err(e) = TcpStream::connect(minecraft_address.as_ref()).await {
         tracing::debug!("{surreal_id} unreachable {e}");
         return Ok(());
     }
+    
+    let (host, port) = minecraft_address.as_ref().split_once(":")
+        .expect("Couldn't separate host and port from minecraft address");
+    let port = port.parse::<u16>().expect("couldn't parse port as int");
 
-    let players = if let Ok(mut connection) = <Connection<TcpStream>>::builder()
-        .enable_minecraft_quirks(true)
-        .connect(
-            minecraft_rcon_address.as_ref(),
-            minecraft_rcon_password.as_ref(),
-        )
-        .await
-    {
-        // list response "There are n of a max of m players online: <player1>"
-        let res = connection.cmd("list").await?;
-
-        // Parse response to get list of player names in a vector
-        let start_index = res.find(':').context("Could not find ':' in response")?;
-        res[start_index + 1..]
-            .trim()
-            .split(',')
-            .map(|s| s.trim().to_string())
-            .filter(|s| !s.is_empty())
-            .collect::<Vec<String>>()
+    let data = mc_query::status(host, port).await?;
+    let players = if let Some(sample) = data.players.sample {
+        sample.iter().map(|player| player.name.clone()).collect()
     } else {
         tracing::debug!("{surreal_id} not running");
-        vec![]
+        Vec::new()
     };
 
     if let Some(message) = players::get_player_changes(&last_player_names, &players) {
@@ -114,16 +100,14 @@ async fn track_generic<S: AsRef<str>>(
 
 pub async fn track_players(state: &AppState) -> Result<(), AppError> {
     track_generic(
-        &state.minecraft_modded_rcon_address,
-        &state.minecraft_modded_rcon_password,
+        &state.minecraft_modded_address,
         &state.discord_minecraft_modded_channel_id,
         "minecraft_modded",
         state,
     )
     .await?;
     track_generic(
-        &state.minecraft_geyser_rcon_address,
-        &state.minecraft_geyser_rcon_password,
+        &state.minecraft_geyser_address,
         &state.discord_minecraft_geyser_channel_id,
         "minecraft_geyser",
         state,

@@ -161,7 +161,7 @@
             });
             discord_bot =
               let
-                cargoToml = builtins.fromTOML (builtins.readFile ./Cargo.toml);
+                cargoToml = builtins.fromTOML (builtins.readFile ./discord_bot/Cargo.toml);
                 rev = toString (self.shortRev or self.dirtyShortRev or self.lastModified or "unknown");
               in
               pkgs.rustPlatform.buildRustPackage {
@@ -202,7 +202,7 @@
                         ln -s ${lib.getExe wasm-bindgen-cli} .share/dioxus/wasm-bindgen/wasm-bindgen-${wasm-bindgen-cli.version}
                       ''
                   }
-                  dx build --release --platform web --verbose --trace
+                  dx build --package discord_bot --release --platform web --verbose --trace
                 '';
                 installPhase = ''
                   mkdir -p $out

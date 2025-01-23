@@ -7,8 +7,6 @@ pub enum AppError {
     Other(String),
     #[cfg(feature = "server")]
     Parse(url::ParseError),
-    #[cfg(feature = "server")]
-    Rcon(rcon::Error),
     Request(reqwest::Error),
     #[cfg(feature = "server")]
     Serenity(serenity::Error),
@@ -27,7 +25,6 @@ impl axum::response::IntoResponse for AppError {
             AppError::Json(e) => tracing::error!("JSON error: {e:}"),
             AppError::Other(e) => tracing::error!("Other error: {e:}"),
             AppError::Parse(e) => tracing::error!("Parse error: {e:}"),
-            AppError::Rcon(e) => tracing::error!("RCON error: {e:}"),
             AppError::Request(e) => tracing::error!("Request error: {e:}"),
             AppError::Serenity(e) => tracing::error!("Serenity error: {e:}"),
             AppError::Surreal(e) => tracing::error!("Surreal error: {e:}"),
@@ -52,8 +49,6 @@ impl std::fmt::Display for AppError {
             AppError::Other(e) => write!(f, "Other error: {}", e),
             #[cfg(feature = "server")]
             AppError::Parse(e) => write!(f, "Parse error: {}", e),
-            #[cfg(feature = "server")]
-            AppError::Rcon(e) => write!(f, "RCON error: {}", e),
             AppError::Request(e) => write!(f, "Request error: {}", e),
             #[cfg(feature = "server")]
             AppError::Serenity(e) => write!(f, "Serenity error: {}", e),
@@ -94,13 +89,6 @@ impl From<serde_json::Error> for AppError {
 impl From<url::ParseError> for AppError {
     fn from(err: url::ParseError) -> Self {
         Self::Parse(err)
-    }
-}
-
-#[cfg(feature = "server")]
-impl From<rcon::Error> for AppError {
-    fn from(err: rcon::Error) -> Self {
-        Self::Rcon(err)
     }
 }
 

@@ -1,42 +1,6 @@
-[package]
-name = "discord_bot"
-version = "0.1.0"
-authors = ["Collin Diekvoss <Collin@Diekvoss.com>"]
-edition = "2021"
-repository = "https://github.com/toyvo/discord_bot"
-
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
-
-[dependencies]
-anyhow = "1"
-axum = { version = "0", optional = true }
-axum-extra = { version = "0", features = ["cookie", "cookie-signed", "typed-header"], optional = true }
-chrono = { version = "0", features = ["rkyv"] }
-dioxus = { version = "0", features = ["router", "fullstack"] }
-dioxus-cli-config = { version = "0", optional = true }
-mime = { version = "0", optional = true }
-oxford_join = "0"
-rcon = { version = "0", features = ["rt-tokio"], optional = true }
-reqwest = { version = "0", features = ["json"] }
-serde = { version = "1", features = ["derive"] }
-serde_json = "1"
-serenity = { version = "0", features = ["interactions_endpoint"], optional = true }
-surrealdb = { version = "2", features = ["kv-rocksdb"], optional = true }
-time = { version = "0", features = ["macros", "serde"] }
-tokio = { version = "1", features = ["full"], optional = true }
-tower = { version = "0", features = ["full"], optional = true }
-tower-http = { version = "0", features = ["full"], optional = true }
-tracing = { version = "0", optional = true }
-tracing-subscriber = { version = "0", features = ["env-filter"], optional = true }
-url = { version = "2", optional = true }
-uuid = { version = "1", features = ["v4"], optional = true }
-
-[features]
-default = []
-server = ["dioxus/server", "axum", "axum-extra", "dioxus-cli-config", "mime", "rcon", "serenity", "surrealdb", "tokio", "tower", "tower-http", "tracing", "tracing-subscriber", "url", "uuid"]
-web = ["dioxus/web"]
-desktop = ["dioxus/desktop"]
-mobile = ["dioxus/mobile"]
+[workspace]
+members = ["discord_bot"]
+resolver = "2"
 
 [profile]
 
