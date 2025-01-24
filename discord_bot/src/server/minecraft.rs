@@ -48,6 +48,14 @@ async fn track_generic<S: AsRef<str>>(
 
     if let Some(message) = players::get_player_changes(&last_player_names, &players) {
         discord::send_message(&message, MessageType::PlayerUpdate, server.clone(), channel_id, state).await?;
+    } else {
+        if let Some(message) = last_message {
+            if message.message_type == MessageType::ServerDown {
+                discord::send_message(&format!("No one is connected to {server}"), MessageType::PlayerUpdate, server.clone(), channel_id, state).await?;
+            }
+        } else {
+            discord::send_message(&format!("No one is connected to {server}"), MessageType::PlayerUpdate, server.clone(), channel_id, state).await?;
+        }
     }
 
     let _: Option<GamePlayers> = state

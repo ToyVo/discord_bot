@@ -67,6 +67,14 @@ pub async fn track_players(state: &AppState) -> Result<(), AppError> {
 
     if let Some(message) = players::get_player_changes(&last_player_nicknames, &player_nicknames) {
         discord::send_message(&message, MessageType::PlayerUpdate, GameServer::Terraria, &state.discord_terraria_channel_id, state).await?;
+    } else {
+        if let Some(message) = last_message {
+            if message.message_type == MessageType::ServerDown {
+                discord::send_message(&format!("No one is connected to terraria"), MessageType::PlayerUpdate, server.clone(), channel_id, state).await?;
+            }
+        } else {
+            discord::send_message(&format!("No one is connected to terraria"), MessageType::PlayerUpdate, server.clone(), channel_id, state).await?;
+        }
     }
 
     let _: Option<GamePlayers> = state
