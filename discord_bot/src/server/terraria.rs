@@ -25,10 +25,10 @@ pub async fn track_players(state: &AppState) -> Result<(), AppError> {
     if let Err(e) = TcpStream::connect(&state.terraria_address).await {
         if let Some(message) = last_message {
             if message.message_type == MessageType::PlayerUpdate {
-                discord::send_message(&"terraria is not running".to_string(), MessageType::PlayerUpdate, GameServer::Terraria, &state.discord_terraria_channel_id, state).await?;
+                discord::send_message(&"terraria is not running".to_string(), MessageType::ServerDown, GameServer::Terraria, &state.discord_terraria_channel_id, state).await?;
             }
         } else if last_message.is_none() {
-            discord::send_message(&"terraria is not running".to_string(), MessageType::PlayerUpdate, GameServer::Terraria, &state.discord_terraria_channel_id, state).await?;
+            discord::send_message(&"terraria is not running".to_string(), MessageType::ServerDown, GameServer::Terraria, &state.discord_terraria_channel_id, state).await?;
         }
         tracing::debug!("terraria unreachable {e}");
         return Ok(());
