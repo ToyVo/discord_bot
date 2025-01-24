@@ -46,7 +46,9 @@ pub async fn ssh_command(
                 .await {
                 Ok(execution) => {
                     if !&execution.stderr.is_empty() {
-                        tracing::error!("{}", std::str::from_utf8(&execution.stderr,)?);
+                        let e = std::str::from_utf8(&execution.stderr,)?;
+                        tracing::error!("{e}");
+                        return Err(AppError::Other(e.to_string()));
                     }
 
                     Ok(std::str::from_utf8(&execution.stdout)?.to_string())
@@ -66,7 +68,9 @@ pub async fn ssh_command(
                 .await?;
 
             if !&execution.stderr.is_empty() {
-                tracing::error!("{}", std::str::from_utf8(&execution.stderr,)?);
+                let e = std::str::from_utf8(&execution.stderr,)?;
+                tracing::error!("{e}");
+                return Err(AppError::Other(e.to_string()));
             }
 
             Ok(std::str::from_utf8(&execution.stdout)?.to_string())
