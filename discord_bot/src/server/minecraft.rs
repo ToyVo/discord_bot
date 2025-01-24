@@ -29,7 +29,7 @@ async fn track_generic<S: AsRef<str>>(
             if message.message_type == MessageType::PlayerUpdate {
                 discord::send_message(&format!("{server} is not running"), MessageType::ServerDown, server.clone(), channel_id, state).await?;
             }
-        } else {
+        } else if last_message.is_none() {
             discord::send_message(&format!("{server} is not running"), MessageType::ServerDown, server.clone(), channel_id, state).await?;
         }
         tracing::debug!("{server} unreachable {e}");
@@ -52,7 +52,7 @@ async fn track_generic<S: AsRef<str>>(
         if message.message_type == MessageType::ServerDown {
             discord::send_message(&format!("No one is connected to {server}"), MessageType::PlayerUpdate, server.clone(), channel_id, state).await?;
         }
-    } else {
+    } else if last_message.is_none() {
         discord::send_message(&format!("No one is connected to {server}"), MessageType::PlayerUpdate, server.clone(), channel_id, state).await?;
     }
 

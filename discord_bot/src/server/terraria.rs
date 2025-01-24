@@ -27,7 +27,7 @@ pub async fn track_players(state: &AppState) -> Result<(), AppError> {
             if message.message_type == MessageType::PlayerUpdate {
                 discord::send_message(&"terraria is not running".to_string(), MessageType::PlayerUpdate, GameServer::Terraria, &state.discord_terraria_channel_id, state).await?;
             }
-        } else {
+        } else if last_message.is_none() {
             discord::send_message(&"terraria is not running".to_string(), MessageType::PlayerUpdate, GameServer::Terraria, &state.discord_terraria_channel_id, state).await?;
         }
         tracing::debug!("terraria unreachable {e}");
@@ -71,7 +71,7 @@ pub async fn track_players(state: &AppState) -> Result<(), AppError> {
         if message.message_type == MessageType::ServerDown {
             discord::send_message(&format!("No one is connected to terraria"), MessageType::PlayerUpdate, GameServer::Terraria, &state.discord_terraria_channel_id, state).await?;
         }
-    } else {
+    } else if last_message.is_none() {
         discord::send_message(&format!("No one is connected to terraria"), MessageType::PlayerUpdate, GameServer::Terraria, &state.discord_terraria_channel_id, state).await?;
     }
 
