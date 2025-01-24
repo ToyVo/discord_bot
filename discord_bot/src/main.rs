@@ -64,6 +64,8 @@ async fn main() {
             .unwrap_or(String::from("127.0.0.1:25565")),
         public_key: var("DISCORD_PUBLIC_KEY").unwrap_or_default(),
         ssh_path: var("SSH_PATH").unwrap_or_default(),
+        terraria_address: var("TERRARIA_ADDRESS")
+            .unwrap_or(String::from("127.0.0.1:7777")),
         tshock_base_url: var("TSHOCK_REST_BASE_URL")
             .unwrap_or(String::from("http://127.0.0.1:7878")),
         tshock_token: var("TSHOCK_APPLICATION_TOKEN").unwrap_or_default(),

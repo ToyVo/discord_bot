@@ -19,16 +19,10 @@ pub async fn get_status(state: &AppState) -> Result<Value, AppError> {
 
 pub async fn track_players(state: &AppState) -> Result<(), AppError> {
     tracing::debug!("Checking players connected to terraria");
-    let scheme_start_index = &state.tshock_base_url.find("://");
-    let address = if let Some(i) = scheme_start_index {
-        state.tshock_base_url.chars().skip(i + 3).collect::<String>()
-    } else {
-        state.tshock_base_url.clone()
-    };
-    
+
     let last_message: Option<DiscordMessage> = state.db.select((DBCollection::DiscordMessages.to_string(), GameServer::Terraria.to_string())).await?;
 
-    if let Err(e) = TcpStream::connect(address).await {
+    if let Err(e) = TcpStream::connect(&state.terraria_address).await {
         if let Some(message) = last_message {
             if message.message_type == MessageType::PlayerUpdate {
                 discord::send_message(&"terraria is not running".to_string(), MessageType::PlayerUpdate, GameServer::Terraria, &state.discord_terraria_channel_id, state).await?;

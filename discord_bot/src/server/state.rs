@@ -38,6 +38,7 @@ pub struct InnerState {
     pub minecraft_modded_address: String,
     pub public_key: String,
     pub ssh_path: String,
+    pub terraria_address: String,
     pub tshock_base_url: String,
     pub tshock_token: String,
     pub user_agent: String,
