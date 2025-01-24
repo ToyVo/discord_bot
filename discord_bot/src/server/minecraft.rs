@@ -23,17 +23,19 @@ async fn track_generic<S: AsRef<str>>(
     };
 
     let last_message: Option<DiscordMessage> = state.db.select((DBCollection::DiscordMessages.to_string(), server.to_string())).await?;
-    
+
     if let Err(e) = TcpStream::connect(minecraft_address.as_ref()).await {
         if let Some(message) = last_message {
             if message.message_type == MessageType::PlayerUpdate {
                 discord::send_message(&format!("{server} is not running"), MessageType::ServerDown, server.clone(), channel_id, state).await?;
             }
+        } else {
+            discord::send_message(&format!("{server} is not running"), MessageType::ServerDown, server.clone(), channel_id, state).await?;
         }
         tracing::debug!("{server} unreachable {e}");
         return Ok(());
     }
-    
+
     let (host, port) = minecraft_address.as_ref().split_once(":")
         .expect("Couldn't separate host and port from minecraft address");
     let port = port.parse::<u16>().expect("couldn't parse port as int");
