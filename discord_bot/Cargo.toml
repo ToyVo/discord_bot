@@ -22,7 +22,6 @@ serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 serenity = { version = "0", features = ["interactions_endpoint"], optional = true }
 surrealdb = { version = "2", features = ["kv-rocksdb"], optional = true }
-time = { version = "0", features = ["macros", "serde"] }
 tokio = { version = "1", features = ["full"], optional = true }
 tower = { version = "0", features = ["full"], optional = true }
 tower-http = { version = "0", features = ["full"], optional = true }
@@ -37,15 +36,3 @@ server = ["dioxus/server", "axum", "axum-extra", "dioxus-cli-config", "mime", "m
 web = ["dioxus/web"]
 desktop = ["dioxus/desktop"]
 mobile = ["dioxus/mobile"]
-
-[profile]
-
-[profile.wasm-dev]
-inherits = "dev"
-opt-level = 1
-
-[profile.server-dev]
-inherits = "dev"
-
-[profile.android-dev]
-inherits = "dev"

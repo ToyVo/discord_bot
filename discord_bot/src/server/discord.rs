@@ -23,6 +23,8 @@ use serenity::{
     json,
 };
 use std::collections::HashMap;
+use serenity::all::MessageFlags;
+use crate::server::models::{DBCollection, DiscordMessage, GameServer, MessageType};
 
 pub async fn interactions(
     headers: HeaderMap,
@@ -193,12 +195,12 @@ pub async fn discord_request<S: AsRef<str>, T: Serialize + ?Sized>(
     tracing::debug!("response from {method} {url}: {response:?}");
 
     let content_type = response.headers().get(header::CONTENT_TYPE.as_str());
-    if content_type.is_some()
-        && content_type.unwrap().to_str().unwrap() == mime::APPLICATION_JSON.as_ref()
-    {
-        let body = response.json::<Value>().await?;
-        tracing::debug!("response body from {method} {url}: {body}");
-        return Ok(Some(body));
+    if let Some(content_type) = content_type {
+        if content_type.to_str().unwrap() == mime::APPLICATION_JSON.as_ref() {
+            let body = response.json::<Value>().await?;
+            tracing::debug!("response body from {method} {url}: {body}");
+            return Ok(Some(body));
+        }
     }
 
     Ok(None)
@@ -229,6 +231,58 @@ pub async fn create_message<S: AsRef<str>>(
             .context("failed to parse as str")?
     );
     Ok(json)
+}
+
+pub async fn send_message<S: AsRef<str>>(
+    message: &String,
+    message_type: MessageType,
+    server: GameServer,
+    channel_id: S,
+    state: &AppState,
+) -> Result<(), AppError> {
+    tracing::info!("{message}");
+    let created_message = create_message(
+        CreateMessage::new()
+            .content(message)
+            .flags(MessageFlags::SUPPRESS_NOTIFICATIONS),
+        &channel_id,
+        state,
+    )
+        .await?;
+
+    match state.db.select((DBCollection::DiscordMessages.to_string(), server.to_string())).await {
+        Ok(Some(data)) => {
+            let data: DiscordMessage = data;
+            delete_message(
+                data.discord_message_id.as_str(),
+                channel_id.as_ref(),
+                state,
+            )
+                .await
+        }
+        Err(e) => {
+            tracing::error!("Error getting DiscordMessage from DB: {e}");
+            Ok(())
+        },
+        _ => Ok(()),
+    }?;
+
+    let _: Option<DiscordMessage> = state
+        .db
+        .upsert((DBCollection::DiscordMessages.to_string(), server.to_string()))
+        .content(DiscordMessage {
+            game: server,
+            discord_message_id: created_message
+                .get("id")
+                .context("Could not find id in response")?
+                .as_str()
+                .context("could not parse as str")?
+                .to_string(),
+            message_type,
+        })
+        .await?;
+
+    Ok(())
 }
 
 pub async fn verify_request<S: AsRef<str>>(

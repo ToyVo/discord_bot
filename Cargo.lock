@@ -2192,7 +2192,6 @@ dependencies = [
  "serde_json",
  "serenity",
  "surrealdb",
- "time",
  "tokio",
  "tower 0.5.2",
  "tower-http 0.6.2",

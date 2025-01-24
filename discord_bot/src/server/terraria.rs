@@ -4,12 +4,10 @@ use crate::server::{
     models::{DiscordMessage, GamePlayers},
     players, AppState,
 };
-use anyhow::Context;
 use chrono::Utc;
 use serde_json::Value;
-use serenity::all::MessageFlags;
-use serenity::builder::CreateMessage;
 use tokio::net::TcpStream;
+use crate::server::models::{DBCollection, GameServer, MessageType};
 
 /// ref: https://tshock.readme.io/reference/v2status
 pub async fn get_status(state: &AppState) -> Result<Value, AppError> {
@@ -20,14 +18,22 @@ pub async fn get_status(state: &AppState) -> Result<Value, AppError> {
 }
 
 pub async fn track_players(state: &AppState) -> Result<(), AppError> {
+    tracing::debug!("Checking players connected to terraria");
     let scheme_start_index = &state.tshock_base_url.find("://");
     let address = if let Some(i) = scheme_start_index {
         state.tshock_base_url.chars().skip(i + 3).collect::<String>()
     } else {
         state.tshock_base_url.clone()
     };
+    
+    let last_message: Option<DiscordMessage> = state.db.select((DBCollection::DiscordMessages.to_string(), GameServer::Terraria.to_string())).await?;
 
     if let Err(e) = TcpStream::connect(address).await {
+        if let Some(message) = last_message {
+            if message.message_type == MessageType::PlayerUpdate {
+                discord::send_message(&"terraria is not running".to_string(), MessageType::PlayerUpdate, GameServer::Terraria, &state.discord_terraria_channel_id, state).await?;
+            }
+        }
         tracing::debug!("terraria unreachable {e}");
         return Ok(());
     }
@@ -56,7 +62,7 @@ pub async fn track_players(state: &AppState) -> Result<(), AppError> {
     };
 
     let last_player_nicknames: Option<GamePlayers> =
-        state.db.select(("players", "terraria")).await?;
+        state.db.select((DBCollection::Players.to_string(), GameServer::Terraria.to_string())).await?;
     let last_player_nicknames = if let Some(data) = last_player_nicknames {
         data.players
     } else {
@@ -64,53 +70,14 @@ pub async fn track_players(state: &AppState) -> Result<(), AppError> {
     };
 
     if let Some(message) = players::get_player_changes(&last_player_nicknames, &player_nicknames) {
-        tracing::info!("{}", message);
-        let message = discord::create_message(
-            CreateMessage::new()
-                .content(message)
-                .flags(MessageFlags::SUPPRESS_NOTIFICATIONS),
-            &state.discord_terraria_channel_id,
-            state,
-        )
-        .await?;
-
-        match state.db.select(("discord_messages", "terraria")).await {
-            Ok(Some(data)) => {
-                let data: DiscordMessage = data;
-                discord::delete_message(
-                    &data.discord_message_id,
-                    &state.discord_terraria_channel_id,
-                    state,
-                )
-                .await
-            }
-            Err(e) => Ok(tracing::error!(
-                "Error getting DiscordMessage from DB: {}",
-                e
-            )),
-            _ => Ok(()),
-        }?;
-
-        let _upserted: Option<DiscordMessage> = state
-            .db
-            .upsert(("discord_messages", "terraria"))
-            .content(DiscordMessage {
-                game: String::from("terraria"),
-                discord_message_id: message
-                    .get("id")
-                    .context("Could not find id in response")?
-                    .as_str()
-                    .context("could not parse as str")?
-                    .to_string(),
-            })
-            .await?;
+        discord::send_message(&message, MessageType::PlayerUpdate, GameServer::Terraria, &state.discord_terraria_channel_id, state).await?;
     }
 
-    let _upserted: Option<GamePlayers> = state
+    let _: Option<GamePlayers> = state
         .db
-        .upsert(("players", "terraria"))
+        .upsert((DBCollection::Players.to_string(), GameServer::Terraria.to_string()))
         .content(GamePlayers {
-            game: String::from("terraria"),
+            game: GameServer::Terraria,
             players: player_nicknames,
             time: Utc::now(),
         })
