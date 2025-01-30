@@ -10,6 +10,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     rust-overlay.url = "github:oxalica/rust-overlay";
+    nixpkgs-dioxus.url = "github:CathalMullan/nixpkgs/dioxus-cli-v0.6.2";
   };
 
   nixConfig = {
@@ -123,6 +124,9 @@
             inherit system;
             overlays = [
               inputs.rust-overlay.overlays.default
+              (final: prev: {
+                dioxus-cli = inputs.nixpkgs-dioxus.legacyPackages.${prev.system}.dioxus-cli;
+              })
             ];
           };
           formatter = pkgs.nixfmt-rfc-style;
@@ -138,27 +142,6 @@
                 targets = [ "wasm32-unknown-unknown" ];
               }
             );
-            wasm-bindgen-cli = pkgs.wasm-bindgen-cli.override {
-              version = "0.2.99";
-              hash = "sha256-1AN2E9t/lZhbXdVznhTcniy+7ZzlaEp/gwLEAucs6EA=";
-              cargoHash = "sha256-DbwAh8RJtW38LJp+J9Ht8fAROK9OabaJ85D9C/Vkve4=";
-            };
-            dioxus-cli = pkgs.dioxus-cli.overrideAttrs (drv: rec {
-              version = "0.6.1";
-              src = pkgs.fetchCrate {
-                inherit version;
-                pname = drv.pname;
-                hash = "sha256-mQnSduf8SHYyUs6gHfI+JAvpRxYQA1DiMlvNofImElU=";
-              };
-              cargoDeps = drv.cargoDeps.overrideAttrs (
-                lib.const {
-                  name = "${drv.cargoDeps.name}-vendor";
-                  inherit src;
-                  outputHash = "sha256-QiGnBoZV4GZb5MQ3K/PJxCfw0p/7qDmoE607hlGKOns=";
-                }
-              );
-              checkFlags = drv.checkFlags ++ [ "--skip=wasm_bindgen::test" ];
-            });
             discord_bot =
               let
                 cargoToml = builtins.fromTOML (builtins.readFile ./discord_bot/Cargo.toml);
@@ -171,6 +154,7 @@
                 strictDeps = true;
                 nativeBuildInputs = with pkgs; [
                   dioxus-cli
+                  wasm-bindgen-cli
                   rustToolchain
                   openssl
                   libiconv
@@ -188,20 +172,6 @@
                     pkgs.darwin.apple_sdk.frameworks.SystemConfiguration
                   ];
                 buildPhase = ''
-                  ${
-                    if pkgs.stdenv.isDarwin then
-                      ''
-                        export HOME="$PWD/.home"
-                        mkdir -p ".home/Library/Application Support/dioxus/wasm-bindgen"
-                        ln -s ${lib.getExe wasm-bindgen-cli} ".home/Library/Application Support/dioxus/wasm-bindgen/wasm-bindgen-${wasm-bindgen-cli.version}"
-                      ''
-                    else
-                      ''
-                        export XDG_DATA_HOME="$PWD/.share"
-                        mkdir -p .share/dioxus/wasm-bindgen
-                        ln -s ${lib.getExe wasm-bindgen-cli} .share/dioxus/wasm-bindgen/wasm-bindgen-${wasm-bindgen-cli.version}
-                      ''
-                  }
                   dx build --package discord_bot --release --platform web --verbose --trace
                 '';
                 installPhase = ''
@@ -226,6 +196,7 @@
             ];
             nativeBuildInputs = with pkgs; [
               dioxus-cli
+              wasm-bindgen-cli
               rustToolchain
               pkg-config
               rustPlatform.bindgenHook
