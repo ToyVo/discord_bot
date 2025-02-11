@@ -10,7 +10,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     rust-overlay.url = "github:oxalica/rust-overlay";
-    nixpkgs-dioxus.url = "github:CathalMullan/nixpkgs/dioxus-cli-v0.6.2";
+    nixpkgs-dioxus.url = "github:NixOS/nixpkgs?ref=pull/375874/head";
   };
 
   nixConfig = {
@@ -154,7 +154,7 @@
                 strictDeps = true;
                 nativeBuildInputs = with pkgs; [
                   dioxus-cli
-                  wasm-bindgen-cli
+                  wasm-bindgen-cli_0_2_100
                   rustToolchain
                   openssl
                   libiconv
@@ -196,7 +196,7 @@
             ];
             nativeBuildInputs = with pkgs; [
               dioxus-cli
-              wasm-bindgen-cli
+              wasm-bindgen-cli_0_2_100
               rustToolchain
               pkg-config
               rustPlatform.bindgenHook
