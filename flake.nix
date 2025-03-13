@@ -10,7 +10,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     rust-overlay.url = "github:oxalica/rust-overlay";
-    nixpkgs-dioxus.url = "github:NixOS/nixpkgs?ref=pull/375874/head";
   };
 
   nixConfig = {
@@ -124,9 +123,6 @@
             inherit system;
             overlays = [
               inputs.rust-overlay.overlays.default
-              (final: prev: {
-                dioxus-cli = inputs.nixpkgs-dioxus.legacyPackages.${prev.system}.dioxus-cli;
-              })
             ];
           };
           formatter = pkgs.nixfmt-rfc-style;

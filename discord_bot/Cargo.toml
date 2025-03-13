@@ -2,7 +2,7 @@
 name = "discord_bot"
 version = "0.1.0"
 authors = ["Collin Diekvoss <Collin@Diekvoss.com>"]
-edition = "2021"
+edition = "2024"
 repository = "https://github.com/toyvo/discord_bot"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
@@ -31,7 +31,7 @@ url = { version = "2", optional = true }
 uuid = { version = "1", features = ["v4"], optional = true }
 
 [features]
-default = []
+default = ["web"]
 server = ["dioxus/server", "axum", "axum-extra", "dioxus-cli-config", "mime", "mc-query", "serenity", "surrealdb", "tokio", "tower", "tower-http", "tracing", "tracing-subscriber", "url", "uuid"]
 web = ["dioxus/web"]
 desktop = ["dioxus/desktop"]
