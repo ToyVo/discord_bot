@@ -1,7 +1,7 @@
 use {
     chrono::{DateTime, Utc},
     serde::{Deserialize, Serialize},
-    std::fmt::Formatter
+    std::fmt::Formatter,
 };
 
 #[derive(Serialize, Deserialize)]

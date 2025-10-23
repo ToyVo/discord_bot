@@ -11,6 +11,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     rust-overlay.url = "github:oxalica/rust-overlay";
+    treefmt-nix.url = "github:numtide/treefmt-nix";
   };
 
   nixConfig = {
@@ -46,6 +47,7 @@
       imports = [
         devshell.flakeModule
         flake-parts.flakeModules.easyOverlay
+        inputs.treefmt-nix.flakeModule
       ];
 
       flake = {
@@ -87,7 +89,7 @@
                   isSystemUser = true;
                   group = "discord_bot";
                 };
-                groups.discord_bot = {};
+                groups.discord_bot = { };
               };
               systemd.services = {
                 discord_bot = {
@@ -97,9 +99,7 @@
                     export $(cat ${cfg.env_file} | xargs)
                     export RUST_BACKTRACE=full
                     ${lib.concatStringsSep "\n" (
-                      lib.mapAttrsToList (
-                        name: value: "export ${name}=${toString value}"
-                      ) cfg.env
+                      lib.mapAttrsToList (name: value: "export ${name}=${toString value}") cfg.env
                     )}
                     ${lib.getExe pkgs.discord_bot}
                   '';
@@ -125,7 +125,14 @@
               inputs.rust-overlay.overlays.default
             ];
           };
-          formatter = pkgs.nixfmt-rfc-style;
+
+          treefmt = {
+            programs = {
+              nixfmt.enable = true;
+              rustfmt.enable = true;
+              prettier.enable = true;
+            };
+          };
 
           packages = rec {
             rustToolchain = pkgs.rust-bin.fromRustupToolchainFile ./rust-toolchain.toml;
@@ -149,13 +156,11 @@
                   rustPlatform.bindgenHook
                   binaryen
                 ];
-                buildInputs =
-                  with pkgs;
-                  [
-                    openssl
-                    libiconv
-                    pkg-config
-                  ];
+                buildInputs = with pkgs; [
+                  openssl
+                  libiconv
+                  pkg-config
+                ];
                 buildPhase = ''
                   dx build --package discord_bot --release --verbose --trace
                 '';

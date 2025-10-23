@@ -1,8 +1,4 @@
-use {
-    chrono::prelude::*,
-    dioxus::prelude::*,
-    std::time::Duration,
-};
+use {chrono::prelude::*, dioxus::prelude::*, std::time::Duration};
 
 const VALID_SERVICES: [&str; 3] = [
     "arion-minecraft-modded.service",

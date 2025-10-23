@@ -1,6 +1,6 @@
+use serde::{Deserialize, Serialize};
 #[cfg(feature = "server")]
 use {crate::error::AppError, std::sync::Arc, tokio::sync::Mutex};
-use {serde::{Deserialize, Serialize}};
 
 // Global state - this will be set by the main function
 #[cfg(feature = "server")]

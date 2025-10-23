@@ -1,6 +1,7 @@
 # Discord Bot with Axum Web Server + Dioxus Frontend
 
 TODO:
+
 - periodically ping the hosting game server on oracle, if ping fails for more than a minute or so, issue a command to reboot the instance
 
 This project demonstrates running both a Discord bot (using Poise) and an Axum web server with a modern Dioxus frontend concurrently, sharing state between them.
@@ -56,6 +57,7 @@ dx serve --platform web
 ```
 
 To run for a different platform, use the `--platform platform` flag. E.g.
+
 ```bash
 dx serve --platform desktop
 ```
