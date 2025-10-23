@@ -1,6 +1,8 @@
-use chrono::prelude::*;
-use dioxus::prelude::*;
-use std::time::Duration;
+use {
+    chrono::prelude::*,
+    dioxus::prelude::*,
+    std::time::Duration,
+};
 
 const VALID_SERVICES: [&str; 3] = [
     "arion-minecraft-modded.service",
@@ -86,8 +88,6 @@ async fn fetch_logs(unit: String, since: String, until: String) -> Result<String
         "-U",
         until.as_str(),
     ];
-    let FromContext(state): FromContext<crate::server::AppState> = extract().await?;
     tracing::info!("fetching logs for unit: {unit}");
-    let logs = crate::server::ssh_command("journalctl", &journalctl_args, &state).await?;
-    Ok(logs)
+    Ok(journalctl_args.join(" "))
 }

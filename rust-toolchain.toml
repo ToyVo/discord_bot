@@ -1,2 +1,4 @@
 [toolchain]
-channel = "stable"
+channel = "nightly"
+targets = ["wasm32-unknown-unknown"]
+components = ["rust-src", "rust-analyzer", "clippy"]

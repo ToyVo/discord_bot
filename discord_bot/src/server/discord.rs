@@ -1,168 +1,60 @@
-use crate::error::AppError;
-use crate::server::{models::DiscordTokens, ssh_command, AppState};
-use anyhow::Context;
-use axum::{
-    extract::{Query, State},
-    http::{header, HeaderMap, StatusCode},
-    response::{IntoResponse, Redirect},
-    Json,
-};
-use axum_extra::extract::{cookie::Cookie, SignedCookieJar};
-use reqwest::Method;
-use serde::Serialize;
-use serde_json::{json, Value};
-use serenity::{
-    all::{
-        CommandDataOptionValue, CommandInteraction, CreateInteractionResponseFollowup, Interaction,
-        InteractionResponseFlags, User,
+use {
+    crate::{
+        error::AppError,
+        server::models::{GameServer, MessageType},
+        state::AppState,
     },
-    builder::{
-        CreateCommand, CreateInteractionResponse, CreateInteractionResponseMessage, CreateMessage,
-    },
-    interactions_endpoint::Verifier,
-    json,
+    anyhow::Context,
+    axum::http::header,
+    reqwest::Method,
+    serde::Serialize,
+    serde_json::Value,
+    serenity::builder::CreateMessage,
 };
-use std::collections::HashMap;
-use serenity::all::MessageFlags;
-use crate::server::models::{DBCollection, DiscordMessage, GameServer, MessageType};
 
-pub async fn interactions(
-    headers: HeaderMap,
-    State(state): State<AppState>,
-    body: String,
-) -> Result<impl IntoResponse, AppError> {
-    tracing::info!("Request received: {headers:?} {body}");
-
-    // Parse request body and verifies incoming requests
-    if verify_request(&headers, &body, &state).await.is_err() {
-        return Ok((StatusCode::UNAUTHORIZED, Json(json!({}))));
-    }
-
-    let payload = match Json::<Interaction>::from_bytes(body.as_bytes()) {
-        Ok(payload) => payload.0,
-        Err(e) => {
-            tracing::error!("Could not parse body: {e}");
-            return Ok((StatusCode::BAD_REQUEST, Json(json!({}))));
-        }
-    };
-
-    match payload {
-        Interaction::Ping(_) => {
-            tracing::info!("Received discord ping request, Replying pong");
-            Ok((
-                StatusCode::OK,
-                Json(json::to_value(CreateInteractionResponse::Pong)?),
-            ))
-        }
-        Interaction::Command(command_payload) => {
-            match handle_slash_command(command_payload, state).await {
-                Ok(value) => Ok((StatusCode::OK, Json(value))),
-                Err(e) => {
-                    tracing::error!("Slash command error {e}");
-                    Ok((StatusCode::OK, Json(json!({}))))
-                }
-            }
-        }
-        Interaction::Autocomplete(_) => Ok((StatusCode::NOT_IMPLEMENTED, Json(json!({})))),
-        Interaction::Component(_) => Ok((StatusCode::NOT_IMPLEMENTED, Json(json!({})))),
-        Interaction::Modal(_) => Ok((StatusCode::NOT_IMPLEMENTED, Json(json!({})))),
-        _ => Ok((StatusCode::BAD_REQUEST, Json(json!({})))),
-    }
-}
-
-pub async fn verify_user(
-    jar: SignedCookieJar,
-    State(state): State<AppState>,
-) -> Result<impl IntoResponse, AppError> {
-    let (url, state) = get_oauth_url(&state).await?;
-    Ok((
-        StatusCode::FOUND,
-        jar.add(Cookie::new("clientState", state)),
-        Redirect::to(url.as_str()),
+#[poise::command(slash_command)]
+pub async fn minecraft_geyser(
+    ctx: crate::state::Context<'_>,
+    // TODO: limit to stop and restart
+    #[description = "The action to perform"] _action: String,
+) -> Result<(), AppError> {
+    let state = ctx.data().lock().await;
+    ctx.say(format!(
+        "Hello! The shared state value is: {}",
+        state.base_url
     ))
+    .await?;
+    Ok(())
 }
 
-pub async fn oauth_callback(
-    Query(query): Query<HashMap<String, String>>,
-    jar: SignedCookieJar,
-    State(state): State<AppState>,
-) -> Result<impl IntoResponse, AppError> {
-    let code = query.get("code").context("Code not on query")?;
-    let discord_state = query.get("state").context("state not on query")?;
-    let client_state = jar.get("clientState").context("Cookie not set")?;
-
-    if client_state.value() != discord_state {
-        return Ok(StatusCode::UNAUTHORIZED);
-    }
-
-    let tokens = &get_oauth_tokens(code, &state).await?;
-    let me_data = get_user_data(tokens).await?;
-    let user_id = me_data.id;
-    let expires_at = chrono::Utc::now() + std::time::Duration::from_millis(tokens.expires_in);
-    let stored_tokens = DiscordTokens {
-        access_token: tokens.access_token.clone(),
-        refresh_token: tokens.refresh_token.clone(),
-        expires_at,
-        expires_in: tokens.expires_in,
-    };
-    // TODO: store in DB
-    tracing::info!("{user_id} {stored_tokens:?}");
-    Ok(StatusCode::OK)
+#[poise::command(slash_command)]
+pub async fn minecraft_modded(
+    ctx: crate::state::Context<'_>,
+    // TODO: limit to stop and restart
+    #[description = "The action to perform"] _action: String,
+) -> Result<(), AppError> {
+    let state = ctx.data().lock().await;
+    ctx.say(format!(
+        "Hello! The shared state value is: {}",
+        state.base_url
+    ))
+    .await?;
+    Ok(())
 }
 
-pub async fn handle_slash_command(
-    payload: CommandInteraction,
-    state: AppState,
-) -> Result<Value, AppError> {
-    tracing::info!("Received discord slash command request, {:?}", &payload);
-    for option in payload.data.options {
-        // TODO: single source of truth for this and install_global_commands
-        match (
-            payload.data.name.as_str(),
-            option.name.as_str(),
-            option.value,
-        ) {
-            (
-                "minecraft-geyser" | "minecraft-modded" | "terraria",
-                "action",
-                CommandDataOptionValue::String(s),
-            ) if s == "restart" || s == "stop" => {
-                let server = payload.data.name.clone();
-                let action = s.clone();
-                tokio::spawn(async move {
-                    let server = payload.data.name;
-                    let action = s.as_str();
-                    let service_name = format!("arion-{server}.service");
-                    let content =
-                        match ssh_command("sudo systemctl", &[action, service_name.as_str()], &state)
-                            .await
-                        {
-                            Ok(_) => {
-                                format!("Successfully {action}ed {server} server")
-                            }
-                            Err(e) => {
-                                tracing::error!("Could not {action} {server} server: {e}");
-                                format!("There was an issue {action}ing {server} server")
-                            }
-                        };
-                    if let Err(e) =
-                        replace_initial_interaction_response(content, payload.token, &state).await
-                    {
-                        tracing::error!("Error submitting followup {e:?}")
-                    }
-                });
-                return Ok(json::to_value(CreateInteractionResponse::Message(
-                    CreateInteractionResponseMessage::new()
-                        .content(format!(
-                            "Successfully requested {action} of {server} server"
-                        ))
-                        .flags(InteractionResponseFlags::SUPPRESS_NOTIFICATIONS),
-                ))?);
-            }
-            (_, _, _) => {}
-        }
-    }
-    Ok(json!({}))
+#[poise::command(slash_command)]
+pub async fn terraria(
+    ctx: crate::state::Context<'_>,
+    // TODO: limit to stop, restart, and send message (with message)
+    #[description = "The action to perform"] _action: String,
+) -> Result<(), AppError> {
+    let state = ctx.data().lock().await;
+    ctx.say(format!(
+        "Hello! The shared state value is: {}",
+        state.base_url
+    ))
+    .await?;
+    Ok(())
 }
 
 pub async fn discord_request<S: AsRef<str>, T: Serialize + ?Sized>(
@@ -206,15 +98,6 @@ pub async fn discord_request<S: AsRef<str>, T: Serialize + ?Sized>(
     Ok(None)
 }
 
-pub async fn install_global_commands(
-    commands: &[CreateCommand],
-    state: &AppState,
-) -> Result<Value, AppError> {
-    let endpoint = format!("applications/{}/commands", state.client_id);
-    let response = discord_request(endpoint, Method::PUT, Some(&commands), state).await?;
-    Ok(response.context("Response not found from installing commands")?)
-}
-
 pub async fn create_message<S: AsRef<str>>(
     payload: CreateMessage,
     channel_id: S,
@@ -235,129 +118,54 @@ pub async fn create_message<S: AsRef<str>>(
 
 pub async fn send_message<S: AsRef<str>>(
     message: &String,
-    message_type: MessageType,
-    server: GameServer,
-    channel_id: S,
-    state: &AppState,
+    _message_type: MessageType,
+    _server: GameServer,
+    _channel_id: S,
+    _state: &AppState,
 ) -> Result<(), AppError> {
     tracing::info!("{message}");
-    let created_message = create_message(
-        CreateMessage::new()
-            .content(message)
-            .flags(MessageFlags::SUPPRESS_NOTIFICATIONS),
-        &channel_id,
-        state,
-    )
-        .await?;
+    // let created_message = create_message(
+    //     CreateMessage::new()
+    //         .content(message)
+    //         .flags(MessageFlags::SUPPRESS_NOTIFICATIONS),
+    //     &channel_id,
+    //     state,
+    // )
+    //     .await?;
 
-    match state.db.select((DBCollection::DiscordMessages.to_string(), server.to_string())).await {
-        Ok(Some(data)) => {
-            let data: DiscordMessage = data;
-            delete_message(
-                data.discord_message_id.as_str(),
-                channel_id.as_ref(),
-                state,
-            )
-                .await
-        }
-        Err(e) => {
-            tracing::error!("Error getting DiscordMessage from DB: {e}");
-            Ok(())
-        },
-        _ => Ok(()),
-    }?;
+    // match state.db.select((DBCollection::DiscordMessages.to_string(), server.to_string())).await {
+    //     Ok(Some(data)) => {
+    //         let data: DiscordMessage = data;
+    //         delete_message(
+    //             data.discord_message_id.as_str(),
+    //             channel_id.as_ref(),
+    //             state,
+    //         )
+    //             .await
+    //     }
+    //     Err(e) => {
+    //         tracing::error!("Error getting DiscordMessage from DB: {e}");
+    //         Ok(())
+    //     },
+    //     _ => Ok(()),
+    // }?;
 
-    let _: Option<DiscordMessage> = state
-        .db
-        .upsert((DBCollection::DiscordMessages.to_string(), server.to_string()))
-        .content(DiscordMessage {
-            game: server,
-            discord_message_id: created_message
-                .get("id")
-                .context("Could not find id in response")?
-                .as_str()
-                .context("could not parse as str")?
-                .to_string(),
-            message_type,
-        })
-        .await?;
+    // let _: Option<DiscordMessage> = state
+    //     .db
+    //     .upsert((DBCollection::DiscordMessages.to_string(), server.to_string()))
+    //     .content(DiscordMessage {
+    //         game: server,
+    //         discord_message_id: created_message
+    //             .get("id")
+    //             .context("Could not find id in response")?
+    //             .as_str()
+    //             .context("could not parse as str")?
+    //             .to_string(),
+    //         message_type,
+    //     })
+    //     .await?;
 
     Ok(())
-}
-
-pub async fn verify_request<S: AsRef<str>>(
-    headers: &HeaderMap,
-    body: S,
-    state: &AppState,
-) -> Result<(), AppError> {
-    let signature = headers
-        .get("X-Signature-Ed25519")
-        .ok_or_else(|| AppError::Other("Missing Discord signature".to_string()))?
-        .to_str()
-        .map_err(|_| AppError::Other("Invalid Discord signature".to_string()))?;
-    let timestamp = headers
-        .get("X-Signature-Timestamp")
-        .ok_or_else(|| AppError::Other("Missing Discord timestamp".to_string()))?
-        .to_str()
-        .map_err(|_| AppError::Other("Invalid Discord timestamp".to_string()))?;
-
-    Verifier::new(state.public_key.as_str())
-        .verify(signature, timestamp, body.as_ref().as_bytes())
-        .map_err(|_| AppError::Other("Signature verification failed".to_string()))
-}
-
-pub async fn get_oauth_url(state: &AppState) -> Result<(String, String), AppError> {
-    let user_state = uuid::Uuid::new_v4().to_string();
-    let url = url::Url::parse_with_params(
-        "https://discord.com/api/oauth2/authorize",
-        &[
-            ("client_id", state.client_id.as_str()),
-            (
-                "redirect_url",
-                &format!("{}/api/discord/oauth-callback", state.base_url),
-            ),
-            ("response_type", "code"),
-            ("state", user_state.as_str()),
-            ("scope", "role_connections.write identify"),
-            ("prompt", "consent"),
-        ],
-    )?;
-
-    Ok((url.to_string(), user_state))
-}
-
-pub async fn get_oauth_tokens<S: AsRef<str>>(
-    code: S,
-    state: &AppState,
-) -> Result<DiscordTokens<String>, AppError> {
-    let response = reqwest::Client::new()
-        .post("https://discord.com/api/v10/oauth2/token")
-        .form(&[
-            ("client_id", state.client_id.as_str()),
-            ("client_secret", state.client_secret.as_str()),
-            ("grant_type", "authorization_code"),
-            ("code", code.as_ref()),
-            (
-                "redirect_uri",
-                &format!("{}/discord-oauth-callback", state.base_url),
-            ),
-        ])
-        .send()
-        .await?
-        .error_for_status()?;
-    let data = response.json::<DiscordTokens<String>>().await?;
-    Ok(data)
-}
-
-pub async fn get_user_data(tokens: &DiscordTokens<String>) -> Result<User, AppError> {
-    Ok(reqwest::Client::new()
-        .get("https://discord.com/api/v10/users/@me")
-        .bearer_auth(tokens.access_token.as_str())
-        .send()
-        .await?
-        .error_for_status()?
-        .json::<User>()
-        .await?)
 }
 
 pub async fn delete_message<S: AsRef<str>>(
@@ -371,24 +179,5 @@ pub async fn delete_message<S: AsRef<str>>(
         message_id.as_ref()
     );
     discord_request(endpoint, Method::DELETE, None::<&str>, state).await?;
-    Ok(())
-}
-
-pub async fn replace_initial_interaction_response<S: AsRef<str>>(
-    content: impl Into<String>,
-    token: S,
-    state: &AppState,
-) -> Result<(), AppError> {
-    discord_request(
-        format!(
-            "webhooks/{}/{}/messages/@original",
-            state.client_id,
-            token.as_ref()
-        ),
-        Method::PATCH,
-        Some(&CreateInteractionResponseFollowup::new().content(content)),
-        state,
-    )
-    .await?;
     Ok(())
 }
