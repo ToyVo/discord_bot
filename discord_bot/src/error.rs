@@ -10,8 +10,6 @@ pub enum AppError {
     Request(reqwest::Error),
     #[cfg(feature = "server")]
     Serenity(serenity::Error),
-    #[cfg(feature = "server")]
-    Surreal(surrealdb::Error),
     UTF8(std::str::Utf8Error),
 }
 
@@ -27,7 +25,6 @@ impl axum::response::IntoResponse for AppError {
             AppError::Parse(e) => tracing::error!("Parse error: {e:}"),
             AppError::Request(e) => tracing::error!("Request error: {e:}"),
             AppError::Serenity(e) => tracing::error!("Serenity error: {e:}"),
-            AppError::Surreal(e) => tracing::error!("Surreal error: {e:}"),
             AppError::UTF8(e) => tracing::error!("UTF-8 error: {e:}"),
         }
 
@@ -52,8 +49,6 @@ impl std::fmt::Display for AppError {
             AppError::Request(e) => write!(f, "Request error: {}", e),
             #[cfg(feature = "server")]
             AppError::Serenity(e) => write!(f, "Serenity error: {}", e),
-            #[cfg(feature = "server")]
-            AppError::Surreal(e) => write!(f, "Surreal error: {}", e),
             AppError::UTF8(e) => write!(f, "UTF-8 error: {}", e),
         }
     }
@@ -102,13 +97,6 @@ impl From<reqwest::Error> for AppError {
 impl From<serenity::Error> for AppError {
     fn from(err: serenity::Error) -> Self {
         Self::Serenity(err)
-    }
-}
-
-#[cfg(feature = "server")]
-impl From<surrealdb::Error> for AppError {
-    fn from(err: surrealdb::Error) -> Self {
-        Self::Surreal(err)
     }
 }
 

@@ -8,8 +8,8 @@ use {
     },
     dioxus::server::{DioxusRouterExt, RenderHandleState, ServeConfig},
     discord_bot::{
+        discord,
         error::AppError,
-        server::{discord, minecraft, terraria},
         state::{AppState, set_global_state},
     },
     poise::serenity_prelude as serenity,
@@ -48,39 +48,13 @@ async fn main() -> Result<(), discord_bot::error::AppError> {
     //     .with(tracing_subscriber::fmt::layer().without_time())
     //     .init();
 
-    // let surrealdb_path =
-    //     var("SURREALDB_PATH").unwrap_or(String::from("/var/lib/discord_bot/surrealdb"));
-    // let db = surrealdb::Surreal::new::<surrealdb::engine::local::RocksDb>(surrealdb_path)
-    //     .await
-    //     .unwrap();
-    // // Select a specific namespace / database
-    // db.use_ns(env!("CARGO_PKG_NAME"))
-    //     .use_db(env!("CARGO_PKG_NAME"))
-    //     .await
-    //     .unwrap();
-
     // Build shared state
     let shared_state = Arc::new(Mutex::new(AppState {
         base_url: var("BASE_URL").unwrap_or_default(),
-        client_id: var("DISCORD_CLIENT_ID").unwrap_or_default(),
-        client_secret: var("DISCORD_CLIENT_SECRET").unwrap_or_default(),
-        discord_bot_spam_channel_id: var("DISCORD_BOT_SPAM_CHANNEL_ID").unwrap_or_default(),
-        discord_minecraft_geyser_channel_id: var("DISCORD_MINECRAFT_GEYSER_CHANNEL_ID")
-            .unwrap_or_default(),
-        discord_minecraft_modded_channel_id: var("DISCORD_MINECRAFT_CHANNEL_ID")
-            .unwrap_or_default(),
-        discord_terraria_channel_id: var("DISCORD_TERRARIA_CHANNEL_ID").unwrap_or_default(),
+        discord_client_id: var("DISCORD_CLIENT_ID").unwrap_or_default(),
+        discord_client_secret: var("DISCORD_CLIENT_SECRET").unwrap_or_default(),
+        discord_public_key: var("DISCORD_PUBLIC_KEY").unwrap_or_default(),
         discord_token: var("DISCORD_TOKEN").unwrap_or_default(),
-        forge_api_key: var("FORGE_API_KEY").unwrap_or_default(),
-        minecraft_geyser_address: var("MINECRAFT_GEYSER_ADDRESS")
-            .unwrap_or(String::from("127.0.0.1:25566")),
-        minecraft_modded_address: var("MINECRAFT_MODDED_ADDRESS")
-            .unwrap_or(String::from("127.0.0.1:25565")),
-        public_key: var("DISCORD_PUBLIC_KEY").unwrap_or_default(),
-        terraria_address: var("TERRARIA_ADDRESS").unwrap_or(String::from("127.0.0.1:7777")),
-        tshock_base_url: var("TSHOCK_REST_BASE_URL")
-            .unwrap_or(String::from("http://127.0.0.1:7878")),
-        tshock_token: var("TSHOCK_APPLICATION_TOKEN").unwrap_or_default(),
         user_agent: format!(
             "DiscordBot ({}, {})",
             env!("CARGO_PKG_REPOSITORY"),
@@ -106,12 +80,7 @@ async fn main() -> Result<(), discord_bot::error::AppError> {
                 loop {
                     interval.tick().await;
                     tracing::debug!("Tracking Tick");
-                    if let Err(e) = terraria::track_players().await {
-                        tracing::error!("Failed to get players from terraria: {e}");
-                    }
-                    if let Err(e) = minecraft::track_players().await {
-                        tracing::error!("Failed to get players from minecraft: {e}");
-                    }
+                    // TODO: call game_manager to get the current game state
                 }
             } => {
                 tracing::error!("Interval task exited first");

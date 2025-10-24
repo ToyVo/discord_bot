@@ -1,15 +1,16 @@
 [workspace]
-members = ["discord_bot"]
+members = [
+    "discord_bot",
+    "game_manager", "game_manager",
+]
 resolver = "2"
 
-[profile]
-
-[profile.wasm-dev]
+[profile.android-dev]
 inherits = "dev"
-opt-level = 1
 
 [profile.server-dev]
 inherits = "dev"
 
-[profile.android-dev]
+[profile.wasm-dev]
+opt-level = 1
 inherits = "dev"

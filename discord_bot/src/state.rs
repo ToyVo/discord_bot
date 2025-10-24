@@ -9,20 +9,10 @@ pub static GLOBAL_STATE: std::sync::OnceLock<Arc<Mutex<AppState>>> = std::sync::
 #[derive(Clone, Serialize, Deserialize, PartialEq, Default)]
 pub struct AppState {
     pub base_url: String,
-    pub client_id: String,
-    pub client_secret: String,
-    pub discord_bot_spam_channel_id: String,
-    pub discord_minecraft_geyser_channel_id: String,
-    pub discord_minecraft_modded_channel_id: String,
-    pub discord_terraria_channel_id: String,
+    pub discord_client_id: String,
+    pub discord_client_secret: String,
+    pub discord_public_key: String,
     pub discord_token: String,
-    pub forge_api_key: String,
-    pub minecraft_geyser_address: String,
-    pub minecraft_modded_address: String,
-    pub public_key: String,
-    pub terraria_address: String,
-    pub tshock_base_url: String,
-    pub tshock_token: String,
     pub user_agent: String,
 }
 
