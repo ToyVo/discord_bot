@@ -12,9 +12,9 @@ anyhow = "1"
 axum = { version = "0", optional = true }
 axum-extra = { version = "0.9", features = ["cookie", "cookie-signed", "typed-header"], optional = true }
 chrono = { version = "0", features = ["rkyv"] }
-dioxus = { version = "0.7.0-rc.3", features = ["router", "fullstack"] }
-dioxus-cli-config = { version = "0.7.0-rc.3", optional = true }
-dioxus-logger = { version = "0.7.0-rc.3", optional = true }
+dioxus = { version = "0.7.0", features = ["router", "fullstack"] }
+dioxus-cli-config = { version = "0.7.0", optional = true }
+dioxus-logger = { version = "0.7.0", optional = true }
 mc-query = { version = "2", optional = true }
 mime = { version = "0", optional = true }
 poise = { version = "0", optional = true }
