@@ -8,13 +8,11 @@ use {
         response::{IntoResponse, Response},
         routing::{get, post},
     },
-    axum_extra::{
-        TypedHeader,
-        headers::{Authorization, authorization::Bearer},
-    },
-    dioxus::server::{DioxusRouterExt, RenderHandleState, ServeConfig},
-    jsonwebtoken::{DecodingKey, EncodingKey, Header, Validation, decode, encode},
+    axum_extra::headers::{Authorization, authorization::Bearer},
+    dioxus::server::{DioxusRouterExt, FullstackState, ServeConfig},
+    jsonwebtoken::{Algorithm, DecodingKey, EncodingKey, Header, Validation, decode, encode},
     rsa::pkcs1::{DecodeRsaPrivateKey, EncodeRsaPrivateKey, EncodeRsaPublicKey, LineEnding},
+    serde_json::json,
     std::{
         env::var,
         sync::{Arc, LazyLock},
@@ -30,7 +28,7 @@ use {
 use {
     dioxus::prelude::*,
     serde::{Deserialize, Serialize},
-    serde_json::{Value, json},
+    serde_json::Value,
 };
 
 const FAVICON: Asset = asset!("/assets/favicon.ico");
@@ -145,9 +143,9 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let mut router = Router::new()
         .route("/api/logs", get(logs))
         .route("/api/authorize", post(authorize))
-        .serve_dioxus_application(ServeConfig::new(), App)
         .layer(middleware)
-        .with_state(app_state_for_axum);
+        .with_state(app_state_for_axum)
+        .serve_dioxus_application(ServeConfig::new(), App);
 
     // dioxus::server::base_path() is not public, so reimplement it, used in the dioxus::server::router function which we are reimplementing
     let base_path = dioxus_cli_config::base_path().map(|s| s.to_string());
@@ -159,13 +157,13 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         router = Router::new().nest(&format!("/{base_path}/"), router).route(
             &format!("/{base_path}"),
             axum::routing::method_routing::get(
-                |state: State<RenderHandleState>, mut request: Request<Body>| async move {
+                |state: State<FullstackState>, mut request: Request<Body>| async move {
                     // The root of the base path always looks like the root from dioxus fullstack
                     *request.uri_mut() = "/".parse().unwrap();
-                    RenderHandleState::render_handler(state, request).await
+                    FullstackState::render_handler(state, request).await
                 },
             )
-            .with_state(RenderHandleState::new(ServeConfig::new(), App)),
+            .with_state(FullstackState::new(ServeConfig::new(), App)),
         )
     }
 
@@ -336,7 +334,7 @@ pub async fn authorize(Json(payload): Json<AuthPayload>) -> Result<Json<AuthBody
     };
     // Create the authorization token
     let token =
-        encode(&Header::default(), &claims, &KEYS.0).map_err(|_| AuthError::TokenCreation)?;
+        encode(&Header::new(Algorithm::RS256), &claims, &KEYS.0).map_err(|_| AuthError::TokenCreation)?;
 
     // Send the authorized token
     Ok(Json(AuthBody::new(token)))

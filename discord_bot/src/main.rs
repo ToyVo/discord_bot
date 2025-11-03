@@ -6,7 +6,7 @@ use {
         extract::{Request, State},
         http::{HeaderValue, header},
     },
-    dioxus::server::{DioxusRouterExt, RenderHandleState, ServeConfig},
+    dioxus::server::{DioxusRouterExt, FullstackState, ServeConfig},
     discord_bot::{
         discord,
         error::AppError,
@@ -123,9 +123,9 @@ async fn main() -> Result<(), discord_bot::error::AppError> {
 
     // we want a deep integration of axum, dioxus, and state management, so we need to reimplement the dioxus axum wrapper, dioxus::server::router
     let mut router = Router::new()
-        .serve_dioxus_application(ServeConfig::new(), discord_bot::app::App)
         .layer(middleware)
-        .with_state(app_state_for_axum);
+        .with_state(app_state_for_axum)
+        .serve_dioxus_application(ServeConfig::new(), discord_bot::app::App);
 
     // dioxus::server::base_path() is not public, so reimplement it, used in the dioxus::server::router function which we are reimplementing
     let base_path = dioxus_cli_config::base_path().map(|s| s.to_string());
@@ -137,13 +137,13 @@ async fn main() -> Result<(), discord_bot::error::AppError> {
         router = Router::new().nest(&format!("/{base_path}/"), router).route(
             &format!("/{base_path}"),
             axum::routing::method_routing::get(
-                |state: State<RenderHandleState>, mut request: Request<Body>| async move {
+                |state: State<FullstackState>, mut request: Request<Body>| async move {
                     // The root of the base path always looks like the root from dioxus fullstack
                     *request.uri_mut() = "/".parse().unwrap();
-                    RenderHandleState::render_handler(state, request).await
+                    FullstackState::render_handler(state, request).await
                 },
             )
-            .with_state(RenderHandleState::new(
+            .with_state(FullstackState::new(
                 ServeConfig::new(),
                 discord_bot::app::App,
             )),
