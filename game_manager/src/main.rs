@@ -13,6 +13,7 @@ use {
     jsonwebtoken::{Algorithm, DecodingKey, EncodingKey, Header, Validation, decode, encode},
     rsa::pkcs1::{DecodeRsaPrivateKey, EncodeRsaPrivateKey, EncodeRsaPublicKey, LineEnding},
     serde_json::json,
+    serde_json::Value,
     std::{
         env::var,
         sync::{Arc, LazyLock},
@@ -28,7 +29,6 @@ use {
 use {
     dioxus::prelude::*,
     serde::{Deserialize, Serialize},
-    serde_json::Value,
 };
 
 const FAVICON: Asset = asset!("/assets/favicon.ico");
@@ -66,6 +66,35 @@ pub struct AppState {
     pub terraria_address: String,
     pub tshock_base_url: String,
     pub tshock_token: String,
+    pub issuer: String,
+    pub audience: String,
+}
+
+#[derive(Debug)]
+#[cfg(feature = "server")]
+pub enum AppError {
+    ReqwestError(reqwest::Error),
+}
+
+#[cfg(feature = "server")]
+impl From<reqwest::Error> for AppError {
+    fn from(err: reqwest::Error) -> Self {
+        AppError::ReqwestError(err)
+    }
+}
+
+#[cfg(feature = "server")]
+impl IntoResponse for AppError {
+    fn into_response(self) -> Response {
+        match self {
+            AppError::ReqwestError(e) => {
+                let body = Json(json!({
+                    "error": format!("Reqwest error: {}", e),
+                }));
+                (StatusCode::INTERNAL_SERVER_ERROR, body).into_response()
+            }
+        }
+    }
 }
 
 #[cfg(feature = "server")]
@@ -104,8 +133,10 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         minecraft_geyser_address: "".into(),
         minecraft_modded_address: "".into(),
         terraria_address: "".into(),
-        tshock_base_url: "".into(),
+        tshock_base_url: "http://localhost:7878".into(),
         tshock_token: "".into(),
+        issuer: "ACME".into(),
+        audience: "ACME".into(),
     }));
 
     // Set global state for Dioxus server functions
@@ -141,8 +172,12 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     // we want a deep integration of axum, dioxus, and state management, so we need to reimplement the dioxus axum wrapper, dioxus::server::router
     let mut router = Router::new()
-        .route("/api/logs", get(logs))
         .route("/api/authorize", post(authorize))
+        .route("/api/logs", get(logs))
+        .route("/api/minecraft/players", get(terraria_status))
+        .route("/api/minecraft/status", get(terraria_status))
+        .route("/api/terraria/players", get(terraria_status))
+        .route("/api/terraria/status", get(terraria_status))
         .layer(middleware)
         .with_state(app_state_for_axum)
         .serve_dioxus_application(ServeConfig::new(), App);
@@ -169,7 +204,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     let address = dioxus_cli_config::fullstack_address_or_localhost();
     let listener = tokio::net::TcpListener::bind(address).await?;
-    tracing::trace!("Listening on {address}");
+    info!("Listening on http://{address}");
     axum::serve(listener, router)
         .with_graceful_shutdown(shutdown_signal())
         .await?;
@@ -206,16 +241,20 @@ pub fn App() -> Element {
     }
 }
 
-#[get("/api/minecraft/status")]
-pub async fn minecraft_status() -> Result<Value, ServerFnError> {
+#[cfg(feature = "server")]
+pub async fn minecraft_status(
+    State(_state): State<Arc<Mutex<AppState>>>,
+) -> Result<Value, AppError> {
     Ok(json!({
         "code": 200,
         "status": "ok"
     }))
 }
 
-#[get("/api/minecraft/players")]
-pub async fn minecraft_players() -> Result<Value, ServerFnError> {
+#[cfg(feature = "server")]
+pub async fn minecraft_players(
+    State(_state): State<Arc<Mutex<AppState>>>,
+) -> Result<Value, AppError> {
     // if let Err(e) = TcpStream::connect(minecraft_address.as_ref()).await {
     //     if let Some(message) = last_message {
     //         if message.message_type == MessageType::PlayerUpdate {
@@ -243,27 +282,25 @@ pub async fn minecraft_players() -> Result<Value, ServerFnError> {
     }))
 }
 
-#[get("/api/terraria/status")]
+#[cfg(feature = "server")]
 /// ref: https://tshock.readme.io/reference/v2status
-pub async fn terraria_status() -> Result<Value, ServerFnError> {
+pub async fn terraria_status(
+    State(state): State<Arc<Mutex<AppState>>>,
+) -> Result<Json<Value>, AppError> {
     // TODO use tshock url from state
-    let url = format!("{}/v2/server/status?players=true", "http://0.0.0.0:7878");
-    let res = reqwest::get(url).await;
-    if let Err(e) = res {
-        return Err(ServerFnError::new(e));
-    }
-    let response = res.unwrap().error_for_status();
-    if let Err(e) = response {
-        return Err(ServerFnError::new(e));
-    }
-    match response.unwrap().json::<Value>().await {
-        Ok(data) => Ok(data),
-        Err(e) => Err(ServerFnError::new(e)),
-    }
+    let url = format!(
+        "{}/v2/server/status?players=true",
+        state.lock().await.tshock_base_url
+    );
+    let res = reqwest::get(url).await?;
+    let response = res.error_for_status()?;
+    Ok(Json(response.json::<Value>().await?))
 }
 
-#[get("/api/terraria/players")]
-pub async fn terraria_players() -> Result<Value, ServerFnError> {
+#[cfg(feature = "server")]
+pub async fn terraria_players(
+    State(_state): State<Arc<Mutex<AppState>>>,
+) -> Result<Value, AppError> {
     // if let Err(e) = TcpStream::connect(&state.terraria_address).await {
     //     if let Some(message) = last_message {
     //         if message.message_type == MessageType::PlayerUpdate {
@@ -333,8 +370,8 @@ pub async fn authorize(Json(payload): Json<AuthPayload>) -> Result<Json<AuthBody
         nbf: now,
     };
     // Create the authorization token
-    let token =
-        encode(&Header::new(Algorithm::RS256), &claims, &KEYS.0).map_err(|_| AuthError::TokenCreation)?;
+    let token = encode(&Header::new(Algorithm::RS256), &claims, &KEYS.0)
+        .map_err(|_| AuthError::TokenCreation)?;
 
     // Send the authorized token
     Ok(Json(AuthBody::new(token)))
@@ -417,9 +454,16 @@ where
             .typed_get::<Authorization<Bearer>>()
             .ok_or(AuthError::InvalidToken)?;
         // Decode the user data
-        let token_data = decode::<Claims>(bearer.token(), &KEYS.1, &Validation::default())
-            .map_err(|_| AuthError::InvalidToken)?;
+        let mut validation = Validation::new(Algorithm::RS256);
+        validation.set_audience(&["ACME"]);
+        validation.set_issuer(&["ACME"]);
+        let token_data = decode::<Claims>(bearer.token(), &KEYS.1, &validation);
 
-        Ok(token_data.claims)
+        if let Err(e) = token_data {
+            tracing::error!("Token decode error: {:?}", e);
+            return Err(AuthError::InvalidToken);
+        }
+
+        Ok(token_data.unwrap().claims)
     }
 }

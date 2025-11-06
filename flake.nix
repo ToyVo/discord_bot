@@ -118,6 +118,27 @@
           config,
           ...
         }:
+        let
+          nativeBuildInputs =
+            with pkgs;
+            [
+              inputs.dioxus-cli-pr.legacyPackages.${system}.dioxus-cli
+              wasm-bindgen-cli_0_2_104
+              (pkgs.rust-bin.fromRustupToolchainFile ./rust-toolchain.toml)
+              openssl
+              libiconv
+              pkg-config
+              rustPlatform.bindgenHook
+              binaryen
+            ]
+            ++ lib.optionals pkgs.stdenv.isDarwin [ darwin.sigtool ];
+          buildInputs = with pkgs; [
+            openssl
+            libiconv
+            pkg-config
+          ];
+          rev = toString (self.shortRev or self.dirtyShortRev or self.lastModified or "unknown");
+        in
         {
           _module.args.pkgs = import inputs.nixpkgs {
             inherit system;
@@ -135,42 +156,38 @@
           };
 
           packages = rec {
-            rustToolchain = pkgs.rust-bin.fromRustupToolchainFile ./rust-toolchain.toml;
-            discord_bot =
-              let
-                cargoToml = builtins.fromTOML (builtins.readFile ./discord_bot/Cargo.toml);
-                rev = toString (self.shortRev or self.dirtyShortRev or self.lastModified or "unknown");
-              in
-              pkgs.rustPlatform.buildRustPackage rec {
-                pname = "discord_bot";
-                version = "${cargoToml.package.version}-${rev}";
-                src = ./.;
-                strictDeps = true;
-                nativeBuildInputs = with pkgs; [
-                  inputs.dioxus-cli-pr.legacyPackages.${system}.dioxus-cli
-                  wasm-bindgen-cli_0_2_104
-                  rustToolchain
-                  openssl
-                  libiconv
-                  pkg-config
-                  rustPlatform.bindgenHook
-                  binaryen
-                ];
-                buildInputs = with pkgs; [
-                  openssl
-                  libiconv
-                  pkg-config
-                ];
-                buildPhase = ''
-                  dx build --package discord_bot --release --verbose --trace
-                '';
-                installPhase = ''
-                  mkdir -p $out
-                  cp -r target/dx/$pname/release/web $out/bin
-                '';
-                meta.mainProgram = pname;
-                cargoLock.lockFile = ./Cargo.lock;
-              };
+            discord_bot = pkgs.rustPlatform.buildRustPackage rec {
+              pname = "discord_bot";
+              version = "${(builtins.fromTOML (builtins.readFile ./discord_bot/Cargo.toml)).package.version}-${rev}";
+              src = ./.;
+              strictDeps = true;
+              inherit nativeBuildInputs buildInputs;
+              buildPhase = ''
+                dx build --package discord_bot --release --verbose --trace
+              '';
+              installPhase = ''
+                mkdir -p $out
+                cp -r target/dx/$pname/release/web $out/bin
+              '';
+              meta.mainProgram = pname;
+              cargoLock.lockFile = ./Cargo.lock;
+            };
+            game_manager = pkgs.rustPlatform.buildRustPackage rec {
+              pname = "game_manager";
+              version = "${(builtins.fromTOML (builtins.readFile ./game_manager/Cargo.toml)).package.version}-${rev}";
+              src = ./.;
+              strictDeps = true;
+              inherit nativeBuildInputs buildInputs;
+              buildPhase = ''
+                dx build --package game_manager --release --verbose --trace
+              '';
+              installPhase = ''
+                mkdir -p $out
+                cp -r target/dx/$pname/release/web $out/bin
+              '';
+              meta.mainProgram = pname;
+              cargoLock.lockFile = ./Cargo.lock;
+            };
             default = self'.packages.discord_bot;
           };
           overlayAttrs = {
@@ -181,18 +198,7 @@
               export RUST_LOG="discord_bot=trace"
               export RUST_SRC_PATH=${pkgs.rustPlatform.rustLibSrc}
             '';
-            nativeBuildInputs = with pkgs; [
-              inputs.dioxus-cli-pr.legacyPackages.${system}.dioxus-cli
-              wasm-bindgen-cli_0_2_104
-              self'.packages.rustToolchain
-              pkg-config
-              rustPlatform.bindgenHook
-              libiconv
-              cargo-watch
-              systemfd
-              binaryen
-              openssl
-            ];
+            inherit nativeBuildInputs;
           };
         };
     };
