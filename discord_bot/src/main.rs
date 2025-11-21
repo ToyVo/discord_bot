@@ -171,8 +171,9 @@ async fn main() -> Result<(), discord_bot::error::AppError> {
     let shutdown_rx_for_poise = shutdown_rx.clone();
     let poise_task = tokio::spawn(async move {
         let token = std::env::var("DISCORD_TOKEN").expect("Expected DISCORD_TOKEN in environment");
-        let intents =
-            serenity::GatewayIntents::non_privileged() | serenity::GatewayIntents::MESSAGE_CONTENT;
+        let intents = serenity::GatewayIntents::non_privileged()
+            | serenity::GatewayIntents::GUILD_MEMBERS
+            | serenity::GatewayIntents::MESSAGE_CONTENT;
 
         let shared_state_for_setup = shared_state_for_poise.clone();
         let framework = poise::Framework::builder()
@@ -181,6 +182,7 @@ async fn main() -> Result<(), discord_bot::error::AppError> {
                     discord::minecraft_geyser(),
                     discord::minecraft_modded(),
                     discord::terraria(),
+                    discord::game_roles(),
                 ],
                 ..Default::default()
             })
