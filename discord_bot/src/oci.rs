@@ -22,7 +22,7 @@ pub async fn restart_instance<S: AsRef<str>>(s: S) -> Result<(), Error> {
     tracing::debug!("response from {method} {url}: {response:?}");
     let content_type = response.headers().get(header::CONTENT_TYPE.as_str());
     if content_type.is_some()
-        && content_type.unwrap().to_str().unwrap() == mime::APPLICATION_JSON.as_ref()
+        && content_type?.to_str()? == mime::APPLICATION_JSON.as_ref()
     {
         let body = response.json::<Value>().await?;
         tracing::debug!("response body from {method} {url}: {body}");
