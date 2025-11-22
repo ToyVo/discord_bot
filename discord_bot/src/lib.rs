@@ -7,3 +7,5 @@ pub mod error;
 pub mod state;
 /// Define a views module that contains the UI for all Layouts and Routes for our app.
 pub mod views;
+
+rust_i18n::i18n!();

@@ -1,10 +1,16 @@
 use serde::{Deserialize, Serialize};
+use std::collections::HashMap;
 #[cfg(feature = "server")]
 use {crate::error::AppError, std::sync::Arc, tokio::sync::Mutex};
 
 // Global state - this will be set by the main function
 #[cfg(feature = "server")]
 pub static GLOBAL_STATE: std::sync::OnceLock<Arc<Mutex<AppState>>> = std::sync::OnceLock::new();
+
+#[derive(Clone, Serialize, Deserialize, PartialEq, Debug)]
+pub enum MessageType {
+    RoleAssigner,
+}
 
 #[derive(Clone, Serialize, Deserialize, PartialEq, Default)]
 pub struct AppState {
@@ -14,6 +20,8 @@ pub struct AppState {
     pub discord_public_key: String,
     pub discord_token: String,
     pub user_agent: String,
+    pub message_ids: HashMap<u64, MessageType>,
+    pub self_assignable_roles: HashMap<String, u64>,
 }
 
 #[cfg(feature = "server")]

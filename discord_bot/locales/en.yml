@@ -1,0 +1,3 @@
+_version: 1
+roles.intro: "What games do you play (anyone can ping these roles)?"
+roles.fallback: "Are you a gamer and want to be pinged for games that aren't listed above?"

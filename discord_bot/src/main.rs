@@ -60,6 +60,7 @@ async fn main() -> Result<(), discord_bot::error::AppError> {
             env!("CARGO_PKG_REPOSITORY"),
             env!("CARGO_PKG_VERSION")
         ),
+        ..Default::default()
     }));
 
     // Set global state for Dioxus server functions
@@ -183,7 +184,12 @@ async fn main() -> Result<(), discord_bot::error::AppError> {
                     discord::minecraft_modded(),
                     discord::terraria(),
                     discord::game_roles(),
+                    discord::register_self_assignable_role(),
+                    discord::deregister_self_assignable_role(),
                 ],
+                event_handler: |ctx, event, framework, data| {
+                    Box::pin(discord::event_handler(ctx, event, framework, data))
+                },
                 ..Default::default()
             })
             .setup(move |ctx, _ready, framework| {
