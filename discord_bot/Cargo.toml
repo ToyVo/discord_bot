@@ -64,3 +64,9 @@ server = [
     "dep:url",
     "dep:uuid",
 ]
+
+[lints.clippy]
+pedantic = { level = "deny", priority = -1 }
+nursery = { level = "deny", priority = -1 }
+volatile-composites = "allow"
+unwrap_used = "deny"

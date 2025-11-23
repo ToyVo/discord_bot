@@ -39,17 +39,17 @@ impl axum::response::IntoResponse for AppError {
 impl std::fmt::Display for AppError {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
-            AppError::Anyhow(e) => write!(f, "Anyhow error: {}", e),
-            AppError::EnvVar(e) => write!(f, "Environment variable error: {}", e),
-            AppError::Io(e) => write!(f, "IO error: {}", e),
-            AppError::Json(e) => write!(f, "JSON error: {}", e),
-            AppError::Other(e) => write!(f, "Other error: {}", e),
+            Self::Anyhow(e) => write!(f, "Anyhow error: {e}"),
+            Self::EnvVar(e) => write!(f, "Environment variable error: {e}"),
+            Self::Io(e) => write!(f, "IO error: {e}"),
+            Self::Json(e) => write!(f, "JSON error: {e}"),
+            Self::Other(e) => write!(f, "Other error: {e}"),
             #[cfg(feature = "server")]
-            AppError::Parse(e) => write!(f, "Parse error: {}", e),
-            AppError::Request(e) => write!(f, "Request error: {}", e),
+            Self::Parse(e) => write!(f, "Parse error: {e}"),
+            Self::Request(e) => write!(f, "Request error: {e}"),
             #[cfg(feature = "server")]
-            AppError::Serenity(e) => write!(f, "Serenity error: {}", e),
-            AppError::UTF8(e) => write!(f, "UTF-8 error: {}", e),
+            Self::Serenity(e) => write!(f, "Serenity error: {e}"),
+            Self::UTF8(e) => write!(f, "UTF-8 error: {e}"),
         }
     }
 }

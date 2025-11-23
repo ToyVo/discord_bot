@@ -1,5 +1,5 @@
 use {
-    crate::{components::Navbar, views::*},
+    crate::{components::Navbar, views::{Home, Logs, TermsOfService, PrivacyPolicy}},
     dioxus::prelude::*,
 };
 
@@ -15,7 +15,7 @@ const TAILWIND_CSS: Asset = asset!("/assets/tailwind.css");
 /// 
 /// Each variant represents a different URL pattern that can be matched by the router. If that pattern is matched,
 /// the components for that route will be rendered.
-#[derive(Debug, Clone, Routable, PartialEq)]
+#[derive(Debug, Clone, Routable, PartialEq, Eq)]
 #[rustfmt::skip]
 pub enum Route {
     // The layout attribute defines a wrapper for all routes under the layout. Layouts are great for wrapping

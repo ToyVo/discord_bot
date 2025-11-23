@@ -1,5 +1,4 @@
 use crate::error::AppError;
-use ::serenity::all::CacheHttp;
 use rust_i18n::t;
 use {
     crate::state::{AppState, MessageType},
@@ -87,7 +86,8 @@ pub async fn terraria_stop(ctx: crate::state::Context<'_>) -> Result<(), AppErro
 
 #[poise::command(slash_command)]
 pub async fn game_roles(ctx: crate::state::Context<'_>) -> Result<(), AppError> {
-    if let Some(guild) = ctx.partial_guild().await {
+    // TODO: we will look up the self_assignable_roles from the database instead of the cache, each role will be associated with a guild_id, so this let Some is still needed
+    if let Some(_guild) = ctx.partial_guild().await {
         let mut data = ctx
             .data()
             .clone()
@@ -167,7 +167,7 @@ pub async fn event_handler(
 ) -> Result<(), AppError> {
     match event {
         serenity::FullEvent::ReactionAdd { add_reaction } => {
-            let mut data = data.lock().await.clone();
+            let data = data.lock().await.clone();
             match data.message_ids.get(&u64::from(add_reaction.message_id)) {
                 Some(&MessageType::RoleAssigner) => {
                     if let serenity::ReactionType::Unicode(emoji) = add_reaction.clone().emoji {
@@ -201,7 +201,7 @@ pub async fn event_handler(
             }
         }
         serenity::FullEvent::ReactionRemove { removed_reaction } => {
-            let mut data = data.lock().await.clone();
+            let data = data.lock().await.clone();
             match data
                 .message_ids
                 .get(&u64::from(removed_reaction.message_id))

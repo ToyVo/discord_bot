@@ -5,7 +5,7 @@ const NAVBAR_CSS: Asset = asset!("/assets/styling/navbar.css");
 /// The Navbar component that will be rendered on all pages of our app since every page is under the layout.
 ///
 ///
-/// This layout component wraps the UI of [Route::Home] in a common navbar. The contents of the Home
+/// This layout component wraps the UI of [`Route::Home`] in a common navbar. The contents of the Home
 /// routes will be rendered under the outlet inside this component
 #[component]
 pub fn Navbar() -> Element {

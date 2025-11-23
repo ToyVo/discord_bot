@@ -7,12 +7,12 @@ use {crate::error::AppError, std::sync::Arc, tokio::sync::Mutex};
 #[cfg(feature = "server")]
 pub static GLOBAL_STATE: std::sync::OnceLock<Arc<Mutex<AppState>>> = std::sync::OnceLock::new();
 
-#[derive(Clone, Serialize, Deserialize, PartialEq, Debug)]
+#[derive(Clone, Serialize, Deserialize, PartialEq, Eq, Debug)]
 pub enum MessageType {
     RoleAssigner,
 }
 
-#[derive(Clone, Serialize, Deserialize, PartialEq, Default)]
+#[derive(Clone, Serialize, Deserialize, PartialEq, Eq, Default)]
 pub struct AppState {
     pub base_url: String,
     pub discord_client_id: String,
