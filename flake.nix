@@ -86,7 +86,7 @@
               nixpkgs.overlays = [ self.overlays.default ];
               services.postgresql = {
                 ensureDatabases = [ "discord_bot" ];
-                ensureRoles = [ {
+                ensureUsers = [ {
                   name = "discord_bot";
                   ensureDBOwership = true;
                   ensureClauses.login = true;
