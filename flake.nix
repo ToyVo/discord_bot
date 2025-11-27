@@ -88,7 +88,7 @@
                 ensureDatabases = [ "discord_bot" ];
                 ensureUsers = [ {
                   name = "discord_bot";
-                  ensureDBOwership = true;
+                  ensureDBOwnership = true;
                   ensureClauses.login = true;
                 } ];
               };
