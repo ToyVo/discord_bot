@@ -84,6 +84,14 @@
             };
             config = lib.mkIf cfg.enable {
               nixpkgs.overlays = [ self.overlays.default ];
+              services.postgresql = {
+                ensureDatabases = [ "discord_bot" ];
+                ensureRoles = [ {
+                  name = "discord_bot";
+                  ensureDBOwership = true;
+                  ensureClauses.login = true;
+                } ];
+              };
               users = {
                 users.discord_bot = {
                   isSystemUser = true;
@@ -130,6 +138,8 @@
               pkg-config
               rustPlatform.bindgenHook
               binaryen
+              diesel-cli
+              diesel-cli-ext
             ]
             ++ lib.optionals pkgs.stdenv.isDarwin [ darwin.sigtool ];
           buildInputs = with pkgs; [
