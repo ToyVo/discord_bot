@@ -1,4 +1,11 @@
-use crate::error::AppError;
+use crate::{
+    error::AppError,
+    models::{NewReactionMessage, NewSelfAssignableRole},
+    queries::{
+        create_reaction_message, create_self_assignable_role, delete_self_assignable_role, get_reaction_message, get_self_assignable_roles
+    },
+    schema::self_assignable_roles,
+};
 use rust_i18n::t;
 use {
     crate::state::{AppState, MessageType},
@@ -86,25 +93,24 @@ pub async fn terraria_stop(ctx: crate::state::Context<'_>) -> Result<(), AppErro
 
 #[poise::command(slash_command)]
 pub async fn game_roles(ctx: crate::state::Context<'_>) -> Result<(), AppError> {
-    // TODO: we will look up the self_assignable_roles from the database instead of the cache, each role will be associated with a guild_id, so this let Some is still needed
-    if let Some(_guild) = ctx.partial_guild().await {
-        let mut data = ctx
-            .data()
-            .clone()
-            .try_lock_owned()
-            .map_err(|e| AppError::from(anyhow::anyhow!(e)))?;
-        let self_assignable_roles = data.self_assignable_roles.clone();
+    if let Some(guild) = ctx.partial_guild().await {
+        let self_assignable_roles =
+            get_self_assignable_roles(pool, u64::from(guild.id).to_string()).await?;
         let message = self_assignable_roles
             .iter()
-            .map(|(emoji, role)| format!("{} = <@&{}>", emoji, role))
+            .map(|sar| format!("{} = <@&{}>", sar.emoji, sar.role_id))
             .collect::<Vec<_>>()
             .join("\n");
         let sent_message = ctx
             .say(format!("{}\n{}", t!("roles.intro"), message,))
             .await?;
         let sent_message_id = sent_message.message().await?.id;
-        data.message_ids
-            .insert(u64::from(sent_message_id), MessageType::RoleAssigner);
+        let new_message = NewReactionMessage {
+            guild_id: u64::from(guild.id).to_string(),
+            message_id: u64::from(sent_message_id).to_string(),
+            message_type: MessageType::RoleAssigner.to_string(),
+        };
+        let new_message = create_reaction_message(pool, new_message).await?;
     }
     Ok(())
 }
@@ -115,13 +121,12 @@ pub async fn register_self_assignable_role(
     #[description = "Pick a role"] role: serenity::RoleId,
     #[description = "Reaction emoji"] emoji: String,
 ) -> Result<(), AppError> {
-    let mut data = ctx
-        .data()
-        .clone()
-        .try_lock_owned()
-        .map_err(|e| AppError::from(anyhow::anyhow!(e)))?;
-    data.self_assignable_roles
-        .insert(emoji.clone(), role.into());
+    let new_role = NewSelfAssignableRole {
+        emoji: emoji.clone(),
+        guild_id: u64::from(ctx.guild_id().unwrap()).to_string(),
+        role_id: u64::from(role).to_string(),
+    };
+    let new_role = create_self_assignable_role(pool, new_role).await?;
     ctx.say(format!(
         "Registered self-assignable role: <@&{}> with emoji {}",
         role, emoji
@@ -135,27 +140,14 @@ pub async fn deregister_self_assignable_role(
     ctx: crate::state::Context<'_>,
     #[description = "Pick a role"] role: serenity::RoleId,
 ) -> Result<(), AppError> {
-    let mut data = ctx
-        .data()
-        .clone()
-        .try_lock_owned()
-        .map_err(|e| AppError::from(anyhow::anyhow!(e)))?;
-    let emoji = if let Some((emoji, _)) = data
-        .self_assignable_roles
-        .iter()
-        .find(|(_, r)| r == &&u64::from(role))
-    {
-        ctx.say(format!("Deregistered self-assignable role: <@&{}>", role))
-            .await?;
-        Some(emoji.clone())
-    } else {
-        ctx.say(format!("Role <@&{}> is not self-assignable", role))
-            .await?;
-        None
-    };
-    if let Some(emoji) = emoji {
-        data.self_assignable_roles.remove(&emoji);
-    }
+    delete_self_assignable_role(
+        pool,
+        u64::from(ctx.guild_id().unwrap()).to_string(),
+        u64::from(role).to_string(),
+    )
+    .await?;
+    ctx.say(format!("Deregistered self-assignable role: <@&{}>", role))
+        .await?;
     Ok(())
 }
 
@@ -167,6 +159,7 @@ pub async fn event_handler(
 ) -> Result<(), AppError> {
     match event {
         serenity::FullEvent::ReactionAdd { add_reaction } => {
+            let message = get_reaction_message(pool, add_reaction.guild_id, add_reaction.message_id).await?;
             let data = data.lock().await.clone();
             match data.message_ids.get(&u64::from(add_reaction.message_id)) {
                 Some(&MessageType::RoleAssigner) => {

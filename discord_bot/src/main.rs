@@ -2,11 +2,10 @@
 use {
     axum::{
         Router,
-        body::Body,
-        extract::{Request, State},
         http::{HeaderValue, header},
     },
-    dioxus::server::{DioxusRouterExt, FullstackState, ServeConfig},
+    diesel_migrations::{EmbeddedMigrations, MigrationHarness, embed_migrations},
+    dioxus::server::{DioxusRouterExt, ServeConfig},
     discord_bot::{
         discord,
         error::AppError,
@@ -21,6 +20,9 @@ use {
         trace::{DefaultMakeSpan, DefaultOnResponse, TraceLayer},
     },
 };
+
+#[cfg(feature = "server")]
+pub const MIGRATIONS: EmbeddedMigrations = embed_migrations!("migrations/");
 
 #[cfg(not(feature = "server"))]
 fn main() {
@@ -47,6 +49,23 @@ async fn main() -> Result<(), discord_bot::error::AppError> {
     //     )
     //     .with(tracing_subscriber::fmt::layer().without_time())
     //     .init();
+
+    let db_url = std::env::var("DATABASE_URL").unwrap();
+
+    // set up connection pool
+    let manager = deadpool_diesel::postgres::Manager::new(db_url, deadpool_diesel::Runtime::Tokio1);
+    let pool = deadpool_diesel::postgres::Pool::builder(manager)
+        .build()
+        .unwrap();
+
+    // run the migrations on server startup
+    {
+        let conn = pool.get().await.unwrap();
+        conn.interact(|conn| conn.run_pending_migrations(MIGRATIONS).map(|_| ()))
+            .await
+            .unwrap()
+            .unwrap();
+    }
 
     // Build shared state
     let shared_state = Arc::new(Mutex::new(AppState {
@@ -123,33 +142,10 @@ async fn main() -> Result<(), discord_bot::error::AppError> {
         );
 
     // we want a deep integration of axum, dioxus, and state management, so we need to reimplement the dioxus axum wrapper, dioxus::server::router
-    let mut router = Router::new()
+    let router = Router::new()
         .layer(middleware)
         .with_state(app_state_for_axum)
         .serve_dioxus_application(ServeConfig::new(), discord_bot::app::App);
-
-    // dioxus::server::base_path() is not public, so reimplement it, used in the dioxus::server::router function which we are reimplementing
-    let base_path = dioxus_cli_config::base_path().map(|s| s.to_string());
-    if let Some(base_path) = base_path {
-        let base_path = base_path.trim_matches('/');
-
-        // If there is a base path, nest the router under it and serve the root route manually
-        // Nesting a route in axum only serves /base_path or /base_path/ not both
-        router = Router::new().nest(&format!("/{base_path}/"), router).route(
-            &format!("/{base_path}"),
-            axum::routing::method_routing::get(
-                |state: State<FullstackState>, mut request: Request<Body>| async move {
-                    // The root of the base path always looks like the root from dioxus fullstack
-                    *request.uri_mut() = "/".parse().unwrap();
-                    FullstackState::render_handler(state, request).await
-                },
-            )
-            .with_state(FullstackState::new(
-                ServeConfig::new(),
-                discord_bot::app::App,
-            )),
-        )
-    }
 
     let address = dioxus_cli_config::fullstack_address_or_localhost();
     let listener = tokio::net::TcpListener::bind(address).await?;
@@ -192,9 +188,9 @@ async fn main() -> Result<(), discord_bot::error::AppError> {
                 },
                 ..Default::default()
             })
-            .setup(move |ctx, _ready, framework| {
+            .setup(move |ctx, ready, framework| {
                 Box::pin(async move {
-                    tracing::info!("Logged in as {}", _ready.user.name);
+                    tracing::info!("Logged in as {}", ready.user.name);
 
                     // Register slash commands
                     poise::builtins::register_globally(ctx, &framework.options().commands).await?;

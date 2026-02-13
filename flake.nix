@@ -135,6 +135,7 @@
               (pkgs.rust-bin.fromRustupToolchainFile ./rust-toolchain.toml)
               openssl
               libiconv
+              libpq
               pkg-config
               rustPlatform.bindgenHook
               binaryen

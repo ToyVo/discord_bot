@@ -17,6 +17,9 @@ anyhow = "1"
 axum = { version = "0", optional = true }
 axum-extra = { version = "0.9", features = ["cookie", "cookie-signed", "typed-header"], optional = true }
 chrono = { version = "0", features = ["rkyv"] }
+deadpool-diesel = { version = "0", features = ["postgres"], optional = true }
+diesel = { version = "2", features = ["postgres", "chrono", "uuid"], optional = true }
+diesel_migrations = { version = "2", optional = true }
 dioxus = { version = "0.7.0", features = ["router", "fullstack"] }
 dioxus-cli-config = { version = "0.7.0", optional = true }
 dioxus-logger = { version = "0.7.0", optional = true }
@@ -50,6 +53,9 @@ server = [
     "dioxus/server",
     "dep:axum",
     "dep:axum-extra",
+    "dep:deadpool-diesel",
+    "dep:diesel",
+    "dep:diesel_migrations",
     "dep:dioxus-cli-config",
     "dep:dioxus-logger",
     "dep:mc-query",

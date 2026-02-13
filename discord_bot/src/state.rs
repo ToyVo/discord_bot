@@ -12,6 +12,12 @@ pub enum MessageType {
     RoleAssigner,
 }
 
+impl std::fmt::Display for MessageType {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{:?}", self)
+    }
+}
+
 #[derive(Clone, Serialize, Deserialize, PartialEq, Eq, Default)]
 pub struct AppState {
     pub base_url: String,
@@ -20,8 +26,6 @@ pub struct AppState {
     pub discord_public_key: String,
     pub discord_token: String,
     pub user_agent: String,
-    pub message_ids: HashMap<u64, MessageType>,
-    pub self_assignable_roles: HashMap<String, u64>,
 }
 
 #[cfg(feature = "server")]
